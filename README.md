@@ -47,5 +47,10 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\T26-09 Kabinet holičů\`.
   (`web/leden-2027.html`, z ukázky v datové složce + `testdata/zkusebni_odpovedi.json`; jen 4h bloky). Výsledek: všichni
   holiči 100 % chtěných hodin, obsazenost 80 %, dražba 33 balíčků, prodáno 31, příplatek 9 760 Kč, Pavel mimo pravidlo ráno/odpoledne.
   Varianta 3h bloků (přepínač, srovnání v „Férovost a nájem“): splnění 99–101 %, dražba 33 z 35, příplatek 7 680 Kč,
-  nikdo mimo pravidlo ráno/odpoledne. Sestavení: `testdata/sestav_leden.py`.
+  nikdo mimo pravidlo ráno/odpoledne.
+- **Leden 2027, úprava (Keksa 23. 11. 2026):** rozdělení skládá souvislé rezervace u jednoho křesla v délce mezi
+  nejkratší a nejdelší rezervací holiče pro daný den; nový vzhled modulů 2 (teplotní mapa poptávky, karty holičů)
+  a 4 (týdny, křesla × dny, legenda, měsíc vybraného holiče). Výsledek 4h: obsazenost 1 916 h, splnění 96–100 %,
+  všech 372 rezervací v povolené délce; 3h: 1 866 h, splnění 88–101 %, 7 z 328 rezervací kratších.
+  Stránka se upravuje přímo, `testdata/sestav_leden.py` v ní jen obnoví data.
 - **Otevřené:** po přechodu na Pro probudit vixen-dev.

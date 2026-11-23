@@ -62,6 +62,57 @@ td.hot{background:var(--hot)!important;font-weight:bold}
 .skryt{display:none}
 select{font:13px Verdana,sans-serif;padding:4px 6px}
 ul{margin:4px 0 8px;padding-left:20px} li{margin:3px 0}
+
+/* modul 2 – přání */
+.heat-wrap{display:flex;flex-wrap:wrap;gap:18px}
+.heat{border-collapse:separate;border-spacing:3px;margin:0}
+.heat th{background:none;color:var(--se);font-weight:normal;text-align:center;padding:2px 4px;font-size:12px}
+.heat th.prov{color:var(--b);font-weight:bold;text-align:left;font-size:13px}
+.heat td{border:0;text-align:center;border-radius:6px;padding:6px 4px;min-width:58px;font-size:12px;line-height:1.25}
+.heat td.bl{background:none!important;font-weight:bold;color:var(--b);text-align:right;min-width:0;white-space:nowrap}
+.heat td b{display:block;font-size:15px}
+.heat td.hot{outline:2px solid var(--chyba);outline-offset:-2px;font-weight:normal}
+.heat-leg{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--se);margin:6px 0 2px;flex-wrap:wrap}
+.heat-leg i{display:inline-block;width:26px;height:12px;border-radius:3px}
+.karty-hol{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.hk{border:1px solid var(--li);border-radius:8px;padding:9px 10px;background:#fff;border-top:4px solid var(--hb,#1F4E78)}
+.hk-h{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin-bottom:6px}
+.hk-h .jm{font-weight:bold;font-size:14px;color:var(--hb)}
+.hk-h .ho{font-size:12px;color:var(--se);text-align:right}
+.hm{border-collapse:separate;border-spacing:2px;margin:0;width:100%}
+.hm th{background:none;color:var(--se);font-weight:normal;font-size:11px;padding:0;text-align:center}
+.hm td{border:0;padding:0;text-align:center;font-size:10.5px;height:20px;border-radius:3px;background:none!important}
+.hm td.bl{text-align:right;color:var(--se);padding-right:3px;white-space:nowrap;width:1%}
+.hm td.c2{background:#43a047!important;color:#fff;font-weight:bold}
+.hm td.c1{background:#c5e1a5!important;color:#33691e}
+.hm td.c0{background:#eceff1!important;color:#90a4ae}
+.hm tr.dl td{background:none!important;color:var(--b);font-size:10.5px;font-weight:bold;height:auto;padding-top:3px}
+.hm tr.dl td.bl{font-weight:normal;color:var(--se)}
+.hk .wtp{font-size:11.5px;color:var(--se);margin-top:5px}
+.leg-r{font-size:12px;color:var(--se);margin:4px 0 8px}
+.leg-r span{display:inline-block;width:14px;height:11px;border-radius:2px;vertical-align:middle;margin:0 3px 0 10px}
+/* modul 4 – rozvrh */
+.ovl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-bottom:10px;font-size:13px}
+.tydny{display:flex;flex-wrap:wrap;gap:4px}
+.tydny button{font:12.5px Verdana,sans-serif;border:1px solid var(--li);background:#fff;border-radius:14px;padding:4px 11px;cursor:pointer;color:var(--b)}
+.tydny button.akt{background:var(--b);color:#fff;border-color:var(--b)}
+.rleg{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 10px}
+.rleg span{font-size:11.5px;padding:2px 8px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+.rleg span.akt{border-color:#000}
+.rgrid{border-collapse:separate;border-spacing:4px;margin:0;width:100%}
+.rgrid th{background:none;color:var(--b);text-align:center;font-size:12.5px;padding:2px 4px}
+.rgrid th small{display:block;color:var(--se);font-weight:normal;font-size:11px}
+.rgrid td{border:0;padding:0;vertical-align:top;background:none!important;min-width:118px}
+.rgrid td.kr{min-width:0;font-weight:bold;color:var(--b);font-size:12px;vertical-align:middle;white-space:nowrap;padding-right:4px}
+.stack{display:flex;flex-direction:column;gap:2px}
+.blk{border-radius:4px;padding:3px 6px;font-size:11.5px;line-height:1.25;border-left:4px solid;min-height:34px;display:flex;flex-direction:column;justify-content:center;transition:opacity .15s}
+.blk .t{font-size:10px;color:var(--se)}
+.blk.vol{border:1px dashed #cfd8dc;border-left:4px solid #eceff1;background:#fafbfc;color:#b0bec5}
+.blk.spoj{border-top-left-radius:0;border-top-right-radius:0;margin-top:-2px}
+.blk.dim{opacity:.18}
+.hmes{margin-top:14px}
+@media(max-width:760px){.rgrid td{min-width:96px}.heat td{min-width:44px;padding:5px 2px;font-size:11px}.heat td b{font-size:14px}.heat{border-spacing:2px}}
+#poptavka{overflow-x:auto}
 </style>
 </head>
 <body>
@@ -92,7 +143,7 @@ ul{margin:4px 0 8px;padding-left:20px} li{margin:3px 0}
 <li><b>Rozvrh:</b> zbytek rozdělí systém spravedlivě. Přednost má vždy ten, kdo má zatím splněno nejméně ze svých hodin.</li>
 <li><b>Férovost a nájem:</b> u každého holiče je vidět, kolik dostal, kolik z toho chtěl, jaký má poměr ráno/odpoledne a kolik zaplatí.</li>
 </ul>
-<p class="mala">Rozdělení jde přepnout mezi 4h bloky (8–12, 12–16, 16–20) a 3h bloky (8–11, 11–14, 14–17, 17–20), každá varianta bere přání holičů ze své mřížky v dotazníku (3a, nebo 3b). Srovnání obou je v části Férovost a nájem. Nejkratší a nejdelší rezervaci zatím nepoužívá. U 3h bloků se chtěné hodiny dorovnají na nejbližší násobek 3. Pro jednoduchost jen pracovní dny . Šestihodinové bloky, víkendy, časy 7–8 a 20–22, burzu směn a přihlašování přidá skutečná aplikace. Počty křesel: Old Place 6, Zverimex 4 (<i>počet ve Zverimexu je zatím nepotvrzený</i>).</p>
+<p class="mala">Rozdělení jde přepnout mezi 4h bloky (8–12, 12–16, 16–20) a 3h bloky (8–11, 11–14, 14–17, 17–20), každá varianta bere přání holičů ze své mřížky v dotazníku (3a, nebo 3b). Srovnání obou je v části Férovost a nájem. Rezervace se skládají ze souvislých bloků u jednoho křesla a jejich délka respektuje nejkratší a nejdelší rezervaci, kterou holič pro daný den zadal. U 3h bloků se chtěné hodiny dorovnají na nejbližší násobek 3. Pro jednoduchost jen pracovní dny . Šestihodinové bloky, víkendy, časy 7–8 a 20–22, burzu směn a přihlašování přidá skutečná aplikace. Počty křesel: Old Place 6, Zverimex 4 (<i>počet ve Zverimexu je zatím nepotvrzený</i>).</p>
 <button class="btn" onclick="ukaz('pravidla')">Začít pravidly →</button>
 <button class="btn sv" onclick="novaData()">Jiná simulace dražby</button>
 </div>
@@ -125,13 +176,17 @@ ul{margin:4px 0 8px;padding-left:20px} li{margin:3px 0}
 <section id="t-prani" class="skryt">
 <div class="karta">
 <h2>2. Přání holičů</h2>
-<p>Každý holič zadá počet hodin a pro každý den v týdnu a blok, jestli ho chce, může, nebo nemůže. <span class="leg"><span class="p2"></span>chce<span class="p1"></span>může<span class="p0"></span>nemůže</span></p>
-<h3>Poptávka po blocích: kolik holičů blok „chce“ / kolik je křesel</h3>
-<div id="poptavka" class="posuv"></div>
-<p class="mala">Červeně jsou žádané bloky, kde je zájem větší než počet křesel. Ty jdou zčásti do dražby.</p>
-<h3>Holiči</h3>
-<div id="praniTab" class="posuv"></div>
-<p class="mala">Mřížka holiče: sloupce Po–Pá, řádky = bloky zvolené varianty. „Kolik by dal“ je vymyšlené a jen simuluje, kdy holič v dražbě klikne. Ve skutečnosti ho nikdo nezadává. „Jiná simulace dražby“ ho vylosuje znovu, přání holičů zůstávají.</p>
+<p>Každý holič zadá, kolik hodin měsíčně chce, které dny a bloky <b>chce / může / nemůže</b> a pro každý den nejkratší a nejdelší rezervaci křesla.</p>
+<h3>Poptávka po blocích</h3>
+<p class="mala">Velké číslo = kolik holičů blok „chce“, pod ním na jedno křeslo. Nad 1,0 je zájem větší než počet křesel (červený rámeček) a část křesel jde do dražby.</p>
+<div id="poptavka"></div>
+<div class="heat-leg">na křeslo: <i style="background:#f1f8e9"></i>pod 0,5 <i style="background:#fff8e1"></i>0,5–1 <i style="background:#ffe0b2"></i>1–1,25 <i style="background:#ffccbc"></i>1,25–1,5 <i style="background:#ef9a9a"></i>1,5 a víc</div>
+<h3 style="margin-top:18px">Holiči
+<select id="fProv" onchange="kresliHolice()" style="margin-left:8px"><option value="">obě provozovny</option><option value="OP">Old Place</option><option value="ZV">Zverimex</option></select>
+<select id="fRazeni" onchange="kresliHolice()"><option value="">podle jména</option><option value="h">podle hodin</option></select></h3>
+<p class="leg-r"><span style="background:#43a047"></span>chce <span style="background:#c5e1a5"></span>může <span style="background:#eceff1"></span>nemůže · <b style="color:var(--b)">3–6</b> = nejkratší–nejdelší rezervace v hodinách</p>
+<div id="praniTab" class="karty-hol"></div>
+<p class="mala" style="margin-top:8px">„Dal by až“ je vymyšlené a jen simuluje, kdy holič v dražbě klikne. Ve skutečnosti ho nikdo nezadává. „Jiná simulace dražby“ ho vylosuje znovu, přání holičů zůstávají.</p>
 </div>
 </section>
 
@@ -161,9 +216,15 @@ ul{margin:4px 0 8px;padding-left:20px} li{margin:3px 0}
 <section id="t-rozvrh" class="skryt">
 <div class="karta">
 <h2>4. Rozvrh</h2>
-<p>Provozovna <select id="rProv" onchange="kresliRozvrh()"></select> zvýraznit holiče <select id="rHolic" onchange="kresliRozvrh()"><option value="">–</option></select></p>
-<p class="mala"><span class="hvezda">★</span> = vydraženo. Prázdná buňka = volné křeslo k dokoupení. Barva = holič.</p>
+<div class="ovl">
+<label>Provozovna <select id="rProv" onchange="rZmenaProv()"></select></label>
+<div class="tydny" id="rTydny"></div>
+<label>Holič <select id="rHolic" onchange="kresliRozvrh()"><option value="">–</option></select></label>
+</div>
+<div class="rleg" id="rLeg"></div>
+<p class="mala"><span class="hvezda">★</span> = vydraženo · čárkovaně = volné křeslo k dokoupení · klepnutím na jméno v legendě holiče zvýrazníte</p>
 <div id="rozvrh" class="posuv"></div>
+<div id="rHolicMesic" class="hmes"></div>
 </div>
 </section>
 
@@ -203,75 +264,90 @@ const DATA_DNY=dnyMesice();
 $('mesicNazev').textContent='leden '+ROK;
 
 // ---------- zkušební odpovědi (testdata/generuj_zkusebni.py, seed 2027) ----------
-const ODPOVEDI=[{"j":"Aňa","p":"OP","h":100,"x":[[1,1,2],[0,0,1],[1,2,2],[1,1,2],[2,2,2]],"y":[[0,1,1,1],[0,0,1,1],[1,2,2,2],[1,1,1,2],[2,2,2,2]]},{"j":"Báďa","p":"OP","h":84,"x":[[0,1,2],[0,1,2],[1,1,2],[1,2,2],[1,2,2]],"y":[[0,1,1,2],[0,1,1,2],[0,1,1,2],[1,1,2,2],[1,2,2,2]]},{"j":"Edita","p":"OP","h":100,"x":[[1,2,2],[0,1,2],[0,1,2],[1,2,2],[1,2,2]],"y":[[1,1,2,2],[0,0,1,2],[0,1,1,2],[1,1,2,2],[1,2,2,2]]},{"j":"Ivet","p":"OP","h":96,"x":[[0,1,2],[1,2,2],[1,1,2],[2,2,2],[0,1,1]],"y":[[0,1,1,1],[1,2,2,2],[1,1,2,2],[2,2,2,2],[0,0,1,1]]},{"j":"Jakub","p":"OP","h":100,"x":[[0,0,1],[2,2,2],[1,1,1],[1,2,2],[1,2,2]],"y":[[0,0,0,1],[1,2,2,2],[1,1,1,2],[1,2,2,2],[1,2,2,2]]},{"j":"Jan","p":"OP","h":96,"x":[[0,1,2],[1,2,2],[0,1,2],[1,2,2],[1,2,2]],"y":[[0,1,2,2],[0,1,2,2],[0,1,1,2],[1,2,2,2],[1,1,2,2]]},{"j":"Matěj","p":"OP","h":92,"x":[[2,1,0],[2,1,0],[2,1,1],[2,2,1],[2,2,1]],"y":[[2,1,0,0],[2,2,1,0],[2,1,1,1],[2,2,2,1],[2,2,1,1]]},{"j":"Merlin","p":"OP","h":96,"x":[[0,1,2],[0,1,2],[1,2,2],[1,1,2],[1,2,2]],"y":[[0,1,2,2],[0,1,1,1],[1,2,2,2],[0,1,2,2],[1,2,2,2]]},{"j":"Michal","p":"OP","h":80,"x":[[1,1,2],[0,1,2],[0,1,2],[1,2,2],[1,1,2]],"y":[[0,1,2,2],[0,1,1,2],[0,1,1,1],[1,1,2,2],[1,1,2,2]]},{"j":"Pavel","p":"OP","h":24,"x":[[0,1,2],[0,0,0],[0,1,2],[0,0,0],[0,0,0]],"y":[[0,0,1,1],[0,0,0,0],[0,1,2,2],[0,0,0,0],[0,0,0,0]]},{"j":"Petr","p":"OP","h":96,"x":[[2,1,1],[2,2,0],[2,1,0],[2,2,1],[2,1,1]],"y":[[2,2,1,1],[2,2,1,0],[2,1,1,0],[2,2,1,1],[2,2,1,0]]},{"j":"Tadeáš","p":"OP","h":92,"x":[[0,1,1],[0,1,1],[1,1,1],[2,2,2],[2,2,2]],"y":[[0,0,1,1],[0,1,1,1],[1,1,1,1],[2,2,2,2],[2,2,2,2]]},{"j":"Tom","p":"OP","h":96,"x":[[0,1,2],[1,2,2],[0,1,2],[1,2,2],[1,2,2]],"y":[[0,0,1,1],[1,2,2,2],[0,1,2,2],[1,1,2,2],[1,1,2,2]]},{"j":"Banána","p":"ZV","h":100,"x":[[0,1,1],[1,2,2],[0,1,2],[1,2,2],[1,2,2]],"y":[[0,0,1,1],[1,1,2,2],[0,1,2,2],[1,2,2,2],[1,1,2,2]]},{"j":"Can","p":"ZV","h":100,"x":[[2,1,0],[2,2,1],[2,1,0],[2,2,1],[2,1,1]],"y":[[2,1,1,0],[2,2,1,0],[2,2,1,0],[2,2,2,1],[2,2,1,1]]},{"j":"Halis","p":"ZV","h":96,"x":[[0,0,0],[0,0,1],[1,2,2],[1,2,2],[1,2,2]],"y":[[0,0,0,0],[0,0,1,1],[1,2,2,2],[1,2,2,2],[1,2,2,2]]},{"j":"Josef","p":"ZV","h":96,"x":[[0,1,1],[0,1,1],[1,2,2],[2,2,2],[2,2,2]],"y":[[0,1,1,1],[0,0,1,1],[1,1,2,2],[1,2,2,2],[2,2,2,2]]},{"j":"Klára","p":"ZV","h":100,"x":[[2,1,1],[2,1,0],[2,1,0],[2,2,1],[2,2,1]],"y":[[2,2,1,0],[2,1,1,0],[2,1,1,0],[2,2,1,1],[2,2,1,1]]},{"j":"Ondřej","p":"ZV","h":92,"x":[[0,1,1],[0,1,1],[2,2,2],[0,0,0],[2,2,2]],"y":[[0,1,1,1],[0,1,2,2],[2,2,2,2],[0,0,0,0],[2,2,2,2]]},{"j":"Sebastian","p":"ZV","h":92,"x":[[0,0,1],[1,1,2],[1,1,2],[2,2,2],[1,2,2]],"y":[[0,0,1,1],[0,1,2,2],[1,1,1,1],[2,2,2,2],[1,2,2,2]]},{"j":"Vera","p":"ZV","h":92,"x":[[1,2,2],[0,1,2],[0,0,0],[0,1,2],[2,2,2]],"y":[[1,2,2,2],[0,1,1,2],[0,0,0,0],[0,1,2,2],[2,2,2,2]]}];
+const ODPOVEDI=[{"j":"Aňa","p":"OP","h":100,"x":[[1,1,2],[0,0,1],[1,2,2],[1,1,2],[2,2,2]],"y":[[0,1,1,1],[0,0,1,1],[1,2,2,2],[1,1,1,2],[2,2,2,2]],"d":[[3,12],[3,8],[3,8],[4,8],[3,8]]},{"j":"Báďa","p":"OP","h":84,"x":[[0,1,2],[0,1,2],[1,1,2],[1,2,2],[1,2,2]],"y":[[0,1,1,2],[0,1,1,2],[0,1,1,2],[1,1,2,2],[1,2,2,2]],"d":[[4,6],[3,12],[4,8],[4,6],[4,8]]},{"j":"Edita","p":"OP","h":100,"x":[[1,2,2],[0,1,2],[0,1,2],[1,2,2],[1,2,2]],"y":[[1,1,2,2],[0,0,1,2],[0,1,1,2],[1,1,2,2],[1,2,2,2]],"d":[[4,6],[4,12],[4,12],[4,8],[3,8]]},{"j":"Ivet","p":"OP","h":96,"x":[[0,1,2],[1,2,2],[1,1,2],[2,2,2],[0,1,1]],"y":[[0,1,1,1],[1,2,2,2],[1,1,2,2],[2,2,2,2],[0,0,1,1]],"d":[[4,12],[3,6],[4,8],[4,6],[4,6]]},{"j":"Jakub","p":"OP","h":100,"x":[[0,0,1],[2,2,2],[1,1,1],[1,2,2],[1,2,2]],"y":[[0,0,0,1],[1,2,2,2],[1,1,1,2],[1,2,2,2],[1,2,2,2]],"d":[[4,12],[4,8],[3,12],[4,12],[3,12]]},{"j":"Jan","p":"OP","h":96,"x":[[0,1,2],[1,2,2],[0,1,2],[1,2,2],[1,2,2]],"y":[[0,1,2,2],[0,1,2,2],[0,1,1,2],[1,2,2,2],[1,1,2,2]],"d":[[4,6],[4,12],[4,8],[4,6],[3,6]]},{"j":"Matěj","p":"OP","h":92,"x":[[2,1,0],[2,1,0],[2,1,1],[2,2,1],[2,2,1]],"y":[[2,1,0,0],[2,2,1,0],[2,1,1,1],[2,2,2,1],[2,2,1,1]],"d":[[4,8],[4,12],[4,8],[4,8],[4,8]]},{"j":"Merlin","p":"OP","h":96,"x":[[0,1,2],[0,1,2],[1,2,2],[1,1,2],[1,2,2]],"y":[[0,1,2,2],[0,1,1,1],[1,2,2,2],[0,1,2,2],[1,2,2,2]],"d":[[3,6],[4,8],[4,8],[4,8],[4,6]]},{"j":"Michal","p":"OP","h":80,"x":[[1,1,2],[0,1,2],[0,1,2],[1,2,2],[1,1,2]],"y":[[0,1,2,2],[0,1,1,2],[0,1,1,1],[1,1,2,2],[1,1,2,2]],"d":[[4,8],[4,8],[4,6],[3,12],[3,8]]},{"j":"Pavel","p":"OP","h":24,"x":[[0,1,2],[0,0,0],[0,1,2],[0,0,0],[0,0,0]],"y":[[0,0,1,1],[0,0,0,0],[0,1,2,2],[0,0,0,0],[0,0,0,0]],"d":[[3,4],null,[3,6],null,null]},{"j":"Petr","p":"OP","h":96,"x":[[2,1,1],[2,2,0],[2,1,0],[2,2,1],[2,1,1]],"y":[[2,2,1,1],[2,2,1,0],[2,1,1,0],[2,2,1,1],[2,2,1,0]],"d":[[4,8],[3,8],[3,8],[3,8],[3,6]]},{"j":"Tadeáš","p":"OP","h":92,"x":[[0,1,1],[0,1,1],[1,1,1],[2,2,2],[2,2,2]],"y":[[0,0,1,1],[0,1,1,1],[1,1,1,1],[2,2,2,2],[2,2,2,2]],"d":[[4,8],[4,8],[3,12],[4,12],[4,6]]},{"j":"Tom","p":"OP","h":96,"x":[[0,1,2],[1,2,2],[0,1,2],[1,2,2],[1,2,2]],"y":[[0,0,1,1],[1,2,2,2],[0,1,2,2],[1,1,2,2],[1,1,2,2]],"d":[[3,8],[4,8],[3,6],[4,6],[4,8]]},{"j":"Banána","p":"ZV","h":100,"x":[[0,1,1],[1,2,2],[0,1,2],[1,2,2],[1,2,2]],"y":[[0,0,1,1],[1,1,2,2],[0,1,2,2],[1,2,2,2],[1,1,2,2]],"d":[[3,8],[4,8],[4,8],[4,8],[3,12]]},{"j":"Can","p":"ZV","h":100,"x":[[2,1,0],[2,2,1],[2,1,0],[2,2,1],[2,1,1]],"y":[[2,1,1,0],[2,2,1,0],[2,2,1,0],[2,2,2,1],[2,2,1,1]],"d":[[4,6],[4,8],[4,8],[4,12],[3,8]]},{"j":"Halis","p":"ZV","h":96,"x":[[0,0,0],[0,0,1],[1,2,2],[1,2,2],[1,2,2]],"y":[[0,0,0,0],[0,0,1,1],[1,2,2,2],[1,2,2,2],[1,2,2,2]],"d":[null,[4,8],[4,12],[4,12],[3,8]]},{"j":"Josef","p":"ZV","h":96,"x":[[0,1,1],[0,1,1],[1,2,2],[2,2,2],[2,2,2]],"y":[[0,1,1,1],[0,0,1,1],[1,1,2,2],[1,2,2,2],[2,2,2,2]],"d":[[4,6],[3,12],[4,6],[4,6],[4,12]]},{"j":"Klára","p":"ZV","h":100,"x":[[2,1,1],[2,1,0],[2,1,0],[2,2,1],[2,2,1]],"y":[[2,2,1,0],[2,1,1,0],[2,1,1,0],[2,2,1,1],[2,2,1,1]],"d":[[4,12],[3,6],[3,6],[3,8],[4,8]]},{"j":"Ondřej","p":"ZV","h":92,"x":[[0,1,1],[0,1,1],[2,2,2],[0,0,0],[2,2,2]],"y":[[0,1,1,1],[0,1,2,2],[2,2,2,2],[0,0,0,0],[2,2,2,2]],"d":[[3,6],[3,8],[4,6],null,[3,8]]},{"j":"Sebastian","p":"ZV","h":92,"x":[[0,0,1],[1,1,2],[1,1,2],[2,2,2],[1,2,2]],"y":[[0,0,1,1],[0,1,2,2],[1,1,1,1],[2,2,2,2],[1,2,2,2]],"d":[[3,6],[4,6],[4,8],[4,8],[4,8]]},{"j":"Vera","p":"ZV","h":92,"x":[[1,2,2],[0,1,2],[0,0,0],[0,1,2],[2,2,2]],"y":[[1,2,2,2],[0,1,1,2],[0,0,0,0],[0,1,2,2],[2,2,2,2]],"d":[[3,12],[4,8],null,[4,8],[4,6]]}];
 function vymysli(){
  const r=rng(seed);
- return ODPOVEDI.map((o,i)=>({jmeno:o.j,prov:o.p,pref:VAR===3?o.y:o.x,cil:o.h,id:i,barva:BARVY[i%BARVY.length],wtp:Math.round((50+r()*45)/5)*5}));
+ return ODPOVEDI.map((o,i)=>({jmeno:o.j,prov:o.p,pref:VAR===3?o.y:o.x,delka:o.d,cil:o.h,id:i,barva:BARVY[i%BARVY.length],wtp:Math.round((50+r()*45)/5)*5}));
 }
 
 // ---------- výpočet měsíce ----------
+// Rezervace = souvislý úsek bloků v jednom dni u jednoho křesla. Délka v hodinách musí být mezi
+// nejkratší a nejdelší rezervací, kterou holič pro ten den v týdnu zadal (sekce 4 dotazníku).
+function minB(h,wd){const d=h.delka[wd];return d?Math.max(1,Math.ceil(d[0]/L)):0}
+function maxB(h,wd){const d=h.delka[wd];return d?Math.floor(d[1]/L):0}
+function bloky(h,di){const ix=[];h.busy[di].forEach((x,i)=>{if(x)ix.push(i)});return ix}
 function spocitej(){
  const r=rng(seed*31+5);
  const H=vymysli();
  const P={sazba:num('pSazba'),rano:num('pRano'),odpo:num('pOdpo'),prah:num('pPrah'),podil:num('pPodil'),start:num('pStart'),krok:Math.max(1,num('pKrok')),max:num('pMax')};
+ const NB=BLOKY.length;
  // obsazení: occ[prov][den][blok][kreslo]
  const occ={};PROV.forEach(p=>{occ[p.id]=DATA_DNY.map(()=>BLOKY.map(()=>Array(p.kresla).fill(null)))});
- H.forEach(h=>{h.busy=DATA_DNY.map(()=>BLOKY.map(()=>false));h.hod=0;h.pred=0;h.po=0;h.chtene=0;h.najem=0;h.drazHod=0;h.drazNavic=0;h.vyhry=0;h.drazBloky={}});
- function prirad(h,di,b,k,cena,draz){occ[h.prov][di][b][k]={h:h.id,cena,draz};h.busy[di][b]=true;h.hod+=L;h.pred+=BLOKY[b].pred;h.po+=BLOKY[b].po;if(h.pref[DATA_DNY[di].wd][b]===2)h.chtene+=L;h.najem+=L*cena;if(draz){h.drazHod+=L;h.drazNavic+=L*(cena-P.sazba)}}
+ H.forEach(h=>{h.busy=DATA_DNY.map(()=>BLOKY.map(()=>false));h.kres=DATA_DNY.map(()=>-1);h.hod=0;h.pred=0;h.po=0;h.chtene=0;h.najem=0;h.drazHod=0;h.drazNavic=0;h.vyhry=0;h.drazBloky={}});
+ function prirad(h,di,b,k,cena,draz){occ[h.prov][di][b][k]={h:h.id,cena,draz};h.busy[di][b]=true;h.kres[di]=k;h.hod+=L;h.pred+=BLOKY[b].pred;h.po+=BLOKY[b].po;if(h.pref[DATA_DNY[di].wd][b]===2)h.chtene+=L;h.najem+=L*cena;if(draz){h.drazHod+=L;h.drazNavic+=L*(cena-P.sazba)}}
+ const volneKreslo=(h,di,bs,pref)=>{const o=occ[h.prov][di];const ok=k=>bs.every(b=>o[b][k]===null);if(pref>=0&&ok(pref))return pref;for(let k=0;k<o[0].length;k++)if(ok(k))return k;return -1};
  // poptávka
  const popt={};PROV.forEach(p=>{popt[p.id]=[0,1,2,3,4].map(wd=>BLOKY.map((_,b)=>H.filter(h=>h.prov===p.id&&h.pref[wd][b]===2).length))});
  // loty
  const loty=[];
- PROV.forEach(p=>{for(let wd=0;wd<5;wd++)for(let b=0;b<BLOKY.length;b++){const n=popt[p.id][wd][b];if(n>p.kresla*P.prah){const pocet=Math.ceil(p.kresla*P.podil/100);for(let k=0;k<pocet;k++)loty.push({prov:p.id,wd,b,k,pomer:n/p.kresla,zajem:n})}}});
+ PROV.forEach(p=>{for(let wd=0;wd<5;wd++)for(let b=0;b<NB;b++){const n=popt[p.id][wd][b];if(n>p.kresla*P.prah){const pocet=Math.ceil(p.kresla*P.podil/100);for(let k=0;k<pocet;k++)loty.push({prov:p.id,wd,b,k,pomer:n/p.kresla,zajem:n})}}});
  loty.sort((a,b)=>b.pomer-a.pomer||a.wd-b.wd);
  const dnyWd=wd=>DATA_DNY.map((d,i)=>d.wd===wd?i:-1).filter(i=>i>=0);
+ const lzePridat=(h,di,b)=>{const ix=bloky(h,di);if(ix.length>=maxB(h,DATA_DNY[di].wd))return false;return !ix.length||b===ix[0]-1||b===ix[ix.length-1]+1};
  loty.forEach(l=>{
   const di=dnyWd(l.wd), hod=di.length*L;l.hod=hod;l.kroky=[];l.vitez=null;
   for(let cena=P.start;cena>=P.sazba;cena-=P.krok){
    l.kroky.push(cena);
-   const kand=H.filter(h=>h.prov===l.prov&&h.pref[l.wd][l.b]===2&&h.wtp>=cena&&h.vyhry<P.max&&!h.drazBloky[l.wd+'-'+l.b]&&h.cil-h.hod>=hod);
+   const kand=H.filter(h=>h.prov===l.prov&&h.pref[l.wd][l.b]===2&&h.wtp>=cena&&h.vyhry<P.max&&!h.drazBloky[l.wd+'-'+l.b]&&h.cil-h.hod>=hod&&lzePridat(h,di[0],l.b));
    if(kand.length){const v=kand[Math.floor(r()*kand.length)];l.vitez=v.id;l.cena=cena;l.souperi=kand.length-1;v.vyhry++;v.drazBloky[l.wd+'-'+l.b]=1;di.forEach(d=>prirad(v,d,l.b,l.k,cena,true));break}
   }
   if(l.vitez===null)l.cena=null;
  });
  // spravedlivé rozdělení zbytku
  const hotovo=new Set();
- for(let it=0;it<5000;it++){
+ for(let it=0;it<20000;it++){
   const kand=H.filter(h=>!hotovo.has(h.id)&&h.cil-h.hod>L/2);
   if(!kand.length)break;
   kand.sort((a,b)=>(a.hod/a.cil)-(b.hod/b.cil)||a.id-b.id);
   const h=kand[0];let best=null,bs=-1e9;
-  const predPct=h.hod?h.pred/h.hod*100:0, poPct=h.hod?h.po/h.hod*100:0;
-  for(let di=0;di<DATA_DNY.length;di++)for(let b=0;b<BLOKY.length;b++){
-   if(h.busy[di][b])continue;const pf=h.pref[DATA_DNY[di].wd][b];if(pf===0)continue;
-   const k=occ[h.prov][di][b].indexOf(null);if(k<0)continue;
-   let s=pf*100;
-   if(BLOKY[b].po===0&&predPct<P.rano+5)s+=150; if(BLOKY[b].pred===0&&poPct<P.odpo+5)s+=150;
-   s-=h.busy[di].filter(x=>x).length*8; // rozložit do více dní
-   s+=r()*5;
-   if(s>bs){bs=s;best={di,b,k}}
+  const predPct=h.hod?h.pred/h.hod*100:0, poPct=h.hod?h.po/h.hod*100:0, zbyva=h.cil-h.hod;
+  const bonus=b=>(BLOKY[b].po===0&&predPct<P.rano+5?150:0)+(BLOKY[b].pred===0&&poPct<P.odpo+5?150:0);
+  for(let di=0;di<DATA_DNY.length;di++){
+   const wd=DATA_DNY[di].wd, mx=maxB(h,wd), mn=minB(h,wd);if(!mx||mn>mx)continue;
+   const ix=bloky(h,di);
+   if(ix.length){ // prodloužit dnešní rezervaci
+    if(ix.length>=mx)continue;
+    [ix[0]-1,ix[ix.length-1]+1].forEach(b=>{
+     if(b<0||b>=NB)return;const pf=h.pref[wd][b];if(pf===0)return;
+     const k=volneKreslo(h,di,[b],h.kres[di]);if(k<0)return;
+     let s=pf*100+bonus(b)+(ix.length<mn?300:-20)+(k===h.kres[di]?0:-40)+r()*5;
+     if(s>bs){bs=s;best={di,bs:[b],k}}
+    });
+   }else{ // nová rezervace v nejkratší délce
+    if(zbyva<mn*L-L/2)continue;
+    for(let s0=0;s0+mn<=NB;s0++){
+     const run=Array.from({length:mn},(_,i)=>s0+i);
+     if(run.some(b=>h.pref[wd][b]===0))continue;
+     const k=volneKreslo(h,di,run,-1);if(k<0)continue;
+     let s=run.reduce((a,b)=>a+h.pref[wd][b]*100+bonus(b),0)/mn+15+r()*5;
+     if(s>bs){bs=s;best={di,bs:run,k}}
+    }
+   }
   }
   if(!best){hotovo.add(h.id);continue}
-  prirad(h,best.di,best.b,best.k,P.sazba,false);
+  best.bs.forEach(b=>prirad(h,best.di,b,best.k,P.sazba,false));
  }
+ // kontrola délky rezervací
+ H.forEach(h=>{h.rez=[];h.podMin=0;h.nadMax=0;DATA_DNY.forEach((d,di)=>{const ix=bloky(h,di);if(!ix.length)return;
+  const n=ix.length, del=n*L, dl=h.delka[d.wd];h.rez.push(del);
+  if(!dl||del<dl[0])h.podMin++;
+  if(dl&&del>dl[1])h.nadMax++;})});
  return {H,P,occ,popt,loty};
 }
 
 // ---------- vykreslení ----------
 function mini(pref){let s='<span class="mini">';for(let b=0;b<BLOKY.length;b++)for(let wd=0;wd<5;wd++)s+='<span class="p'+pref[wd][b]+'" title="'+DNY[wd]+' '+BLOKY[b].t+'"></span>';return s+'</span>'}
 function cip(h){return '<span class="cip" style="background:'+h.barva+'">'+h.jmeno+'</span>'}
-function kresliPrani(){
- let s='';
- PROV.forEach(p=>{
-  s+='<table><tr><th>'+p.nazev+' ('+p.kresla+(p.kresla<5?' křesla':' křesel')+')</th>'+DNY.map(d=>'<th>'+d+'</th>').join('')+'</tr>';
-  BLOKY.forEach((bl,b)=>{s+='<tr><td><b>'+bl.t+'</b></td>';for(let wd=0;wd<5;wd++){const n=D.popt[p.id][wd][b];s+='<td class="'+(n>p.kresla*D.P.prah?'hot':'')+'">'+n+' / '+p.kresla+'</td>'}s+='</tr>'});
-  s+='</table>';
- });
- $('poptavka').innerHTML=s;
- let t='<table class="siroka"><tr><th>Holič</th><th>Provozovna</th><th>Chce hodin</th><th>Přání Po–Pá</th><th>Kolik by dal za žádaný blok</th></tr>';
- D.H.forEach(h=>{t+='<tr><td>'+cip(h)+'</td><td>'+PROV.find(p=>p.id===h.prov).nazev+'</td><td>'+h.cil+' h</td><td>'+mini(h.pref)+'</td><td>až '+h.wtp+' Kč/h</td></tr>'});
- $('praniTab').innerHTML=t+'</table>';
-}
 function lotTxt(l){return PROV.find(p=>p.id===l.prov).nazev+' · '+['každé pondělí','každé úterý','každou středu','každý čtvrtek','každý pátek'][l.wd]+' '+BLOKY[l.b].t+' · křeslo '+(l.k+1)}
 function radekLogu(l){
  if(l.vitez===null)return '<div>'+lotTxt(l)+': <span class="chyba">neprodáno</span> ani za '+D.P.sazba+' Kč/h → běžné rozdělení</div>';
@@ -299,17 +375,62 @@ function prehratDrazbu(){
   ki++;if(ki>=l.kroky.length+PAUZA){li++;ki=0}
  },160);
 }
-function kresliRozvrh(){
- const pid=$('rProv').value, p=PROV.find(x=>x.id===pid), zv=$('rHolic').value;
- let s='<table class="rozvrh"><tr><th rowspan="2">Den</th>'+BLOKY.map(b=>'<th colspan="'+p.kresla+'">'+b.t+'</th>').join('')+'</tr><tr>'+BLOKY.map(()=>Array.from({length:p.kresla},(_,k)=>'<th>'+(k+1)+'</th>').join('')).join('')+'</tr>';
- DATA_DNY.forEach((d,di)=>{
-  s+='<tr><td class="den">'+d.txt+'</td>';
-  BLOKY.forEach((bl,b)=>{for(let k=0;k<p.kresla;k++){const o=D.occ[pid][di][b][k];
-   if(!o){s+='<td class="vol">·</td>';continue}
-   const h=D.H[o.h];s+='<td class="'+(zv!==''&&+zv===h.id?'zvyr':'')+'" style="background:'+h.barva+'22" title="'+h.jmeno+', '+o.cena+' Kč/h'+(o.draz?', vydraženo':'')+'"><span style="color:'+h.barva+';font-weight:bold">'+h.jmeno.slice(0,3)+'</span>'+(o.draz?'<span class="hvezda">★</span>':'')+'</td>'}});
-  s+='</tr>';
+function heatBarva(x){return x<0.5?'#f1f8e9':x<1?'#fff8e1':x<1.25?'#ffe0b2':x<1.5?'#ffccbc':'#ef9a9a'}
+function kresliPrani(){
+ let s='<div class="heat-wrap">';
+ PROV.forEach(p=>{
+  s+='<table class="heat"><tr><th class="prov">'+p.nazev+'<br><span class="mala">'+p.kresla+(p.kresla<5?' křesla':' křesel')+'</span></th>'+DNY.map(d=>'<th>'+d+'</th>').join('')+'</tr>';
+  BLOKY.forEach((bl,b)=>{s+='<tr><td class="bl">'+bl.t+'</td>';for(let wd=0;wd<5;wd++){const n=D.popt[p.id][wd][b],x=n/p.kresla;
+   s+='<td class="'+(n>p.kresla*D.P.prah?'hot':'')+'" style="background:'+heatBarva(x)+'" title="'+DNY[wd]+' '+bl.t+': chce '+n+' holičů, '+p.kresla+' křesel"><b>'+n+'</b>'+x.toFixed(2).replace('.',',')+'</td>'}s+='</tr>'});
+  s+='</table>';
  });
+ $('poptavka').innerHTML=s+'</div>';
+ kresliHolice();
+}
+function kresliHolice(){
+ const fp=$('fProv').value, raz=$('fRazeni').value;
+ let H=D.H.filter(h=>!fp||h.prov===fp);
+ H=H.slice().sort(raz==='h'?(a,b)=>b.cil-a.cil:(a,b)=>a.jmeno.localeCompare(b.jmeno,'cs'));
+ const TX=['–','může','chce'];
+ $('praniTab').innerHTML=H.map(h=>{
+  let t='<table class="hm"><tr><th></th>'+DNY.map(d=>'<th>'+d+'</th>').join('')+'</tr>';
+  BLOKY.forEach((bl,b)=>{t+='<tr><td class="bl">'+bl.t+'</td>'+[0,1,2,3,4].map(wd=>'<td class="c'+h.pref[wd][b]+'">'+TX[h.pref[wd][b]]+'</td>').join('')+'</tr>'});
+  t+='<tr class="dl"><td class="bl">rezervace</td>'+[0,1,2,3,4].map(wd=>'<td>'+(h.delka[wd]?h.delka[wd][0]+'–'+h.delka[wd][1]:'–')+'</td>').join('')+'</tr></table>';
+  return '<div class="hk" style="--hb:'+h.barva+'"><div class="hk-h"><span class="jm">'+h.jmeno+'</span><span class="ho">'+PROV.find(p=>p.id===h.prov).nazev+'<br><b style="color:#1a1a1a">'+h.cil+' h</b> / měsíc · '+Math.round(h.cil/4)+' h týdně</span></div>'+t+'<div class="wtp">Dal by až '+h.wtp+' Kč/h za žádaný blok · dostal '+h.hod+' h</div></div>'}).join('');
+}
+function tydny(){const w=[];let cur=null,pw=9;DATA_DNY.forEach((d,i)=>{if(d.wd<=pw){cur=[];w.push(cur)}cur.push(i);pw=d.wd});return w}
+let rTyden=0;
+function rZmenaProv(){const pid=$('rProv').value;$('rHolic').innerHTML='<option value="">–</option>'+D.H.filter(h=>h.prov===pid).map(h=>'<option value="'+h.id+'">'+h.jmeno+'</option>').join('');kresliRozvrh()}
+function rVyberHolice(id){$('rHolic').value=$('rHolic').value===String(id)?'':String(id);kresliRozvrh()}
+function rVyberTyden(i){rTyden=i;kresliRozvrh()}
+function kresliRozvrh(){
+ const pid=$('rProv').value, p=PROV.find(x=>x.id===pid), zv=$('rHolic').value, W=tydny();
+ if(rTyden>=W.length)rTyden=0;
+ $('rTydny').innerHTML=W.map((w,i)=>'<button class="'+(i===rTyden?'akt':'')+'" onclick="rVyberTyden('+i+')">'+DATA_DNY[w[0]].txt.split(' ').slice(1).join(' ')+'–'+DATA_DNY[w[w.length-1]].txt.split(' ').slice(1).join(' ')+'</button>').join('');
+ const HP=D.H.filter(h=>h.prov===pid);
+ $('rLeg').innerHTML=HP.map(h=>'<span class="'+(zv===String(h.id)?'akt':'')+'" style="background:'+h.barva+'22;color:'+h.barva+'" onclick="rVyberHolice('+h.id+')"><b>'+h.jmeno+'</b> '+h.hod+' h</span>').join('');
+ const dny=W[rTyden];
+ let s='<table class="rgrid"><tr><th></th>'+dny.map(di=>{const t=DATA_DNY[di].txt.split(' ');return '<th>'+t[0]+'<small>'+t.slice(1).join(' ')+'</small></th>'}).join('')+'</tr>';
+ for(let k=0;k<p.kresla;k++){
+  s+='<tr><td class="kr">Křeslo '+(k+1)+'</td>';
+  dny.forEach(di=>{s+='<td><div class="stack">';
+   BLOKY.forEach((bl,b)=>{const o=D.occ[pid][di][b][k];
+    if(!o){s+='<div class="blk vol"><span>volno</span><span class="t">'+bl.t+'</span></div>';return}
+    const h=D.H[o.h], pred=b>0&&D.occ[pid][di][b-1][k], spoj=pred&&pred.h===o.h;
+    s+='<div class="blk'+(spoj?' spoj':'')+(zv!==''&&+zv!==h.id?' dim':'')+'" style="background:'+h.barva+'1f;border-left-color:'+h.barva+'" title="'+h.jmeno+', '+bl.t+', '+o.cena+' Kč/h'+(o.draz?', vydraženo':'')+'"><span style="color:'+h.barva+';font-weight:bold">'+h.jmeno+(o.draz?' <span class="hvezda">★</span>':'')+'</span><span class="t">'+bl.t+(o.cena>D.P.sazba?' · '+o.cena+' Kč/h':'')+'</span></div>'});
+   s+='</div></td>'});
+  s+='</tr>';
+ }
  $('rozvrh').innerHTML=s+'</table>';
+ // měsíc vybraného holiče
+ if(zv===''){$('rHolicMesic').innerHTML='';return}
+ const h=D.H[+zv];let t='<h3>'+cip(h)+' – celý leden</h3><table class="siroka"><tr><th>Den</th><th>Čas</th><th>Křeslo</th><th>Hodin</th><th>Cena</th><th>Rezervace podle přání</th></tr>';
+ DATA_DNY.forEach((d,di)=>{const ix=bloky(h,di);if(!ix.length)return;
+  const k=D.occ[h.prov][di][ix[0]].findIndex(o=>o&&o.h===h.id);const krs=[...new Set(ix.map(b=>D.occ[h.prov][di][b].findIndex(o=>o&&o.h===h.id)+1))].join(', ');
+  const cena=ix.reduce((a,b)=>{const o=D.occ[h.prov][di][b].find(o=>o&&o.h===h.id);return a+o.cena*L},0);
+  const dl=h.delka[d.wd],del=ix.length*L,ok=dl&&del>=dl[0]&&del<=dl[1];
+  t+='<tr><td>'+d.txt+'</td><td>'+BLOKY[ix[0]].t.split('–')[0]+'–'+BLOKY[ix[ix.length-1]].t.split('–')[1]+'</td><td>'+krs+'</td><td>'+del+' h</td><td>'+kc(cena)+'</td><td class="'+(ok?'':'chyba')+'">'+(dl?dl[0]+'–'+dl[1]+' h':'–')+'</td></tr>'});
+ $('rHolicMesic').innerHTML=t+'<tr><td colspan="3"><b>Celkem</b></td><td><b>'+h.hod+' h</b></td><td><b>'+kc(h.najem)+'</b></td><td></td></tr></table>';
 }
 function kresliFerovost(){
  const P=D.P;let celkemZaklad=0,celkemNavic=0,kap=0,obs=0;
@@ -317,16 +438,18 @@ function kresliFerovost(){
  D.H.forEach(h=>{obs+=h.hod;celkemNavic+=h.drazNavic;celkemZaklad+=h.najem-h.drazNavic});
  const splneni=D.H.map(h=>h.hod/h.cil*100);
  const porus=D.H.filter(h=>h.hod&&(h.pred/h.hod*100<P.rano||h.po/h.hod*100<P.odpo)).length;
+ const mimoRez=D.H.reduce((a,h)=>a+h.podMin+h.nadMax,0), vsechRez=D.H.reduce((a,h)=>a+h.rez.length,0);
  let sum='<div class="dlazdice"><div class="h">'+Math.round(obs/kap*100)+' %</div><div class="t">obsazenost křesel ('+obs+' z '+kap+' h)</div></div>'+
  PROV.map(p=>{const k=DATA_DNY.length*12*p.kresla;const o=D.H.filter(h=>h.prov===p.id).reduce((a,h)=>a+h.hod,0);return '<div class="dlazdice"><div class="h">'+Math.round(o/k*100)+' %</div><div class="t">obsazenost '+p.nazev+'</div></div>'}).join('')+
  '<div class="dlazdice"><div class="h">'+kc(celkemZaklad)+'</div><div class="t">nájem za základní sazbu</div></div>'+
  '<div class="dlazdice"><div class="h">'+kc(celkemNavic)+'</div><div class="t">příplatek z dražby</div></div>'+
  '<div class="dlazdice"><div class="h">'+Math.round(Math.min(...splneni))+'–'+Math.round(Math.max(...splneni))+' %</div><div class="t">splnění chtěných hodin (nejhorší–nejlepší holič)</div></div>'+
- '<div class="dlazdice"><div class="h">'+porus+'</div><div class="t">holičů mimo pravidlo ráno/odpoledne (kvůli jejich přáním)</div></div>';
+ '<div class="dlazdice"><div class="h">'+porus+'</div><div class="t">holičů mimo pravidlo ráno/odpoledne (kvůli jejich přáním)</div></div>'+
+ '<div class="dlazdice"><div class="h">'+mimoRez+' z '+vsechRez+'</div><div class="t">rezervací mimo nejkratší–nejdelší délku podle přání</div></div>';
  $('souhrn').innerHTML=sum;
- let t='<table class="siroka"><tr><th>Holič</th><th>Provozovna</th><th>Chtěl</th><th>Dostal</th><th>Splněno</th><th>Ve chtěných blocích</th><th>Před 14 / po 14</th><th>Vydraženo</th><th>Nájem</th><th>z toho příplatek</th></tr>';
+ let t='<table class="siroka"><tr><th>Holič</th><th>Provozovna</th><th>Chtěl</th><th>Dostal</th><th>Splněno</th><th>Ve chtěných blocích</th><th>Před 14 / po 14</th><th>Rezervace za den</th><th>Vydraženo</th><th>Nájem</th><th>z toho příplatek</th></tr>';
  D.H.forEach(h=>{const pr=h.hod?Math.round(h.pred/h.hod*100):0,po=h.hod?Math.round(h.po/h.hod*100):0;const ok=h.hod&&pr>=P.rano&&po>=P.odpo;
-  t+='<tr><td>'+cip(h)+'</td><td>'+PROV.find(p=>p.id===h.prov).nazev+'</td><td>'+h.cil+' h</td><td>'+h.hod+' h</td><td>'+Math.round(h.hod/h.cil*100)+' %</td><td>'+(h.hod?Math.round(h.chtene/h.hod*100):0)+' %</td><td class="'+(ok?'':'chyba')+'">'+pr+' % / '+po+' %</td><td>'+(h.drazHod?h.drazHod+' h ★':'–')+'</td><td><b>'+kc(h.najem)+'</b></td><td>'+(h.drazNavic?kc(h.drazNavic):'–')+'</td></tr>'});
+  t+='<tr><td>'+cip(h)+'</td><td>'+PROV.find(p=>p.id===h.prov).nazev+'</td><td>'+h.cil+' h</td><td>'+h.hod+' h</td><td>'+Math.round(h.hod/h.cil*100)+' %</td><td>'+(h.hod?Math.round(h.chtene/h.hod*100):0)+' %</td><td class="'+(ok?'':'chyba')+'">'+pr+' % / '+po+' %</td><td class="'+(h.podMin+h.nadMax?'chyba':'')+'">'+(h.rez.length?Math.min(...h.rez)+'–'+Math.max(...h.rez)+' h, '+h.rez.length+'×':'–')+(h.podMin?' ('+h.podMin+'× kratší)':'')+(h.nadMax?' ('+h.nadMax+'× delší)':'')+'</td><td>'+(h.drazHod?h.drazHod+' h ★':'–')+'</td><td><b>'+kc(h.najem)+'</b></td><td>'+(h.drazNavic?kc(h.drazNavic):'–')+'</td></tr>'});
  $('ferTab').innerHTML=t+'</table>';
 }
 function souhrnVar(v){const puv=VAR;nastavVar(v);const d=spocitej();nastavVar(puv);
@@ -335,6 +458,7 @@ function souhrnVar(v){const puv=VAR;nastavVar(v);const d=spocitej();nastavVar(pu
  return {kap,obs,loty:d.loty.length,prod:prod.length,navic:d.H.reduce((a,h)=>a+h.drazNavic,0),najem:d.H.reduce((a,h)=>a+h.najem,0),
   sp:Math.round(Math.min(...sp))+'–'+Math.round(Math.max(...sp))+' %',chtene:Math.round(d.H.reduce((a,h)=>a+h.chtene,0)/obs*100),
   porus:d.H.filter(h=>h.hod&&(h.pred/h.hod*100<d.P.rano||h.po/h.hod*100<d.P.odpo)).length,
+  mimo:d.H.reduce((a,h)=>a+h.podMin+h.nadMax,0),rez:d.H.reduce((a,h)=>a+h.rez.length,0),
   zadane:PROV.reduce((a,p)=>a+d.popt[p.id].flat().filter(n=>n>p.kresla*d.P.prah).length,0)}}
 function kresliSrovnani(){const a=souhrnVar(4),b=souhrnVar(3);
  const r=(t,x,y)=>'<tr><td>'+t+'</td><td'+(VAR===4?' style="font-weight:bold"':'')+'>'+x+'</td><td'+(VAR===3?' style="font-weight:bold"':'')+'>'+y+'</td></tr>';
@@ -346,13 +470,15 @@ function kresliSrovnani(){const a=souhrnVar(4),b=souhrnVar(3);
  r('Dražba: prodáno / balíčků',a.prod+' / '+a.loty,b.prod+' / '+b.loty)+
  r('Příplatek z dražby',kc(a.navic),kc(b.navic))+
  r('Nájem celkem',kc(a.najem),kc(b.najem))+
- r('Holičů mimo pravidlo ráno/odpoledne',a.porus,b.porus)+'</table>'}
+ r('Holičů mimo pravidlo ráno/odpoledne',a.porus,b.porus)+
+ r('Rezervací mimo nejkratší–nejdelší délku',a.mimo+' z '+a.rez,b.mimo+' z '+b.rez)+'</table>'}
 function prepniVar(){nastavVar(VAR===4?3:4);$('pVar').value=VAR;prepocitat()}
 function prepocitat(){
  zastavDrazbu(false);D=spocitej();
  $('varNazev').textContent=VAR+'hodinové bloky';$('varJina').textContent=(VAR===4?3:4)+'hodinové';
- $('rProv').innerHTML=PROV.map(p=>'<option value="'+p.id+'">'+p.nazev+'</option>').join('');
- $('rHolic').innerHTML='<option value="">–</option>'+D.H.map(h=>'<option value="'+h.id+'">'+h.jmeno+'</option>').join('');
+ const pv=$('rProv').value||'OP', hv=$('rHolic').value;
+ $('rProv').innerHTML=PROV.map(p=>'<option value="'+p.id+'">'+p.nazev+'</option>').join('');$('rProv').value=pv;
+ $('rHolic').innerHTML='<option value="">–</option>'+D.H.filter(h=>h.prov===pv).map(h=>'<option value="'+h.id+'">'+h.jmeno+'</option>').join('');$('rHolic').value=hv;
  $('dInt').textContent=D.P.start?num('pInterval'):'';
  kresliPrani();kresliRozvrh();kresliFerovost();kresliSrovnani();kresliLog(0);
  $('dCo').textContent=D.loty.length?D.loty.length+' balíčků čeká na dražbu':'Dražba se nekoná';$('dCena').textContent='– Kč/h';$('dStav').innerHTML='&nbsp;';
