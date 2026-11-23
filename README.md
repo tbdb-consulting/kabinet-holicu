@@ -46,4 +46,6 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\T26-09 Kabinet holičů\`.
 - **Leden 2027 ze zkušebních dat (zveřejněno 23. 11. 2026, Keksa):** https://tbdb-consulting.github.io/kabinet-holicu/leden-2027.html
   (`web/leden-2027.html`, z ukázky v datové složce + `testdata/zkusebni_odpovedi.json`; jen 4h bloky). Výsledek: všichni
   holiči 100 % chtěných hodin, obsazenost 80 %, dražba 33 balíčků, prodáno 31, příplatek 9 760 Kč, Pavel mimo pravidlo ráno/odpoledne.
+  Varianta 3h bloků (přepínač, srovnání v „Férovost a nájem“): splnění 99–101 %, dražba 33 z 35, příplatek 7 680 Kč,
+  nikdo mimo pravidlo ráno/odpoledne. Sestavení: `testdata/sestav_leden.py`.
 - **Otevřené:** po přechodu na Pro probudit vixen-dev.
