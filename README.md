@@ -34,4 +34,9 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\T26-09 Kabinet holičů\`.
 - **23. 11. 2026 večer:** sekce 4 „Jak dlouhou rezervaci křesla chcete“ (nejkratší a nejdelší rezervace
   po dnech Po–Pá, 2–12 h) a sloupec `delka`; migrace `20261123200000_dotaznik_delka.sql` nasazená přes
   SQL Editor, stará verze stránky ukládá dál (`delka` = null). Ověřeno odesláním, zkušební odpovědi smazané.
+- **23. 11. 2026 večer, druhá úprava:** sekce 3 je teď 3a (4h bloky R/S/O) a 3b (3h bloky A 8–11, B 11–14,
+  C 14–17, D 17–20, sloupec `prani3`), obě povinné. Migrace `20261123210000_dotaznik_prani3.sql`, starší verze
+  stránky ukládají dál. Ověřeno odesláním, zkušební odpovědi smazané.
+- **Cíl vyhodnocení (Keksa 23. 11. 2026):** z odpovědí určit atraktivitu bloků; výstupem je dražba bloků,
+  nebo cena bloku podle atraktivity (žádanější dražší, méně žádané levnější).
 - **Otevřené:** po přechodu na Pro probudit vixen-dev.

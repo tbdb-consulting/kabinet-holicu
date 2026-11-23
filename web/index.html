@@ -75,11 +75,19 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 </div>
 
 <div class="karta">
-<h2>3. Které dny a časy</h2>
+<h2>3a. Které dny a časy – výběr 4hodinových bloků</h2>
 <p>Klepnutím měníte: <span class="leg"><span style="background:var(--chci)"></span>chci<span style="background:var(--muzu)"></span>můžu<span style="background:var(--ne)"></span>nemůžu</span></p>
 <table id="mrizka"></table>
 <p class="mala" style="margin-top:6px"><b>Chci</b> = tenhle čas chcete nejvíc. <b>Můžu</b> = vzal(a) byste ho, když nebude jiný. <b>Nemůžu</b> = vůbec.</p>
 <div class="chyba" id="e3"></div>
+</div>
+
+<div class="karta">
+<h2>3b. Které dny a časy – výběr 3hodinových bloků</h2>
+<p>Totéž ještě jednou, jen po 3 hodinách. Zatím nevíme, jestli budou bloky po 4, nebo po 3 hodinách, proto se ptáme na obojí.</p>
+<p>Klepnutím měníte: <span class="leg"><span style="background:var(--chci)"></span>chci<span style="background:var(--muzu)"></span>můžu<span style="background:var(--ne)"></span>nemůžu</span></p>
+<table id="mrizka3"></table>
+<div class="chyba" id="e3b"></div>
 </div>
 
 <div class="karta">
@@ -119,7 +127,8 @@ const DNY=[['Po','Po'],['Ut','Út'],['St','St'],['Ct','Čt'],['Pa','Pá']];
 const BLOKY=[['R','8–12'],['S','12–16'],['O','16–20']];
 const TXT=['ne','můžu','chci'];
 const $=id=>document.getElementById(id);
-const prani={};DNY.forEach(([d])=>{prani[d]={}});
+const BLOKY3=[['A','8–11'],['B','11–14'],['C','14–17'],['D','17–20']];
+const prani={},prani3={};DNY.forEach(([d])=>{prani[d]={};prani3[d]={}});
 
 if(TEST)$('testInfo').style.display='block';
 ['OP','ZV'].forEach(p=>HOLICI[p].forEach(j=>{const o=document.createElement('option');o.value=p+'|'+j;o.textContent=j;$('og'+p).appendChild(o)}));
@@ -129,24 +138,28 @@ $('jmeno').addEventListener('change',e=>{
 });
 
 // mřížka
-let h='<tr><th></th>'+DNY.map(d=>'<th>'+d[1]+'</th>').join('')+'</tr>';
-BLOKY.forEach(([b,t])=>{h+='<tr><td class="blok">'+t+'</td>'+DNY.map(([d])=>'<td><button type="button" class="bunka" data-d="'+d+'" data-b="'+b+'">?</button></td>').join('')+'</tr>'});
-$('mrizka').innerHTML=h;
+function mrizka(id,bloky,cil){
+ let h='<tr><th></th>'+DNY.map(d=>'<th>'+d[1]+'</th>').join('')+'</tr>';
+ bloky.forEach(([b,t])=>{h+='<tr><td class="blok">'+t+'</td>'+DNY.map(([d])=>'<td><button type="button" class="bunka" data-d="'+d+'" data-b="'+b+'">?</button></td>').join('')+'</tr>'});
+ $(id).innerHTML=h;
+ $(id).addEventListener('click',e=>{
+  const t=e.target.closest('.bunka');if(!t)return;
+  const d=t.dataset.d,b=t.dataset.b;const cur=cil[d][b];
+  const nov=cur===undefined?2:(cur===2?1:(cur===1?0:2));
+  cil[d][b]=nov;t.className='bunka v'+nov;t.textContent=TXT[nov];
+ });
+}
+mrizka('mrizka',BLOKY,prani);
+mrizka('mrizka3',BLOKY3,prani3);
 // délka rezervace po dnech
 const DELKY=[2,3,4,5,6,8,10,12];
 const vyber=(d,k)=>'<select id="'+k+d+'" aria-label="'+(k==='min'?'nejkratší':'nejdelší')+' '+d+'"><option value="">–</option>'+DELKY.map(x=>'<option value="'+x+'">'+x+' h</option>').join('')+'</select>';
 $('delky').innerHTML='<tr><th></th><th>nejkratší</th><th>nejdelší</th></tr>'+DNY.map(([d,t])=>'<tr><td class="blok">'+t+'</td><td>'+vyber(d,'min')+'</td><td>'+vyber(d,'max')+'</td></tr>').join('');
 $('stejne').addEventListener('click',()=>{DNY.slice(1).forEach(([d])=>{$('min'+d).value=$('minPo').value;$('max'+d).value=$('maxPo').value})});
 
-$('mrizka').addEventListener('click',e=>{
- const t=e.target.closest('.bunka');if(!t)return;
- const d=t.dataset.d,b=t.dataset.b;const cur=prani[d][b];
- const nov=cur===undefined?2:(cur===2?1:(cur===1?0:2));
- prani[d][b]=nov;t.className='bunka v'+nov;t.textContent=TXT[nov];
-});
 
 $('f').addEventListener('submit',async e=>{
- e.preventDefault();['e1','e2','e3','e4','eOdeslani'].forEach(i=>$(i).textContent='');
+ e.preventDefault();['e1','e2','e3','e3b','e4','eOdeslani'].forEach(i=>$(i).textContent='');
  let ok=true;
  const sel=$('jmeno').value;let jmeno='';
  if(sel==='__jine')jmeno=$('jmenoJine').value.trim();else if(sel)jmeno=sel.split('|')[1];
@@ -156,6 +169,8 @@ $('f').addEventListener('submit',async e=>{
  if(isNaN(hodin)||hodin<0||hodin>300){$('e2').textContent='Napište počet hodin (0–300).';ok=false}
  const chybi=DNY.reduce((a,[d])=>a+BLOKY.filter(([b])=>prani[d][b]===undefined).length,0);
  if(chybi){$('e3').textContent='U '+chybi+' políček chybí volba. Klepněte na každé, dokud neukáže chci, můžu, nebo ne.';ok=false}
+ const chybi3=DNY.reduce((a,[d])=>a+BLOKY3.filter(([b])=>prani3[d][b]===undefined).length,0);
+ if(chybi3){$('e3b').textContent='U '+chybi3+' políček chybí volba. Klepněte na každé, dokud neukáže chci, můžu, nebo ne.';ok=false}
  const delka={};let e4='';
  DNY.forEach(([d,t])=>{const mi=$('min'+d).value,ma=$('max'+d).value;
   if(!mi&&!ma)return;
@@ -165,7 +180,7 @@ $('f').addEventListener('submit',async e=>{
  if(!e4&&!Object.keys(delka).length)e4='Vyplňte délku aspoň u jednoho dne.';
  if(e4){$('e4').textContent=e4;ok=false}
  if(!ok){document.querySelector('.chyba:not(:empty)').scrollIntoView({block:'center'});return}
- const data={p_jmeno:jmeno,p_provozovna:prov,p_hodin:hodin,p_prani:prani,p_delka:delka,p_poznamka:$('poznamka').value.trim()||null};
+ const data={p_jmeno:jmeno,p_provozovna:prov,p_hodin:hodin,p_prani:prani,p_prani3:prani3,p_delka:delka,p_poznamka:$('poznamka').value.trim()||null};
  if(TEST){$('f').style.display='none';$('diky').style.display='block';$('testVystup').style.display='block';$('testVystup').textContent='Uložilo by se:\n'+JSON.stringify(data,null,1);return}
  $('odeslat').disabled=true;
  try{
