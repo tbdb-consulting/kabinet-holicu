@@ -39,4 +39,8 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\T26-09 Kabinet holičů\`.
   stránky ukládají dál. Ověřeno odesláním, zkušební odpovědi smazané.
 - **Cíl vyhodnocení (Keksa 23. 11. 2026):** z odpovědí určit atraktivitu bloků; výstupem je dražba bloků,
   nebo cena bloku podle atraktivity (žádanější dražší, méně žádané levnější).
+- **Zkušební data (Keksa 23. 11. 2026):** `testdata/generuj_zkusebni.py` vyrobí vymyšlené odpovědi všech 21 holičů
+  OP a ZV: poptávka = 80 % kapacity (OP 6 křesel 288 h/týden, ZV 4 křesla 192 h/týden; leden 2027 = 4 týdny,
+  Po–Pá 8–20), nejvíc 25 h/týden, nejméně 6 h/týden. Výstupy (`zkusebni_odpovedi.json/.csv`, `zkusebni_souhrn.md`)
+  jsou v `.gitignore`, protože u skutečných jmen jsou vymyšlená přání a repozitář je veřejný.
 - **Otevřené:** po přechodu na Pro probudit vixen-dev.
