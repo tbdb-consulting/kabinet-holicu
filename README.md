@@ -28,5 +28,7 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\T26-09 Kabinet holičů\`.
 - Bezpečnostní kontrola: 0 chyb; upozornění „Public/Signed-In Users Can Execute SECURITY DEFINER Function“
   u `odeslat_dotaznik` je záměr (jediná cesta zápisu), u `rls_auto_enable()` jde o funkci od Supabase;
   „RLS Enabled No Policy“ je záměr.
-- **Otevřené:** zveřejnit přes GitHub Pages (skill publikovat-web, jen se souhlasem Keksy); po přechodu
-  na Pro probudit vixen-dev.
+- **Zveřejněno 23. 11. 2026:** https://tbdb-consulting.github.io/kabinet-holicu/ (repozitář
+  `tbdb-consulting/kabinet-holicu`, veřejný; workflow `.github/workflows/nasadit.yml` nasazuje složku `web`).
+  Publishable klíč je v `.gitleaksignore` jako schválená výjimka (Keksa 23. 11. 2026).
+- **Otevřené:** po přechodu na Pro probudit vixen-dev.
