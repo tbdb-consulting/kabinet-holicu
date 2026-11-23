@@ -53,4 +53,7 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\T26-09 Kabinet holičů\`.
   a 4 (týdny, křesla × dny, legenda, měsíc vybraného holiče). Výsledek 4h: obsazenost 1 916 h, splnění 96–100 %,
   všech 372 rezervací v povolené délce; 3h: 1 866 h, splnění 88–101 %, 7 z 328 rezervací kratších.
   Stránka se upravuje přímo, `testdata/sestav_leden.py` v ní jen obnoví data.
+- **Leden 2027, mobil (Keksa 23. 11. 2026):** aplikace se bude používat hlavně v mobilu. Nápovědy u všech prvků (myš: najetí,
+  mobil: klepnutí, zmizí po 4,5 s), výrazný přepínač 4h/3h pod menu a barva podle varianty (modrá 4 h, zelená 3 h),
+  na mobilu rozvrh po dnech (křesla × bloky) a férovost na kartách.
 - **Otevřené:** po přechodu na Pro probudit vixen-dev.
