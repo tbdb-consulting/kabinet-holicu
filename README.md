@@ -43,4 +43,7 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\T26-09 Kabinet holičů\`.
   OP a ZV: poptávka = 80 % kapacity (OP 6 křesel 288 h/týden, ZV 4 křesla 192 h/týden; leden 2027 = 4 týdny,
   Po–Pá 8–20), nejvíc 25 h/týden, nejméně 6 h/týden. Výstupy (`zkusebni_odpovedi.json/.csv`, `zkusebni_souhrn.md`)
   jsou v `.gitignore`, protože u skutečných jmen jsou vymyšlená přání a repozitář je veřejný.
+- **Leden 2027 ze zkušebních dat (zveřejněno 23. 11. 2026, Keksa):** https://tbdb-consulting.github.io/kabinet-holicu/leden-2027.html
+  (`web/leden-2027.html`, z ukázky v datové složce + `testdata/zkusebni_odpovedi.json`; jen 4h bloky). Výsledek: všichni
+  holiči 100 % chtěných hodin, obsazenost 80 %, dražba 33 balíčků, prodáno 31, příplatek 9 760 Kč, Pavel mimo pravidlo ráno/odpoledne.
 - **Otevřené:** po přechodu na Pro probudit vixen-dev.
