@@ -31,4 +31,7 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\T26-09 Kabinet holičů\`.
 - **Zveřejněno 23. 11. 2026:** https://tbdb-consulting.github.io/kabinet-holicu/ (repozitář
   `tbdb-consulting/kabinet-holicu`, veřejný; workflow `.github/workflows/nasadit.yml` nasazuje složku `web`).
   Publishable klíč je v `.gitleaksignore` jako schválená výjimka (Keksa 23. 11. 2026).
+- **23. 11. 2026 večer:** sekce 4 „Jak dlouhou rezervaci křesla chcete“ (nejkratší a nejdelší rezervace
+  po dnech Po–Pá, 2–12 h) a sloupec `delka`; migrace `20261123200000_dotaznik_delka.sql` nasazená přes
+  SQL Editor, stará verze stránky ukládá dál (`delka` = null). Ověřeno odesláním, zkušební odpovědi smazané.
 - **Otevřené:** po přechodu na Pro probudit vixen-dev.
