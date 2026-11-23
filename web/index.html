@@ -98,9 +98,9 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 </div>
 </main>
 <script>
-// Nastavení databáze se doplní po založení projektu Supabase (veřejný anon klíč smí být ve stránce).
-const SUPABASE_URL='DOPLNIT';
-const SUPABASE_ANON_KEY='DOPLNIT';
+// Projekt Supabase kabinet-holicu v organizaci TBDB (veřejný publishable klíč smí být ve stránce).
+const SUPABASE_URL='https://bgnzfrxnvkifvpmrilgd.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_-CwxCS480OD5Hfx7N_OsHg_WuVoWOQj';
 const TEST=new URLSearchParams(location.search).has('test')||SUPABASE_URL==='DOPLNIT';
 
 // Holiči podle kabinetholicu.cz/objednavka (23. 11. 2026)
@@ -146,7 +146,7 @@ $('f').addEventListener('submit',async e=>{
  if(TEST){$('f').style.display='none';$('diky').style.display='block';$('testVystup').style.display='block';$('testVystup').textContent='Uložilo by se:\n'+JSON.stringify(data,null,1);return}
  $('odeslat').disabled=true;
  try{
-  const r=await fetch(SUPABASE_URL+'/rest/v1/rpc/odeslat_dotaznik',{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+SUPABASE_ANON_KEY},body:JSON.stringify(data)});
+  const r=await fetch(SUPABASE_URL+'/rest/v1/rpc/odeslat_dotaznik',{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPABASE_ANON_KEY},body:JSON.stringify(data)});
   if(!r.ok)throw new Error(await r.text());
   $('f').style.display='none';$('diky').style.display='block';window.scrollTo(0,0);
  }catch(err){$('eOdeslani').textContent='Odeslání se nepovedlo. Zkuste to prosím za chvíli znovu.';$('odeslat').disabled=false}

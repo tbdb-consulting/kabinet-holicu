@@ -18,7 +18,15 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\T26-09 Kabinet holičů\`.
 
 ## Stav (23. 11. 2026)
 
-- Dotazník vyzkoušen lokálně (zkušební režim): kontrola chyb i složení odpovědi funguje.
-- **Otevřené:** projekt Supabase (účet Keksa má 2 aktivní projekty Free: vixen-dev, hory-bory), doplnit
-  `SUPABASE_URL` a `SUPABASE_ANON_KEY` v `web/index.html`, nasadit migraci a otestovat, zveřejnit přes
-  GitHub Pages (skill publikovat-web, jen se souhlasem Keksy).
+- **Databáze:** projekt Supabase `kabinet-holicu` (`bgnzfrxnvkifvpmrilgd`, Frankfurt) v organizaci **TBDB**
+  (`vfkpmpulmxdwinsaizmg`), zatím tarif Free, přechod na Pro do pár dní (Keksa 23. 11. 2026). Kvůli limitu
+  2 bezplatných projektů je do té doby uspaný vixen-dev. Při založení vypnuté „Grant API access to new tables
+  automatically“ a zapnuté automatické RLS.
+- Migrace nasazená ručně přes SQL Editor (propojení Supabase v Claudovi vidí jen organizaci Keksa), proto
+  není v `supabase_migrations`. Ověřeno 23. 11. 2026: chybná přání vrátí chybu, anon tabulku ani pohled
+  nepřečte (401), platná odpověď z webu se uloží (2 zkušební odpovědi pak smazané, id od 1).
+- Bezpečnostní kontrola: 0 chyb; upozornění „Public/Signed-In Users Can Execute SECURITY DEFINER Function“
+  u `odeslat_dotaznik` je záměr (jediná cesta zápisu), u `rls_auto_enable()` jde o funkci od Supabase;
+  „RLS Enabled No Policy“ je záměr.
+- **Otevřené:** zveřejnit přes GitHub Pages (skill publikovat-web, jen se souhlasem Keksy); po přechodu
+  na Pro probudit vixen-dev.
