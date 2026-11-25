@@ -47,6 +47,12 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\T26-09 Kabinet holičů\`.
 - **25. 11. 2026, adresy:** dotazník se přesunul na https://tbdb-consulting.github.io/kabinet-holicu/dotaznik-pro-holice-pronajem-kresel/,
   kořen webu je místo pro prototyp konečné aplikace (zatím jen úvodní stránka). Další dotazníky každý na vlastní
   popisné adrese (Keksa 25. 11. 2026).
+- **25. 11. 2026 odpoledne:** mřížky 3a a 3b mají čtyři stupně (3 určitě chci, 2 spíše chci, 1 spíše nechci,
+  0 určitě nechci; dřív 2 chci, 1 můžu, 0 nemůžu), nová nepovinná sekce 3c „Kdy určitě nemůžete“ (Po–Pá × 7–22
+  po hodinách, sloupec `nemuzu`), sekce 2 vysvětluje sběr dat ve dvou variantách bloků a hodiny týdně i měsíčně
+  (měsíc = 4,3 týdne). Migrace `20261125150000_dotaznik_ctyri_stupne_nemuzu.sql` nasazená přes SQL Editor,
+  ověřeno curl (stará i nová podoba se uloží, hodnota 4 a den So vrátí chybu), zkušební řádky smazané.
+  Ukázka `leden-2027.html` dál počítá se třemi stupni.
 - **Cíl vyhodnocení (Keksa 23. 11. 2026):** z odpovědí určit atraktivitu bloků; výstupem je dražba bloků,
   nebo cena bloku podle atraktivity (žádanější dražší, méně žádané levnější).
 - **Zkušební data (Keksa 23. 11. 2026):** `testdata/generuj_zkusebni.py` vyrobí vymyšlené odpovědi všech 21 holičů
