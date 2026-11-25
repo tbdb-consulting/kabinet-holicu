@@ -15,6 +15,9 @@ Web: https://tbdb-consulting.github.io/kabinet-holicu/ (kořen = prototyp aplika
 - Publishable klíč v `web/` je schválená výjimka (`.gitleaksignore`, Keksa 23. 11. 2026). Jiné klíče nikdy.
 - **Kořen webu (`web/index.html`) je prototyp konečné aplikace.** Průběžné dotazníky každý do vlastní složky
   s popisným názvem (co a pro koho), např. `web/dotaznik-pro-holice-pronajem-kresel/` (Keksa 25. 11. 2026).
+- **Otázky dotazníku pro holiče, které se týkají budoucnosti** (hodiny a směny, přání po blocích, kdy určitě
+  nemůže, nejkratší a nejdelší rezervace) musí být i v aplikaci jako měsíční přání, aby se zohlednily při každém
+  plánování; předvyplnit z minulého měsíce. Změna v dotazníku = změna i v návrhu obrazovky Přání (Keksa 25. 11. 2026).
 - Aplikace se používá hlavně v mobilu – každou změnu zkontrolovat i v úzkém zobrazení.
 
 ## Obecná pravidla TBDB (platí i v cloudu a z telefonu)

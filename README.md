@@ -53,6 +53,9 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   (měsíc = 4,3 týdne). Migrace `20261125150000_dotaznik_ctyri_stupne_nemuzu.sql` nasazená přes SQL Editor,
   ověřeno curl (stará i nová podoba se uloží, hodnota 4 a den So vrátí chybu), zkušební řádky smazané.
   Ukázka `leden-2027.html` dál počítá se třemi stupni.
+- **25. 11. 2026 večer:** úvod dotazníku se třemi fázemi (1. fáze bez slibu „spravedlivě“, rozvrh na měsíc nebo
+  delší období – předmět diskuze), sekce 7 – o nabídkách rozhoduje holič, k zákazníkům i automaticky podle jeho
+  nastavení. Otázky do budoucna budou v aplikaci jako měsíční přání (architektura verze 5). Nasazení ve dvou úlohách.
 - **Cíl vyhodnocení (Keksa 23. 11. 2026):** z odpovědí určit atraktivitu bloků; výstupem je dražba bloků,
   nebo cena bloku podle atraktivity (žádanější dražší, méně žádané levnější).
 - **Zkušební data (Keksa 23. 11. 2026):** `testdata/generuj_zkusebni.py` vyrobí vymyšlené odpovědi všech 21 holičů
