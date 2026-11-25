@@ -1,7 +1,7 @@
 # Kabinet holičů – rezervace křesel (T26-09-1)
 
 TBDB Consulting · zákazník T26-09 · kontext: `C:\Projekty TBDB\tbdb\Klienti\Kabinet-holicu\KONTEXT.md`,
-data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\T26-09 Kabinet holičů\`.
+data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabinet holičů\`.
 
 ## Co tu je
 
