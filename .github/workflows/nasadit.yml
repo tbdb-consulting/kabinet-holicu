@@ -4,8 +4,11 @@
 #
 # Co dělá po každém push do main:
 #   1. zkontroluje celou historii na tajné údaje (gitleaks) – když najde, nic se nezveřejní,
-#   2. zveřejní obsah složky WEB (výchozí: kořen repozitáře),
-#   3. ověří, že živý web vrací přesně nahraný soubor KONTROLNI_SOUBOR.
+#   2. zabalí a nahraje obsah složky WEB (výchozí: kořen repozitáře),
+#   3. v samostatné navazující úloze ho zveřejní a ověří, že živý web vrací přesně nahraný
+#      soubor KONTROLNI_SOUBOR.
+# Zabalení a zveřejnění jsou dvě úlohy záměrně: když deploy-pages běží ve stejné úloze hned
+# po nahrání, GitHub balíček občas ještě nevidí („No artifacts named github-pages“, 25. 11. 2026).
 
 name: Nasadit web
 
@@ -24,15 +27,12 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  WEB: web                     # složka, která se zveřejní
+  WEB: web           # složka, která se zveřejní
   KONTROLNI_SOUBOR: index.html # soubor, podle kterého se ověří živý web
 
 jobs:
-  nasadit:
+  zabalit:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.nasazeni.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -49,8 +49,17 @@ jobs:
         with:
           path: ${{ env.WEB }}
 
+  nasadit:
+    needs: zabalit
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.nasazeni.outputs.page_url }}
+    steps:
       - id: nasazeni
         uses: actions/deploy-pages@v4
+
+      - uses: actions/checkout@v4
 
       - name: Ověřit živý web
         env:
