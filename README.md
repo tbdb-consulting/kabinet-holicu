@@ -37,6 +37,12 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\T26-09 Kabinet holičů\`.
 - **23. 11. 2026 večer, druhá úprava:** sekce 3 je teď 3a (4h bloky R/S/O) a 3b (3h bloky A 8–11, B 11–14,
   C 14–17, D 17–20, sloupec `prani3`), obě povinné. Migrace `20261123210000_dotaznik_prani3.sql`, starší verze
   stránky ukládají dál. Ověřeno odesláním, zkušební odpovědi smazané.
+- **25. 11. 2026:** v sekci 2 i počet směn za měsíc; nové sekce 5 (odhad % volných křesel v provozovně,
+  odpracované hodiny za 3 měsíce, obojí jde nechat „nevím“), 6 (nepovinné obsazené hodiny 7–22 po týdnech
+  Po–Pá, nejvýš 13 týdnů zpět; pro případ, že nebudou data z Reservanta), 7 (zájem o funkce fází 2 a 3
+  a vlastní nápad), poznámka je teď 8. Sloupce `smen`, `odhad_volno`, `hodin_3m`, `sloty_stav`, `sloty`,
+  `dalsi`; migrace `20261125120000_dotaznik_smeny_odhady.sql` nasazená přes SQL Editor. Ověřeno curl: stará
+  i nová podoba odpovědi se uloží, chybná hodina vrátí chybu; zkušební řádky smazané (tabulka prázdná).
 - **Cíl vyhodnocení (Keksa 23. 11. 2026):** z odpovědí určit atraktivitu bloků; výstupem je dražba bloků,
   nebo cena bloku podle atraktivity (žádanější dražší, méně žádané levnější).
 - **Zkušební data (Keksa 23. 11. 2026):** `testdata/generuj_zkusebni.py` vyrobí vymyšlené odpovědi všech 21 holičů

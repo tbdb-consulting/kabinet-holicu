@@ -34,12 +34,21 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 .chyba{color:var(--chyba);font-size:13px;margin-top:6px}
 .diky{text-align:center;padding:30px 16px}
 .diky h2{font-size:20px}
+:root{--obs:#1F4E78}
+.nav{font:13px Verdana,sans-serif;background:#fff;border:1px solid var(--li);border-radius:6px;padding:8px 10px;cursor:pointer;color:var(--b)}
+.nav:disabled{opacity:.4;cursor:default}
+.slot{width:100%;min-width:40px;height:32px;border:0;border-radius:5px;background:#eceff1;cursor:pointer;font:10.5px Verdana,sans-serif;color:#90a4ae}
+.slot.on{background:var(--obs);color:#fff}
+#sloty td.blok{font-weight:normal;font-size:11.5px;color:var(--se)}
+.fce{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--li);border-radius:6px;padding:9px 10px;margin-bottom:6px;cursor:pointer}
+.fce input{margin-top:3px;flex:none;width:18px;height:18px}
+.fce .faze{display:inline-block;font-size:10.5px;font-weight:bold;border-radius:9px;padding:1px 7px;margin-right:4px;background:#e3edf6;color:var(--b)}
 .test{background:#fff3c4;border:1px solid #e0c96a;border-radius:6px;padding:8px 12px;font-size:12.5px;margin-bottom:12px}
 </style>
 </head>
 <body>
 <header><h1>Kabinet holičů – kdy chcete stříhat</h1>
-<p>Krátký dotazník pro holiče z Old Place a Zverimexu · zabere asi 3 minuty</p></header>
+<p>Dotazník pro holiče z Old Place a Zverimexu · zabere asi 5 minut, s nepovinnou částí 6 déle</p></header>
 <main>
 <div id="testInfo" class="test" style="display:none">ZKUŠEBNÍ REŽIM: odpověď se nikam neodešle, jen se ukáže, co by se uložilo.</div>
 
@@ -68,9 +77,13 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 </div>
 
 <div class="karta">
-<h2>2. Kolik hodin měsíčně chcete mít křeslo</h2>
-<input type="number" id="hodin" min="0" max="300" step="4" inputmode="numeric" placeholder="např. 80">
+<h2>2. Kolik chcete v běžném měsíci stříhat</h2>
+<label for="hodin" style="display:block;font-weight:bold;font-size:13.5px;margin-bottom:4px">Hodin s křeslem za měsíc celkem</label>
+<input type="number" id="hodin" min="0" max="300" step="1" inputmode="numeric" placeholder="např. 80">
 <p class="mala" style="margin-top:6px">Pro představu: jeden 4hodinový blok každý všední den je asi 80 h, celé křeslo od 8 do 20 je asi 240 h.</p>
+<label for="smen" style="display:block;font-weight:bold;font-size:13.5px;margin:12px 0 4px">Kolik směn (rezervací křesla) za měsíc</label>
+<input type="number" id="smen" min="0" max="60" step="1" inputmode="numeric" placeholder="např. 16">
+<p class="mala" style="margin-top:6px">Směna = jedna rezervace křesla v kuse. Čtyři směny týdně jsou asi 17 za měsíc.</p>
 <div class="chyba" id="e2"></div>
 </div>
 
@@ -100,7 +113,48 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 </div>
 
 <div class="karta">
-<h2>5. Chcete něco dodat? <span class="mala">(nepovinné)</span></h2>
+<h2>5. Jak je to teď – váš odhad</h2>
+<label for="volno" style="display:block;font-weight:bold;font-size:13.5px;margin-bottom:4px">Kolik procent křesel je podle vás v provozovně, kde stříháte, teď běžně volných?</label>
+<select id="volno"><option value="">– vyberte –</option></select>
+<label for="hodin3" style="display:block;font-weight:bold;font-size:13.5px;margin:12px 0 4px">Kolik hodin jste odpracoval(a) za poslední 3 měsíce celkem?</label>
+<input type="number" id="hodin3" min="0" max="1500" step="1" inputmode="numeric" placeholder="např. 240">
+<p class="mala" style="margin-top:6px">Stačí odhad. Když opravdu nevíte, nechte prázdné.</p>
+<div class="chyba" id="e5"></div>
+</div>
+
+<div class="karta">
+<h2>6. Které hodiny jste měl(a) obsazené <span class="mala">(nepovinné)</span></h2>
+<p>Pomůže nám vědět, kdy jste v posledních týdnech opravdu stříhal(a). Stačí poslední 4 týdny, nejvýš 13 týdnů zpátky. Víkendy zatím neřešíme.</p>
+<div class="volby">
+<label><input type="radio" name="slotyStav" value="ano">vyplním teď</label>
+<label><input type="radio" name="slotyStav" value="ne">nevím, přeskočím</label>
+</div>
+<div id="slotyBox" style="display:none;margin-top:12px">
+<div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
+<button type="button" id="tStarsi" class="nav">‹ starší</button>
+<b id="tNazev" style="font-size:13.5px;text-align:center"></b>
+<button type="button" id="tNovejsi" class="nav">novější ›</button>
+</div>
+<p class="mala" style="margin:6px 0">Klepněte na hodiny, kdy jste stříhal(a): <span class="leg"><span style="background:var(--obs)"></span>obsazeno<span style="background:#eceff1"></span>volno</span></p>
+<table id="sloty"></table>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+<button type="button" id="tKopie" class="nav">Stejně jako novější týden</button>
+<button type="button" id="tNic" class="nav">Tento týden jsem nestříhal(a)</button>
+</div>
+<p class="mala" id="tSouhrn" style="margin-top:8px"></p>
+</div>
+<div class="chyba" id="e6"></div>
+</div>
+
+<div class="karta">
+<h2>7. Co by vám aplikace měla umět dál</h2>
+<p>Aplikace začne rezervací křesel a bude se rozšiřovat. Zaškrtněte, co byste používal(a).</p>
+<div id="dalsi"></div>
+<textarea id="napad" maxlength="1000" placeholder="Co dalšího by vám usnadnilo práci s rezervacemi a náhradami?" style="margin-top:8px"></textarea>
+</div>
+
+<div class="karta">
+<h2>8. Chcete něco dodat? <span class="mala">(nepovinné)</span></h2>
 <textarea id="poznamka" maxlength="1000" placeholder="Třeba: v sudé týdny nemůžu ráno…"></textarea>
 </div>
 
@@ -157,16 +211,67 @@ const vyber=(d,k)=>'<select id="'+k+d+'" aria-label="'+(k==='min'?'nejkratší':
 $('delky').innerHTML='<tr><th></th><th>nejkratší</th><th>nejdelší</th></tr>'+DNY.map(([d,t])=>'<tr><td class="blok">'+t+'</td><td>'+vyber(d,'min')+'</td><td>'+vyber(d,'max')+'</td></tr>').join('');
 $('stejne').addEventListener('click',()=>{DNY.slice(1).forEach(([d])=>{$('min'+d).value=$('minPo').value;$('max'+d).value=$('maxPo').value})});
 
+// 5. odhad volných křesel
+for(let x=0;x<=100;x+=10){const o=document.createElement('option');o.value=x;o.textContent=x===0?'skoro žádná (0 %)':x+' %';$('volno').appendChild(o)}
+{const o=document.createElement('option');o.value='nevim';o.textContent='nevím';$('volno').appendChild(o)}
+
+// 6. obsazené hodiny po týdnech (Po–Pá, 7–22 po hodinách), nejvýš 13 týdnů zpět
+const HOD=[];for(let h=7;h<22;h++)HOD.push(h);
+const MAXT=13;
+const pondeli=k=>{const d=new Date();d.setHours(12,0,0,0);const wd=(d.getDay()+6)%7;d.setDate(d.getDate()-wd-7*k);return d};
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const sloty={};// {'2026-11-16':{Po:[9,10],...}} jen vyplněné týdny
+let tyden=1;
+function prazdny(){const o={};DNY.forEach(([d])=>o[d]=[]);return o}
+function kresliTyden(){
+ const m=pondeli(tyden),pa=new Date(m);pa.setDate(m.getDate()+4);
+ $('tNazev').textContent=m.getDate()+'. '+(m.getMonth()+1)+'. – '+pa.getDate()+'. '+(pa.getMonth()+1)+'. '+pa.getFullYear()+(tyden===1?' (minulý týden)':'');
+ $('tStarsi').disabled=tyden>=MAXT;$('tNovejsi').disabled=tyden<=1;$('tKopie').disabled=tyden<=1;
+ const k=iso(m),t=sloty[k];
+ let h='<tr><th></th>'+DNY.map(([d,n],i)=>{const x=new Date(m);x.setDate(m.getDate()+i);return '<th>'+n+'<br>'+x.getDate()+'. '+(x.getMonth()+1)+'.</th>'}).join('')+'</tr>';
+ HOD.forEach(hh=>{h+='<tr><td class="blok">'+hh+'–'+(hh+1)+'</td>'+DNY.map(([d])=>{const on=t&&t[d].includes(hh);return '<td><button type="button" class="slot'+(on?' on':'')+'" data-d="'+d+'" data-h="'+hh+'">'+(on?'✓':'')+'</button></td>'}).join('')+'</tr>'});
+ $('sloty').innerHTML=h;souhrnSlotu();
+}
+function souhrnSlotu(){
+ const k=Object.keys(sloty);let hod=0;k.forEach(w=>DNY.forEach(([d])=>hod+=sloty[w][d].length));
+ const t=sloty[iso(pondeli(tyden))];
+ $('tSouhrn').textContent='Vyplněno týdnů: '+k.length+' z nejvýš '+MAXT+' · obsazených hodin celkem: '+hod+(t?' · tento týden: '+DNY.reduce((a,[d])=>a+t[d].length,0)+' h':' · tento týden zatím nevyplněný');
+}
+$('sloty').addEventListener('click',e=>{
+ const b=e.target.closest('.slot');if(!b)return;
+ const k=iso(pondeli(tyden));if(!sloty[k])sloty[k]=prazdny();
+ const a=sloty[k][b.dataset.d],h=+b.dataset.h,i=a.indexOf(h);
+ if(i<0){a.push(h);a.sort((x,y)=>x-y)}else a.splice(i,1);
+ b.classList.toggle('on',i<0);b.textContent=i<0?'✓':'';souhrnSlotu();
+});
+$('tStarsi').addEventListener('click',()=>{if(tyden<MAXT){tyden++;kresliTyden()}});
+$('tNovejsi').addEventListener('click',()=>{if(tyden>1){tyden--;kresliTyden()}});
+$('tKopie').addEventListener('click',()=>{const z=sloty[iso(pondeli(tyden-1))];sloty[iso(pondeli(tyden))]=z?JSON.parse(JSON.stringify(z)):prazdny();kresliTyden()});
+$('tNic').addEventListener('click',()=>{sloty[iso(pondeli(tyden))]=prazdny();kresliTyden()});
+document.querySelectorAll('input[name=slotyStav]').forEach(r=>r.addEventListener('change',()=>{const ano=r.value==='ano'&&r.checked;$('slotyBox').style.display=ano?'block':'none';if(ano)kresliTyden()}));
+
+// 7. další fáze
+const FUNKCE=[
+ ['chat',2,'Chat s kolegy přímo v aplikaci'],
+ ['nabidnout',2,'Když nemůžu, nabídnu své křeslo (celý blok nebo jen některé hodiny) kolegům'],
+ ['prevzit',2,'Dostanu upozornění, když kolega nabízí křeslo, a můžu ho převzít'],
+ ['moji_zakaznici',3,'Když se mi uvolní křeslo, pošlu svým zákazníkům nabídku na nejbližší volný čas'],
+ ['zruseni',3,'Když zákazník zruší, nabídne se uvolněný čas dalším zákazníkům'],
+ ['interval',3,'Zákazník si předem nastaví, kdy by chtěl přijít, a přijde mu nabídka']];
+$('dalsi').innerHTML=FUNKCE.map(([k,f,t])=>'<label class="fce"><input type="checkbox" value="'+k+'"><span><span class="faze">fáze '+f+'</span>'+t+'</span></label>').join('');
+
 
 $('f').addEventListener('submit',async e=>{
- e.preventDefault();['e1','e2','e3','e3b','e4','eOdeslani'].forEach(i=>$(i).textContent='');
+ e.preventDefault();['e1','e2','e3','e3b','e4','e5','e6','eOdeslani'].forEach(i=>$(i).textContent='');
  let ok=true;
  const sel=$('jmeno').value;let jmeno='';
  if(sel==='__jine')jmeno=$('jmenoJine').value.trim();else if(sel)jmeno=sel.split('|')[1];
  const prov=(document.querySelector('input[name=prov]:checked')||{}).value;
  if(!jmeno||!prov){$('e1').textContent='Vyberte své jméno a kde chcete stříhat.';ok=false}
  const hodin=parseInt($('hodin').value,10);
- if(isNaN(hodin)||hodin<0||hodin>300){$('e2').textContent='Napište počet hodin (0–300).';ok=false}
+ const smen=parseInt($('smen').value,10);
+ if(isNaN(hodin)||hodin<0||hodin>300){$('e2').textContent='Napište počet hodin za měsíc (0–300).';ok=false}
+ else if(isNaN(smen)||smen<0||smen>60){$('e2').textContent='Napište počet směn za měsíc (0–60).';ok=false}
  const chybi=DNY.reduce((a,[d])=>a+BLOKY.filter(([b])=>prani[d][b]===undefined).length,0);
  if(chybi){$('e3').textContent='U '+chybi+' políček chybí volba. Klepněte na každé, dokud neukáže chci, můžu, nebo ne.';ok=false}
  const chybi3=DNY.reduce((a,[d])=>a+BLOKY3.filter(([b])=>prani3[d][b]===undefined).length,0);
@@ -179,8 +284,17 @@ $('f').addEventListener('submit',async e=>{
   delka[d]={min:+mi,max:+ma}});
  if(!e4&&!Object.keys(delka).length)e4='Vyplňte délku aspoň u jednoho dne.';
  if(e4){$('e4').textContent=e4;ok=false}
+ const vol=$('volno').value;
+ if(!vol){$('e5').textContent='Vyberte odhad volných křesel (nebo „nevím“).';ok=false}
+ const h3s=$('hodin3').value.trim(),h3=h3s===''?null:parseInt(h3s,10);
+ if(h3!==null&&(isNaN(h3)||h3<0||h3>1500)){$('e5').textContent='Hodiny za 3 měsíce: číslo 0–1500, nebo nechte prázdné.';ok=false}
+ const sst=(document.querySelector('input[name=slotyStav]:checked')||{}).value||null;
+ if(sst==='ano'&&!Object.keys(sloty).length){$('e6').textContent='Označte obsazené hodiny aspoň v jednom týdnu, nebo zvolte „nevím, přeskočím“.';ok=false}
  if(!ok){document.querySelector('.chyba:not(:empty)').scrollIntoView({block:'center'});return}
- const data={p_jmeno:jmeno,p_provozovna:prov,p_hodin:hodin,p_prani:prani,p_prani3:prani3,p_delka:delka,p_poznamka:$('poznamka').value.trim()||null};
+ const funkce=[...document.querySelectorAll('#dalsi input:checked')].map(x=>x.value);
+ const data={p_jmeno:jmeno,p_provozovna:prov,p_hodin:hodin,p_prani:prani,p_prani3:prani3,p_delka:delka,p_poznamka:$('poznamka').value.trim()||null,
+  p_smen:smen,p_odhad_volno:vol==='nevim'?null:+vol,p_hodin_3m:h3,p_sloty_stav:sst,p_sloty:sst==='ano'?sloty:null,
+  p_dalsi:{funkce:funkce,napad:$('napad').value.trim()||null}};
  if(TEST){$('f').style.display='none';$('diky').style.display='block';$('testVystup').style.display='block';$('testVystup').textContent='Uložilo by se:\n'+JSON.stringify(data,null,1);return}
  $('odeslat').disabled=true;
  try{
