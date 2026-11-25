@@ -7,7 +7,8 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\T26-09 Kabinet holičů\`.
 
 | Co | Kde |
 |---|---|
-| Dotazník pro holiče (kolik hodin, mřížka Po–Pá × 8–12/12–16/16–20 chci/můžu/nemůžu) | `web/index.html` – HTML + JS bez sestavování |
+| Prototyp aplikace (zatím jen úvodní stránka) | `web/index.html` – kořen webu |
+| Dotazník pro holiče (hodiny a směny, bloky 4 h a 3 h, délky, odhady, obsazené hodiny, další fáze) | `web/dotaznik-pro-holice-pronajem-kresel/index.html` – HTML + JS bez sestavování |
 | Databáze dotazníku | `supabase/migrations/20261123120000_dotaznik.sql` |
 
 - Stránka bez nastavené databáze (nebo s `?test=1`) běží ve zkušebním režimu: nic neodešle, jen ukáže data.
@@ -43,6 +44,9 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\T26-09 Kabinet holičů\`.
   a vlastní nápad), poznámka je teď 8. Sloupce `smen`, `odhad_volno`, `hodin_3m`, `sloty_stav`, `sloty`,
   `dalsi`; migrace `20261125120000_dotaznik_smeny_odhady.sql` nasazená přes SQL Editor. Ověřeno curl: stará
   i nová podoba odpovědi se uloží, chybná hodina vrátí chybu; zkušební řádky smazané (tabulka prázdná).
+- **25. 11. 2026, adresy:** dotazník se přesunul na https://tbdb-consulting.github.io/kabinet-holicu/dotaznik-pro-holice-pronajem-kresel/,
+  kořen webu je místo pro prototyp konečné aplikace (zatím jen úvodní stránka). Další dotazníky každý na vlastní
+  popisné adrese (Keksa 25. 11. 2026).
 - **Cíl vyhodnocení (Keksa 23. 11. 2026):** z odpovědí určit atraktivitu bloků; výstupem je dražba bloků,
   nebo cena bloku podle atraktivity (žádanější dražší, méně žádané levnější).
 - **Zkušební data (Keksa 23. 11. 2026):** `testdata/generuj_zkusebni.py` vyrobí vymyšlené odpovědi všech 21 holičů

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Kabinet holičů – kdy chcete stříhat</title>
+<style>
+:root{--b:#1F4E78;--li:#d5dfe8;--se:#5a6b7a;--chci:#2e7d32;--muzu:#9ccc65;--ne:#b0bec5;--chyba:#c62828}
+*{box-sizing:border-box}
+body{margin:0;background:#f4f7fa;color:#1a1a1a;font:15px/1.55 Verdana,Geneva,sans-serif}
+header{background:var(--b);color:#fff;padding:18px 16px}
+header h1{margin:0;font-size:19px;max-width:640px;margin:0 auto}
+header p{margin:4px auto 0;font-size:13px;opacity:.85;max-width:640px}
+main{max-width:640px;margin:0 auto;padding:16px 16px 60px}
+.karta{background:#fff;border:1px solid var(--li);border-radius:8px;padding:14px 16px;margin:0 0 14px}
+h2{font-size:15px;color:var(--b);margin:0 0 8px}
+p{margin:0 0 8px}
+.mala{font-size:12.5px;color:var(--se)}
+select,input[type=number],input[type=text],textarea{width:100%;font:15px Verdana,sans-serif;padding:8px 10px;border:1px solid var(--li);border-radius:6px;background:#fff}
+textarea{min-height:70px;resize:vertical}
+.volby{display:flex;flex-wrap:wrap;gap:8px}
+.volby label{flex:1 1 140px;border:1px solid var(--li);border-radius:6px;padding:8px 10px;cursor:pointer}
+.volby input{margin-right:6px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{color:var(--se);font-weight:normal;font-size:12px;padding:4px 2px}
+td{padding:3px 2px;text-align:center}
+td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;padding-right:6px}
+.bunka{width:100%;min-width:44px;height:44px;border:0;border-radius:6px;font:bold 11px Verdana,sans-serif;cursor:pointer;background:#eceff1;color:#78909c}
+.bunka.v2{background:var(--chci);color:#fff}.bunka.v1{background:var(--muzu);color:#1b3a00}.bunka.v0{background:var(--ne);color:#37474f}
+.leg span{display:inline-block;width:14px;height:12px;border-radius:3px;vertical-align:middle;margin:0 4px 0 10px}
+.btn{width:100%;font:bold 16px Verdana,sans-serif;background:var(--b);color:#fff;border:0;border-radius:8px;padding:14px;cursor:pointer}
+.btn:disabled{opacity:.5}
+.chyba{color:var(--chyba);font-size:13px;margin-top:6px}
+.diky{text-align:center;padding:30px 16px}
+.diky h2{font-size:20px}
+:root{--obs:#1F4E78}
+.nav{font:13px Verdana,sans-serif;background:#fff;border:1px solid var(--li);border-radius:6px;padding:8px 10px;cursor:pointer;color:var(--b)}
+.nav:disabled{opacity:.4;cursor:default}
+.slot{width:100%;min-width:40px;height:32px;border:0;border-radius:5px;background:#eceff1;cursor:pointer;font:10.5px Verdana,sans-serif;color:#90a4ae}
+.slot.on{background:var(--obs);color:#fff}
+#sloty td.blok{font-weight:normal;font-size:11.5px;color:var(--se)}
+.fce{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--li);border-radius:6px;padding:9px 10px;margin-bottom:6px;cursor:pointer}
+.fce input{margin-top:3px;flex:none;width:18px;height:18px}
+.fce .faze{display:inline-block;font-size:10.5px;font-weight:bold;border-radius:9px;padding:1px 7px;margin-right:4px;background:#e3edf6;color:var(--b)}
+.test{background:#fff3c4;border:1px solid #e0c96a;border-radius:6px;padding:8px 12px;font-size:12.5px;margin-bottom:12px}
+</style>
+</head>
+<body>
+<header><h1>Kabinet holičů – kdy chcete stříhat</h1>
+<p>Dotazník pro holiče z Old Place a Zverimexu · zabere asi 5 minut, s nepovinnou částí 6 déle</p></header>
+<main>
+<div id="testInfo" class="test" style="display:none">ZKUŠEBNÍ REŽIM: odpověď se nikam neodešle, jen se ukáže, co by se uložilo.</div>
+
+<form id="f" novalidate>
+<div class="karta">
+<p>Chystáme nový způsob rezervace křesel. Abychom ho nastavili spravedlivě, potřebujeme vědět, <b>kolik a kdy chcete v běžném měsíci stříhat</b>. Nejde zatím o žádnou závaznou rezervaci.</p>
+<p class="mala">Odpovědi uvidí jen Tom a TBDB Consulting, která dotazník zpracovává. Když dotazník vyplníte znovu, platí poslední odpověď.</p>
+</div>
+
+<div class="karta">
+<h2>1. Kdo jste</h2>
+<select id="jmeno" required>
+<option value="">– vyberte své jméno –</option>
+<optgroup label="Old Place" id="ogOP"></optgroup>
+<optgroup label="Zverimex" id="ogZV"></optgroup>
+<option value="__jine">Nejsem v seznamu…</option>
+</select>
+<input type="text" id="jmenoJine" placeholder="Vaše jméno" maxlength="60" style="display:none;margin-top:8px">
+<h2 style="margin-top:14px">Kde chcete stříhat</h2>
+<div class="volby">
+<label><input type="radio" name="prov" value="OP">Old Place</label>
+<label><input type="radio" name="prov" value="ZV">Zverimex</label>
+<label><input type="radio" name="prov" value="OBE">v obou</label>
+</div>
+<div class="chyba" id="e1"></div>
+</div>
+
+<div class="karta">
+<h2>2. Kolik chcete v běžném měsíci stříhat</h2>
+<p class="mala" style="background:#eaf1f7;border-left:3px solid var(--b);border-radius:4px;padding:8px 10px">Zatím jen sbíráme data, nic se nerezervuje. Zkoumáme dvě varianty: křeslo po <b>4hodinových</b> blocích (8–12, 12–16, 16–20) a po <b>3hodinových</b> blocích (8–11, 11–14, 14–17, 17–20). Která platí, ještě není rozhodnuté, proto se v sekcích 3a a 3b ptáme na obě. Tady napište, kolik chcete stříhat celkem, bez ohledu na délku bloku.</p>
+<label for="hodin" style="display:block;font-weight:bold;font-size:13.5px;margin-bottom:4px">Hodin s křeslem za měsíc celkem</label>
+<input type="number" id="hodin" min="0" max="300" step="1" inputmode="numeric" placeholder="např. 80">
+<p class="mala" style="margin-top:6px">Pro představu: jeden blok každý všední den je asi 80 h u 4hodinových, nebo asi 60 h u 3hodinových bloků; celé křeslo od 8 do 20 je asi 240 h.</p>
+<label for="smen" style="display:block;font-weight:bold;font-size:13.5px;margin:12px 0 4px">Kolik směn (rezervací křesla) za měsíc</label>
+<input type="number" id="smen" min="0" max="60" step="1" inputmode="numeric" placeholder="např. 16">
+<p class="mala" style="margin-top:6px">Směna = jedna rezervace křesla v kuse. Čtyři směny týdně jsou asi 17 za měsíc.</p>
+<div class="chyba" id="e2"></div>
+</div>
+
+<div class="karta">
+<h2>3a. Které dny a časy – výběr 4hodinových bloků</h2>
+<p>Klepnutím měníte: <span class="leg"><span style="background:var(--chci)"></span>chci<span style="background:var(--muzu)"></span>můžu<span style="background:var(--ne)"></span>nemůžu</span></p>
+<table id="mrizka"></table>
+<p class="mala" style="margin-top:6px"><b>Chci</b> = tenhle čas chcete nejvíc. <b>Můžu</b> = vzal(a) byste ho, když nebude jiný. <b>Nemůžu</b> = vůbec.</p>
+<div class="chyba" id="e3"></div>
+</div>
+
+<div class="karta">
+<h2>3b. Které dny a časy – výběr 3hodinových bloků</h2>
+<p>Totéž ještě jednou, jen po 3 hodinách. Zatím nevíme, jestli budou bloky po 4, nebo po 3 hodinách, proto se ptáme na obojí.</p>
+<p>Klepnutím měníte: <span class="leg"><span style="background:var(--chci)"></span>chci<span style="background:var(--muzu)"></span>můžu<span style="background:var(--ne)"></span>nemůžu</span></p>
+<table id="mrizka3"></table>
+<div class="chyba" id="e3b"></div>
+</div>
+
+<div class="karta">
+<h2>4. Jak dlouhou rezervaci křesla chcete</h2>
+<p>Jedna rezervace = jak dlouho v kuse máte křeslo. U každého dne vyberte <b>nejkratší</b> rezervaci, která se vám ještě vyplatí, a <b>nejdelší</b>, kterou zvládnete.</p>
+<table id="delky"></table>
+<button type="button" id="stejne" class="mala" style="margin-top:8px;background:none;border:1px solid var(--li);border-radius:6px;padding:6px 10px;cursor:pointer;color:var(--b)">Použít pondělí pro všechny dny</button>
+<p class="mala" style="margin-top:6px">Když ten den stříhat nechcete, nechte u něj obě pole „–“.</p>
+<div class="chyba" id="e4"></div>
+</div>
+
+<div class="karta">
+<h2>5. Jak je to teď – váš odhad</h2>
+<label for="volno" style="display:block;font-weight:bold;font-size:13.5px;margin-bottom:4px">Kolik procent křesel je podle vás v provozovně, kde stříháte, teď běžně volných?</label>
+<select id="volno"><option value="">– vyberte –</option></select>
+<label for="hodin3" style="display:block;font-weight:bold;font-size:13.5px;margin:12px 0 4px">Kolik hodin jste odpracoval(a) za poslední 3 měsíce celkem?</label>
+<input type="number" id="hodin3" min="0" max="1500" step="1" inputmode="numeric" placeholder="např. 240">
+<p class="mala" style="margin-top:6px">Stačí odhad. Když opravdu nevíte, nechte prázdné.</p>
+<div class="chyba" id="e5"></div>
+</div>
+
+<div class="karta">
+<h2>6. Které hodiny jste měl(a) obsazené <span class="mala">(nepovinné)</span></h2>
+<p>Pomůže nám vědět, kdy jste v posledních týdnech opravdu stříhal(a). Stačí poslední 4 týdny, nejvýš 13 týdnů zpátky. Víkendy zatím neřešíme.</p>
+<div class="volby">
+<label><input type="radio" name="slotyStav" value="ano">vyplním teď</label>
+<label><input type="radio" name="slotyStav" value="ne">nevím, přeskočím</label>
+</div>
+<div id="slotyBox" style="display:none;margin-top:12px">
+<div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
+<button type="button" id="tStarsi" class="nav">‹ starší</button>
+<b id="tNazev" style="font-size:13.5px;text-align:center"></b>
+<button type="button" id="tNovejsi" class="nav">novější ›</button>
+</div>
+<p class="mala" style="margin:6px 0">Klepněte na hodiny, kdy jste stříhal(a): <span class="leg"><span style="background:var(--obs)"></span>obsazeno<span style="background:#eceff1"></span>volno</span></p>
+<table id="sloty"></table>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+<button type="button" id="tKopie" class="nav">Stejně jako novější týden</button>
+<button type="button" id="tNic" class="nav">Tento týden jsem nestříhal(a)</button>
+</div>
+<p class="mala" id="tSouhrn" style="margin-top:8px"></p>
+</div>
+<div class="chyba" id="e6"></div>
+</div>
+
+<div class="karta">
+<h2>7. Co by vám aplikace měla umět dál</h2>
+<p>Aplikace začne rezervací křesel a bude se rozšiřovat. Zaškrtněte, co byste používal(a).</p>
+<div id="dalsi"></div>
+<textarea id="napad" maxlength="1000" placeholder="Co dalšího by vám usnadnilo práci s rezervacemi a náhradami?" style="margin-top:8px"></textarea>
+</div>
+
+<div class="karta">
+<h2>8. Chcete něco dodat? <span class="mala">(nepovinné)</span></h2>
+<textarea id="poznamka" maxlength="1000" placeholder="Třeba: v sudé týdny nemůžu ráno…"></textarea>
+</div>
+
+<button class="btn" id="odeslat" type="submit">Odeslat</button>
+<div class="chyba" id="eOdeslani"></div>
+</form>
+
+<div id="diky" class="karta diky" style="display:none">
+<h2>Děkujeme!</h2>
+<p>Odpověď je uložená. Když si to rozmyslíte, vyplňte dotazník znovu, platit bude poslední odpověď.</p>
+<pre id="testVystup" class="mala" style="text-align:left;white-space:pre-wrap;display:none"></pre>
+</div>
+</main>
+<script>
+// Projekt Supabase kabinet-holicu v organizaci TBDB (veřejný publishable klíč smí být ve stránce).
+const SUPABASE_URL='https://bgnzfrxnvkifvpmrilgd.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_-CwxCS480OD5Hfx7N_OsHg_WuVoWOQj';
+const TEST=new URLSearchParams(location.search).has('test')||SUPABASE_URL==='DOPLNIT';
+
+// Holiči podle kabinetholicu.cz/objednavka (23. 11. 2026)
+const HOLICI={OP:['Aňa','Báďa','Edita','Ivet','Jakub','Jan','Matěj','Merlin','Michal','Pavel','Petr','Tadeáš','Tom'],
+             ZV:['Banána','Can','Halis','Josef','Klára','Ondřej','Sebastian','Vera']};
+const DNY=[['Po','Po'],['Ut','Út'],['St','St'],['Ct','Čt'],['Pa','Pá']];
+const BLOKY=[['R','8–12'],['S','12–16'],['O','16–20']];
+const TXT=['ne','můžu','chci'];
+const $=id=>document.getElementById(id);
+const BLOKY3=[['A','8–11'],['B','11–14'],['C','14–17'],['D','17–20']];
+const prani={},prani3={};DNY.forEach(([d])=>{prani[d]={};prani3[d]={}});
+
+if(TEST)$('testInfo').style.display='block';
+['OP','ZV'].forEach(p=>HOLICI[p].forEach(j=>{const o=document.createElement('option');o.value=p+'|'+j;o.textContent=j;$('og'+p).appendChild(o)}));
+$('jmeno').addEventListener('change',e=>{
+ const v=e.target.value;$('jmenoJine').style.display=v==='__jine'?'block':'none';
+ if(v&&v!=='__jine'){const p=v.split('|')[0];const r=document.querySelector('input[name=prov][value='+p+']');if(r&&!document.querySelector('input[name=prov]:checked'))r.checked=true}
+});
+
+// mřížka
+function mrizka(id,bloky,cil){
+ let h='<tr><th></th>'+DNY.map(d=>'<th>'+d[1]+'</th>').join('')+'</tr>';
+ bloky.forEach(([b,t])=>{h+='<tr><td class="blok">'+t+'</td>'+DNY.map(([d])=>'<td><button type="button" class="bunka" data-d="'+d+'" data-b="'+b+'">?</button></td>').join('')+'</tr>'});
+ $(id).innerHTML=h;
+ $(id).addEventListener('click',e=>{
+  const t=e.target.closest('.bunka');if(!t)return;
+  const d=t.dataset.d,b=t.dataset.b;const cur=cil[d][b];
+  const nov=cur===undefined?2:(cur===2?1:(cur===1?0:2));
+  cil[d][b]=nov;t.className='bunka v'+nov;t.textContent=TXT[nov];
+ });
+}
+mrizka('mrizka',BLOKY,prani);
+mrizka('mrizka3',BLOKY3,prani3);
+// délka rezervace po dnech
+const DELKY=[2,3,4,5,6,8,10,12];
+const vyber=(d,k)=>'<select id="'+k+d+'" aria-label="'+(k==='min'?'nejkratší':'nejdelší')+' '+d+'"><option value="">–</option>'+DELKY.map(x=>'<option value="'+x+'">'+x+' h</option>').join('')+'</select>';
+$('delky').innerHTML='<tr><th></th><th>nejkratší</th><th>nejdelší</th></tr>'+DNY.map(([d,t])=>'<tr><td class="blok">'+t+'</td><td>'+vyber(d,'min')+'</td><td>'+vyber(d,'max')+'</td></tr>').join('');
+$('stejne').addEventListener('click',()=>{DNY.slice(1).forEach(([d])=>{$('min'+d).value=$('minPo').value;$('max'+d).value=$('maxPo').value})});
+
+// 5. odhad volných křesel
+for(let x=0;x<=100;x+=10){const o=document.createElement('option');o.value=x;o.textContent=x===0?'skoro žádná (0 %)':x+' %';$('volno').appendChild(o)}
+{const o=document.createElement('option');o.value='nevim';o.textContent='nevím';$('volno').appendChild(o)}
+
+// 6. obsazené hodiny po týdnech (Po–Pá, 7–22 po hodinách), nejvýš 13 týdnů zpět
+const HOD=[];for(let h=7;h<22;h++)HOD.push(h);
+const MAXT=13;
+const pondeli=k=>{const d=new Date();d.setHours(12,0,0,0);const wd=(d.getDay()+6)%7;d.setDate(d.getDate()-wd-7*k);return d};
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const sloty={};// {'2026-11-16':{Po:[9,10],...}} jen vyplněné týdny
+let tyden=1;
+function prazdny(){const o={};DNY.forEach(([d])=>o[d]=[]);return o}
+function kresliTyden(){
+ const m=pondeli(tyden),pa=new Date(m);pa.setDate(m.getDate()+4);
+ $('tNazev').textContent=m.getDate()+'. '+(m.getMonth()+1)+'. – '+pa.getDate()+'. '+(pa.getMonth()+1)+'. '+pa.getFullYear()+(tyden===1?' (minulý týden)':'');
+ $('tStarsi').disabled=tyden>=MAXT;$('tNovejsi').disabled=tyden<=1;$('tKopie').disabled=tyden<=1;
+ const k=iso(m),t=sloty[k];
+ let h='<tr><th></th>'+DNY.map(([d,n],i)=>{const x=new Date(m);x.setDate(m.getDate()+i);return '<th>'+n+'<br>'+x.getDate()+'. '+(x.getMonth()+1)+'.</th>'}).join('')+'</tr>';
+ HOD.forEach(hh=>{h+='<tr><td class="blok">'+hh+'–'+(hh+1)+'</td>'+DNY.map(([d])=>{const on=t&&t[d].includes(hh);return '<td><button type="button" class="slot'+(on?' on':'')+'" data-d="'+d+'" data-h="'+hh+'">'+(on?'✓':'')+'</button></td>'}).join('')+'</tr>'});
+ $('sloty').innerHTML=h;souhrnSlotu();
+}
+function souhrnSlotu(){
+ const k=Object.keys(sloty);let hod=0;k.forEach(w=>DNY.forEach(([d])=>hod+=sloty[w][d].length));
+ const t=sloty[iso(pondeli(tyden))];
+ $('tSouhrn').textContent='Vyplněno týdnů: '+k.length+' z nejvýš '+MAXT+' · obsazených hodin celkem: '+hod+(t?' · tento týden: '+DNY.reduce((a,[d])=>a+t[d].length,0)+' h':' · tento týden zatím nevyplněný');
+}
+$('sloty').addEventListener('click',e=>{
+ const b=e.target.closest('.slot');if(!b)return;
+ const k=iso(pondeli(tyden));if(!sloty[k])sloty[k]=prazdny();
+ const a=sloty[k][b.dataset.d],h=+b.dataset.h,i=a.indexOf(h);
+ if(i<0){a.push(h);a.sort((x,y)=>x-y)}else a.splice(i,1);
+ b.classList.toggle('on',i<0);b.textContent=i<0?'✓':'';souhrnSlotu();
+});
+$('tStarsi').addEventListener('click',()=>{if(tyden<MAXT){tyden++;kresliTyden()}});
+$('tNovejsi').addEventListener('click',()=>{if(tyden>1){tyden--;kresliTyden()}});
+$('tKopie').addEventListener('click',()=>{const z=sloty[iso(pondeli(tyden-1))];sloty[iso(pondeli(tyden))]=z?JSON.parse(JSON.stringify(z)):prazdny();kresliTyden()});
+$('tNic').addEventListener('click',()=>{sloty[iso(pondeli(tyden))]=prazdny();kresliTyden()});
+document.querySelectorAll('input[name=slotyStav]').forEach(r=>r.addEventListener('change',()=>{const ano=r.value==='ano'&&r.checked;$('slotyBox').style.display=ano?'block':'none';if(ano)kresliTyden()}));
+
+// 7. další fáze
+const FUNKCE=[
+ ['chat',2,'Chat s kolegy přímo v aplikaci'],
+ ['nabidnout',2,'Když nemůžu, nabídnu své křeslo (celý blok nebo jen některé hodiny) kolegům'],
+ ['prevzit',2,'Dostanu upozornění, když kolega nabízí křeslo, a můžu ho převzít'],
+ ['moji_zakaznici',3,'Když se mi uvolní křeslo, pošlu svým zákazníkům nabídku na nejbližší volný čas'],
+ ['zruseni',3,'Když zákazník zruší, nabídne se uvolněný čas dalším zákazníkům'],
+ ['interval',3,'Zákazník si předem nastaví, kdy by chtěl přijít, a přijde mu nabídka']];
+$('dalsi').innerHTML=FUNKCE.map(([k,f,t])=>'<label class="fce"><input type="checkbox" value="'+k+'"><span><span class="faze">fáze '+f+'</span>'+t+'</span></label>').join('');
+
+
+$('f').addEventListener('submit',async e=>{
+ e.preventDefault();['e1','e2','e3','e3b','e4','e5','e6','eOdeslani'].forEach(i=>$(i).textContent='');
+ let ok=true;
+ const sel=$('jmeno').value;let jmeno='';
+ if(sel==='__jine')jmeno=$('jmenoJine').value.trim();else if(sel)jmeno=sel.split('|')[1];
+ const prov=(document.querySelector('input[name=prov]:checked')||{}).value;
+ if(!jmeno||!prov){$('e1').textContent='Vyberte své jméno a kde chcete stříhat.';ok=false}
+ const hodin=parseInt($('hodin').value,10);
+ const smen=parseInt($('smen').value,10);
+ if(isNaN(hodin)||hodin<0||hodin>300){$('e2').textContent='Napište počet hodin za měsíc (0–300).';ok=false}
+ else if(isNaN(smen)||smen<0||smen>60){$('e2').textContent='Napište počet směn za měsíc (0–60).';ok=false}
+ const chybi=DNY.reduce((a,[d])=>a+BLOKY.filter(([b])=>prani[d][b]===undefined).length,0);
+ if(chybi){$('e3').textContent='U '+chybi+' políček chybí volba. Klepněte na každé, dokud neukáže chci, můžu, nebo ne.';ok=false}
+ const chybi3=DNY.reduce((a,[d])=>a+BLOKY3.filter(([b])=>prani3[d][b]===undefined).length,0);
+ if(chybi3){$('e3b').textContent='U '+chybi3+' políček chybí volba. Klepněte na každé, dokud neukáže chci, můžu, nebo ne.';ok=false}
+ const delka={};let e4='';
+ DNY.forEach(([d,t])=>{const mi=$('min'+d).value,ma=$('max'+d).value;
+  if(!mi&&!ma)return;
+  if(!mi||!ma){e4=e4||t+': vyberte nejkratší i nejdelší, nebo nechte obě „–“.';return}
+  if(+mi>+ma){e4=e4||t+': nejkratší nesmí být delší než nejdelší.';return}
+  delka[d]={min:+mi,max:+ma}});
+ if(!e4&&!Object.keys(delka).length)e4='Vyplňte délku aspoň u jednoho dne.';
+ if(e4){$('e4').textContent=e4;ok=false}
+ const vol=$('volno').value;
+ if(!vol){$('e5').textContent='Vyberte odhad volných křesel (nebo „nevím“).';ok=false}
+ const h3s=$('hodin3').value.trim(),h3=h3s===''?null:parseInt(h3s,10);
+ if(h3!==null&&(isNaN(h3)||h3<0||h3>1500)){$('e5').textContent='Hodiny za 3 měsíce: číslo 0–1500, nebo nechte prázdné.';ok=false}
+ const sst=(document.querySelector('input[name=slotyStav]:checked')||{}).value||null;
+ if(sst==='ano'&&!Object.keys(sloty).length){$('e6').textContent='Označte obsazené hodiny aspoň v jednom týdnu, nebo zvolte „nevím, přeskočím“.';ok=false}
+ if(!ok){document.querySelector('.chyba:not(:empty)').scrollIntoView({block:'center'});return}
+ const funkce=[...document.querySelectorAll('#dalsi input:checked')].map(x=>x.value);
+ const data={p_jmeno:jmeno,p_provozovna:prov,p_hodin:hodin,p_prani:prani,p_prani3:prani3,p_delka:delka,p_poznamka:$('poznamka').value.trim()||null,
+  p_smen:smen,p_odhad_volno:vol==='nevim'?null:+vol,p_hodin_3m:h3,p_sloty_stav:sst,p_sloty:sst==='ano'?sloty:null,
+  p_dalsi:{funkce:funkce,napad:$('napad').value.trim()||null}};
+ if(TEST){$('f').style.display='none';$('diky').style.display='block';$('testVystup').style.display='block';$('testVystup').textContent='Uložilo by se:\n'+JSON.stringify(data,null,1);return}
+ $('odeslat').disabled=true;
+ try{
+  const r=await fetch(SUPABASE_URL+'/rest/v1/rpc/odeslat_dotaznik',{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPABASE_ANON_KEY},body:JSON.stringify(data)});
+  if(!r.ok)throw new Error(await r.text());
+  $('f').style.display='none';$('diky').style.display='block';window.scrollTo(0,0);
+ }catch(err){$('eOdeslani').textContent='Odeslání se nepovedlo. Zkuste to prosím za chvíli znovu.';$('odeslat').disabled=false}
+});
+</script>
+</body>
+</html>

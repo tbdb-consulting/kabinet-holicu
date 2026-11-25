@@ -2,7 +2,7 @@
 
 Rezervace křesel pro Kabinet holičů, zakázka TBDB **T26-09-1**. Web HTML + JS bez sestavování (`web/`), databáze Supabase.
 Stav a historie: `README.md`. Kontext zakázky: repozitář `tbdb-consulting/tbdb`, soubor `Klienti/Kabinet-holicu/KONTEXT.md`.
-Web: https://tbdb-consulting.github.io/kabinet-holicu/
+Web: https://tbdb-consulting.github.io/kabinet-holicu/ (kořen = prototyp aplikace; dotazníky každý na vlastní adrese, např. `dotaznik-pro-holice-pronajem-kresel/`)
 
 ## Pravidla projektu (vždy)
 
@@ -13,6 +13,8 @@ Web: https://tbdb-consulting.github.io/kabinet-holicu/
 - **Zkušební data** u skutečných jmen holičů mají vymyšlená přání, proto výstupy `testdata/` zůstávají v `.gitignore`.
   Do repozitáře žádné skutečné odpovědi ani osobní údaje.
 - Publishable klíč v `web/` je schválená výjimka (`.gitleaksignore`, Keksa 23. 11. 2026). Jiné klíče nikdy.
+- **Kořen webu (`web/index.html`) je prototyp konečné aplikace.** Průběžné dotazníky každý do vlastní složky
+  s popisným názvem (co a pro koho), např. `web/dotaznik-pro-holice-pronajem-kresel/` (Keksa 25. 11. 2026).
 - Aplikace se používá hlavně v mobilu – každou změnu zkontrolovat i v úzkém zobrazení.
 
 ## Obecná pravidla TBDB (platí i v cloudu a z telefonu)
