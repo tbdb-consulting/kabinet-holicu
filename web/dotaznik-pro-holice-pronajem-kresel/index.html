@@ -160,7 +160,7 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 
 <div class="karta">
 <h2>7. Co by vám aplikace měla umět dál</h2>
-<p>Aplikace začne rezervací křesel a bude se rozšiřovat. Nic z toho se nebude dít samo: vždy rozhodujete vy, jestli a komu co nabídnete nebo co přijmete. Zaškrtněte, co byste používal(a).</p>
+<p>Aplikace začne rezervací křesel a bude se rozšiřovat. Nic z toho se nebude dít bez vás: buď to uděláte sami, nebo si sami nastavíte, že se to má dít automaticky. Zaškrtněte, co byste používal(a).</p>
 <div id="dalsi"></div>
 <textarea id="napad" maxlength="1000" placeholder="Co dalšího by vám usnadnilo práci s rezervacemi a náhradami?" style="margin-top:8px"></textarea>
 </div>
@@ -288,7 +288,7 @@ const FUNKCE=[
  ['prevzit',2,'Uvidím, když kolega nabízí křeslo, a sám(a) se rozhodnu, jestli ho převezmu'],
  ['moji_zakaznici',3,'Když se mi uvolní křeslo, můžu svým zákazníkům poslat nabídku na nejbližší volný čas – jestli a komu, rozhodnu já'],
  ['zruseni',3,'Když mi zákazník zruší termín, můžu uvolněný čas nabídnout dalším svým zákazníkům – pokud budu chtít'],
- ['interval',3,'Zákazník si předem nastaví rozmezí dnů a hodin, kdy by chtěl přijít; když se mi v tu dobu uvolní čas, můžu mu poslat nabídku – rozhodnu já']];
+ ['interval',3,'Zákazník si předem nastaví rozmezí dnů a hodin, kdy by chtěl přijít; když se mi v tu dobu uvolní čas, nabídka mu přijde – podle mého nastavení automaticky, nebo až když ji sám(a) pošlu']];
 $('dalsi').innerHTML=FUNKCE.map(([k,f,t])=>'<label class="fce"><input type="checkbox" value="'+k+'"><span><span class="faze">fáze '+f+'</span>'+t+'</span></label>').join('');
 
 
