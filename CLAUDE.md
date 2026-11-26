@@ -34,6 +34,9 @@ Web: https://tbdb-consulting.github.io/kabinet-holicu/ (kořen = prototyp aplika
   a přitom podnik držet mezi levnějšími. Kontext: podnik vědomě funguje „pod cenou“ jako přátelský social club
   a Tom o to nechce přijít; okolní svět ale tlačí na ceny i na nájem holičů. Obsazenost je hodně individuální
   (někteří holiči mají plno, jiní ne) a holičů je tolik, že občas není koho vystřídat.
+- **Historická data a přístup (Keksa a Tom 26. 11. 2026):** pseudonymizovaná historie z Reservanta do schématu
+  `analytika` (bez jmen a kontaktů, nepřístupné z veřejného webu), nahrává Claude importem v administraci Supabase.
+  Přehledy vidí jen Tom a TBDB; odpovědný pracovník (holič Kuba) jen vybraná data. Patří do fáze 1 za pevnou cenu.
 - **Více firem od začátku (Keksa 26. 11. 2026):** franšízové provozovny rezervují přes Reservanto pod Tomovým účtem
   a mohou později přejít na aplikaci. Datový model: firma → provozovna → holič → zákazník, data firem oddělená
   (řádkové zabezpečení podle firmy), role za firmu, EET za každého holiče nebo firmu zvlášť. Přechod po jedné
