@@ -56,6 +56,12 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
 - **25. 11. 2026 večer:** úvod dotazníku se třemi fázemi (1. fáze bez slibu „spravedlivě“, rozvrh na měsíc nebo
   delší období – předmět diskuze), sekce 7 – o nabídkách rozhoduje holič, k zákazníkům i automaticky podle jeho
   nastavení. Otázky do budoucna budou v aplikaci jako měsíční přání (architektura verze 5). Nasazení ve dvou úlohách.
+- **26. 11. 2026 (Keksa):** holič nejdřív vybere délku bloku 3, 4, 6 nebo 12 h (nová sekce 2) a vyplní jen jednu
+  mřížku pro tuto délku (sekce 4, dřív dvě mřížky 3a/3b). Sekce 3 vysvětluje směnu (= jeden blok) tabulkou
+  1–5 směn týdně → hodiny týdně, směny a hodiny měsíčně; zadává se jen počet směn, hodiny se dopočítají.
+  Sekce 6 „Kolik hodin v kuse zvládnete“ (nejkratší a nejdelší rezervace) zůstává, nezávazně. Sekce přečíslované 1–10.
+  Migrace `20261126090000_dotaznik_delka_bloku.sql` (sloupce `blok`, `prani_blok`, `prani` nepovinné) – **zatím
+  nenasazená**; bez ní web odpověď odmítne. Architektura verze 7.
 - **Cíl vyhodnocení (Keksa 23. 11. 2026):** z odpovědí určit atraktivitu bloků; výstupem je dražba bloků,
   nebo cena bloku podle atraktivity (žádanější dražší, méně žádané levnější).
 - **Zkušební data (Keksa 23. 11. 2026):** `testdata/generuj_zkusebni.py` vyrobí vymyšlené odpovědi všech 21 holičů
