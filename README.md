@@ -70,7 +70,7 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   Sekce 9 má 5 krátkých nabídek, první a hlavní: zpráva přes WhatsApp zákazníkům, kterým se blíží čas na střih,
   když holiči odpadne zákazník (klíč `moji_zakaznici`); `zruseni` vypadlo (spojené s ním). Databáze beze změny.
 - **26. 11. 2026 (Keksa):** sekce „Co by se ti v appce hodilo“ je hned na začátku jako 1 (má nadchnout), ostatní 2–10.
-  Nová volba „Appka za mě vyřeší EET“ (klíč `eet`, migrace `20261126140000_dotaznik_volba_eet.sql`).
+  Nová volba „Appka za mě vyřeší EET“ (klíč `eet`, migrace `20261126140000_dotaznik_volba_eet.sql`, nasazená a ověřená 26. 11.).
 - **Cíl vyhodnocení (Keksa 23. 11. 2026):** z odpovědí určit atraktivitu bloků; výstupem je dražba bloků,
   nebo cena bloku podle atraktivity (žádanější dražší, méně žádané levnější).
 - **Zkušební data (Keksa 23. 11. 2026):** `testdata/generuj_zkusebni.py` vyrobí vymyšlené odpovědi všech 21 holičů
