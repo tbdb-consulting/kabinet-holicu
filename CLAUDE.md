@@ -19,6 +19,12 @@ Web: https://tbdb-consulting.github.io/kabinet-holicu/ (kořen = prototyp aplika
   nemůže, nejkratší a nejdelší rezervace) musí být i v aplikaci jako měsíční přání, aby se zohlednily při každém
   plánování; předvyplnit z minulého měsíce. Změna v dotazníku = změna i v návrhu obrazovky Přání (Keksa 25. 11. 2026).
 - Aplikace se používá hlavně v mobilu – každou změnu zkontrolovat i v úzkém zobrazení.
+- **Tón dotazníků i aplikace (Keksa 26. 11. 2026):** přátelsky, tykat, krátce, bez technického vyjadřování
+  a bez vysvětlování, proč se ptáme. Vibe firmy: volnomyšlenkářská komunita, ne příliš svázaná pravidly.
+  Pravidla podávat jako domluvu, ne jako příkazy.
+- **Klíčová funkce pro holiče (Keksa a Tom 26. 11. 2026):** když holiči odpadne zákazník, aplikace pošle zprávu
+  přes WhatsApp jeho zákazníkům, kterým se blíží obvyklý čas na střih, a kdo chce, zaskočí. Holiče to zajímá,
+  protože jinak by hodinu stál. Ve fázi 3 má přednost.
 
 ## Obecná pravidla TBDB (platí i v cloudu a z telefonu)
 
