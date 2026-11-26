@@ -7,9 +7,13 @@
 alter table public.dotaznik_odpoved add column blok integer;
 alter table public.dotaznik_odpoved add column prani_blok jsonb;
 alter table public.dotaznik_odpoved alter column prani drop not null;
+-- Sekce 7: místo hodin za poslední 3 měsíce se ptáme na obvyklý počet hodin za měsíc (Keksa 26. 11. 2026).
+alter table public.dotaznik_odpoved add column hodin_prumer integer;
 
 comment on column public.dotaznik_odpoved.blok is
   'Délka bloku, ve které chce holič stříhat: 3, 4, 6 nebo 12 hodin.';
+comment on column public.dotaznik_odpoved.hodin_prumer is
+  'Kolik hodin měsíčně holič teď obvykle stříhá (průměr za poslední dobu, odhad). Dřív hodin_3m = hodiny za 3 měsíce celkem.';
 comment on column public.dotaznik_odpoved.prani_blok is
   'Přání v blocích zvolené délky Po–Pá, klíč = začátek bloku (3 h: 8, 11, 14, 17; 4 h: 8, 12, 16; 6 h: 8, 14; 12 h: 8); 3 = určitě chci, 2 = spíše chci, 1 = spíše nechci, 0 = určitě nechci.';
 
@@ -20,7 +24,8 @@ create function public.odeslat_dotaznik(
   p_poznamka text default null, p_delka jsonb default null, p_prani3 jsonb default null,
   p_smen integer default null, p_odhad_volno integer default null, p_hodin_3m integer default null,
   p_sloty_stav text default null, p_sloty jsonb default null, p_dalsi jsonb default null,
-  p_nemuzu jsonb default null, p_blok integer default null, p_prani_blok jsonb default null)
+  p_nemuzu jsonb default null, p_blok integer default null, p_prani_blok jsonb default null,
+  p_hodin_prumer integer default null)
 returns void
 language plpgsql
 security definer
@@ -113,6 +118,9 @@ begin
   if p_hodin_3m is not null and (p_hodin_3m < 0 or p_hodin_3m > 1500) then
     raise exception 'chybné hodiny za 3 měsíce';
   end if;
+  if p_hodin_prumer is not null and (p_hodin_prumer < 0 or p_hodin_prumer > 300) then
+    raise exception 'chybné obvyklé hodiny za měsíc';
+  end if;
   if p_sloty_stav is not null and p_sloty_stav not in ('ano', 'ne') then
     raise exception 'chybný stav obsazených hodin';
   end if;
@@ -167,15 +175,15 @@ begin
   end if;
   insert into public.dotaznik_odpoved (jmeno, provozovna, hodin, prani, poznamka, delka, prani3,
                                        smen, odhad_volno, hodin_3m, sloty_stav, sloty, dalsi, nemuzu,
-                                       blok, prani_blok)
+                                       blok, prani_blok, hodin_prumer)
   values (trim(p_jmeno), p_provozovna, p_hodin, p_prani, nullif(trim(p_poznamka), ''), p_delka, p_prani3,
           p_smen, p_odhad_volno, p_hodin_3m, p_sloty_stav, p_sloty, p_dalsi, p_nemuzu,
-          p_blok, p_prani_blok);
+          p_blok, p_prani_blok, p_hodin_prumer);
 end;
 $$;
 
-revoke all on function public.odeslat_dotaznik(text, text, integer, jsonb, text, jsonb, jsonb, integer, integer, integer, text, jsonb, jsonb, jsonb, integer, jsonb) from public;
-grant execute on function public.odeslat_dotaznik(text, text, integer, jsonb, text, jsonb, jsonb, integer, integer, integer, text, jsonb, jsonb, jsonb, integer, jsonb) to anon, authenticated;
+revoke all on function public.odeslat_dotaznik(text, text, integer, jsonb, text, jsonb, jsonb, integer, integer, integer, text, jsonb, jsonb, jsonb, integer, jsonb, integer) from public;
+grant execute on function public.odeslat_dotaznik(text, text, integer, jsonb, text, jsonb, jsonb, integer, integer, integer, text, jsonb, jsonb, jsonb, integer, jsonb, integer) to anon, authenticated;
 
 -- pohled (select *) se při přidání sloupce sám nerozšíří
 create or replace view public.dotaznik_posledni
