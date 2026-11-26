@@ -60,8 +60,8 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   mřížku pro tuto délku (sekce 4, dřív dvě mřížky 3a/3b). Sekce 3 vysvětluje směnu (= jeden blok) tabulkou
   1–5 směn týdně → hodiny týdně, směny a hodiny měsíčně; zadává se jen počet směn, hodiny se dopočítají.
   Sekce 6 „Kolik hodin v kuse zvládnete“ (nejkratší a nejdelší rezervace) zůstává, nezávazně. Sekce přečíslované 1–10.
-  Migrace `20261126090000_dotaznik_delka_bloku.sql` (sloupce `blok`, `prani_blok`, `prani` nepovinné) – **zatím
-  nenasazená**; bez ní web odpověď odmítne. Architektura verze 7.
+  Migrace `20261126090000_dotaznik_delka_bloku.sql` (sloupce `blok`, `prani_blok`, `prani` nepovinné) – nasazená 26. 11. 2026 přes SQL Editor,
+  ověřeno curl (správná odpověď 204, blok 5 a neúplná mřížka chyba 400), zkušební řádky smazané. Architektura verze 7.
   Dále: celý dotazník v tykání; v sekci 7 místo „hodiny za poslední 3 měsíce“ otázka „Kolik hodin měsíčně teď
   obvykle stříháš?“ (průměr, 0–300, sloupec `hodin_prumer` ve stejné migraci).
   Sekce 8 zjednodušená (bez vysvětlování): klepnutí střídá „stříhal(a) jsem zákazníka“ a „křeslo jsem měl(a),
