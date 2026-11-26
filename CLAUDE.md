@@ -28,6 +28,10 @@ Web: https://tbdb-consulting.github.io/kabinet-holicu/ (kořen = prototyp aplika
 - **Reservanto se ve fázi 3 nejspíš úplně nahradí (Keksa a Tom 26. 11. 2026):** zákazníci budou postupně při návštěvě
   vyzváni, ať si stáhnou aplikaci nebo se zaregistrují ve webové aplikaci, a další rezervaci udělají už tam.
   Datový model proto od začátku počítat se zákazníky a jejich rezervacemi u holiče, ne jen s křesly.
+- **Více firem od začátku (Keksa 26. 11. 2026):** franšízové provozovny rezervují přes Reservanto pod Tomovým účtem
+  a mohou později přejít na aplikaci. Datový model: firma → provozovna → holič → zákazník, data firem oddělená
+  (řádkové zabezpečení podle firmy), role za firmu, EET za každého holiče nebo firmu zvlášť. Přechod po jedné
+  provozovně, Reservanto souběžně; Tomův účet zrušit až po přechodu poslední franšízy. Otázky F1–F5 v dotazníku K1.
 
 ## Obecná pravidla TBDB (platí i v cloudu a z telefonu)
 
