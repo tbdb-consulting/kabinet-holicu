@@ -28,6 +28,12 @@ Web: https://tbdb-consulting.github.io/kabinet-holicu/ (kořen = prototyp aplika
 - **Reservanto se ve fázi 3 nejspíš úplně nahradí (Keksa a Tom 26. 11. 2026):** zákazníci budou postupně při návštěvě
   vyzváni, ať si stáhnou aplikaci nebo se zaregistrují ve webové aplikaci, a další rezervaci udělají už tam.
   Datový model proto od začátku počítat se zákazníky a jejich rezervacemi u holiče, ne jen s křesly.
+- **Data pro manažerské rozhodování Toma (Keksa a Tom 26. 11. 2026):** výstupem projektu jsou i souhrnná čísla
+  a přehledy pro majitele – vytíženost křesel a holičů, příjem z nájmu, vývoj v čase, predikce a jistota příjmu –
+  aby mohl rozhodovat o cenách (nájem prostor, nájem křesel, ceny služeb) a zůstat konkurenceschopný,
+  a přitom podnik držet mezi levnějšími. Kontext: podnik vědomě funguje „pod cenou“ jako přátelský social club
+  a Tom o to nechce přijít; okolní svět ale tlačí na ceny i na nájem holičů. Obsazenost je hodně individuální
+  (někteří holiči mají plno, jiní ne) a holičů je tolik, že občas není koho vystřídat.
 - **Více firem od začátku (Keksa 26. 11. 2026):** franšízové provozovny rezervují přes Reservanto pod Tomovým účtem
   a mohou později přejít na aplikaci. Datový model: firma → provozovna → holič → zákazník, data firem oddělená
   (řádkové zabezpečení podle firmy), role za firmu, EET za každého holiče nebo firmu zvlášť. Přechod po jedné
