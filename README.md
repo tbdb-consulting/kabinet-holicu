@@ -83,6 +83,7 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   nájem holičů z přepisu (přiřazení a křesla OP 6 / ZV 4 doplněny migrací 20261126180000; Masna a Naproti bez křesel).
   První obsazenost Po–Pá 9–18 (12 měsíců): Old Place 50 %, Zverimex 58 %. Pozor: špička OP 8 a ZV 5 současných
   rezervací převyšuje počet křesel – ověřit s Tomem (víc křesel, holič jinde, nebo dvojí rezervace).
+  Masna a Kabinet Naproti jsou franšízy (Keksa 26. 11.): vlastní firmy v `analytika.firma`, zatím se nevyhodnocují.
   Data jsou jen v Supabase a ve složce klienta `Data\Reservanto`, nikdy v repozitáři.
 - **Cíl vyhodnocení (Keksa 23. 11. 2026):** z odpovědí určit atraktivitu bloků; výstupem je dražba bloků,
   nebo cena bloku podle atraktivity (žádanější dražší, méně žádané levnější).
