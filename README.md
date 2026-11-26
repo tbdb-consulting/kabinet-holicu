@@ -64,6 +64,8 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   nenasazená**; bez ní web odpověď odmítne. Architektura verze 7.
   Dále: celý dotazník v tykání; v sekci 7 místo „hodiny za poslední 3 měsíce“ otázka „Kolik hodin měsíčně teď
   obvykle stříháš?“ (průměr, 0–300, sloupec `hodin_prumer` ve stejné migraci).
+  Sekce 8 zjednodušená (bez vysvětlování): klepnutí střídá „stříhal(a) jsem zákazníka“ a „křeslo jsem měl(a),
+  ale bez zákazníka“ (nový sloupec `sloty_rez`, stejná migrace).
 - **Cíl vyhodnocení (Keksa 23. 11. 2026):** z odpovědí určit atraktivitu bloků; výstupem je dražba bloků,
   nebo cena bloku podle atraktivity (žádanější dražší, méně žádané levnější).
 - **Zkušební data (Keksa 23. 11. 2026):** `testdata/generuj_zkusebni.py` vyrobí vymyšlené odpovědi všech 21 holičů

@@ -9,9 +9,13 @@ alter table public.dotaznik_odpoved add column prani_blok jsonb;
 alter table public.dotaznik_odpoved alter column prani drop not null;
 -- Sekce 7: místo hodin za poslední 3 měsíce se ptáme na obvyklý počet hodin za měsíc (Keksa 26. 11. 2026).
 alter table public.dotaznik_odpoved add column hodin_prumer integer;
+-- Sekce 8: vedle hodin se zákazníkem (sloty) i hodiny, kdy měl holič křeslo, ale bez zákazníka (Keksa a Tom 26. 11. 2026).
+alter table public.dotaznik_odpoved add column sloty_rez jsonb;
 
 comment on column public.dotaznik_odpoved.blok is
   'Délka bloku, ve které chce holič stříhat: 3, 4, 6 nebo 12 hodin.';
+comment on column public.dotaznik_odpoved.sloty_rez is
+  'Hodiny, kdy měl holič křeslo, ale bez zákazníka, po týdnech: {"YYYY-MM-DD" (pondělí): {"Po": [9, 10]}}. sloty = hodiny se zákazníkem.';
 comment on column public.dotaznik_odpoved.hodin_prumer is
   'Kolik hodin měsíčně holič teď obvykle stříhá (průměr za poslední dobu, odhad). Dřív hodin_3m = hodiny za 3 měsíce celkem.';
 comment on column public.dotaznik_odpoved.prani_blok is
@@ -25,7 +29,7 @@ create function public.odeslat_dotaznik(
   p_smen integer default null, p_odhad_volno integer default null, p_hodin_3m integer default null,
   p_sloty_stav text default null, p_sloty jsonb default null, p_dalsi jsonb default null,
   p_nemuzu jsonb default null, p_blok integer default null, p_prani_blok jsonb default null,
-  p_hodin_prumer integer default null)
+  p_hodin_prumer integer default null, p_sloty_rez jsonb default null)
 returns void
 language plpgsql
 security definer
@@ -144,6 +148,26 @@ begin
       end loop;
     end loop;
   end if;
+  if p_sloty_rez is not null then
+    if jsonb_typeof(p_sloty_rez) <> 'object' or (select count(*) from jsonb_object_keys(p_sloty_rez)) > 13 then
+      raise exception 'sloty_rez musí být objekt s nejvýš 13 týdny';
+    end if;
+    for w in select jsonb_object_keys(p_sloty_rez) loop
+      if w !~ '^\d{4}-\d{2}-\d{2}$' or jsonb_typeof(p_sloty_rez -> w) <> 'object' then
+        raise exception 'chybný týden %', w;
+      end if;
+      for d in select jsonb_object_keys(p_sloty_rez -> w) loop
+        if d not in ('Po','Ut','St','Ct','Pa') or jsonb_typeof(p_sloty_rez -> w -> d) <> 'array'
+           or jsonb_array_length(p_sloty_rez -> w -> d) > 15 then
+          raise exception 'chybný den % %', w, d;
+        end if;
+        if exists (select 1 from jsonb_array_elements(p_sloty_rez -> w -> d) x
+                   where jsonb_typeof(x) <> 'number' or (x::text)::numeric not between 7 and 21) then
+          raise exception 'chybná hodina % %', w, d;
+        end if;
+      end loop;
+    end loop;
+  end if;
   if p_dalsi is not null then
     if jsonb_typeof(p_dalsi) <> 'object' or length(p_dalsi::text) > 2000 then
       raise exception 'chybné další fáze';
@@ -175,15 +199,15 @@ begin
   end if;
   insert into public.dotaznik_odpoved (jmeno, provozovna, hodin, prani, poznamka, delka, prani3,
                                        smen, odhad_volno, hodin_3m, sloty_stav, sloty, dalsi, nemuzu,
-                                       blok, prani_blok, hodin_prumer)
+                                       blok, prani_blok, hodin_prumer, sloty_rez)
   values (trim(p_jmeno), p_provozovna, p_hodin, p_prani, nullif(trim(p_poznamka), ''), p_delka, p_prani3,
           p_smen, p_odhad_volno, p_hodin_3m, p_sloty_stav, p_sloty, p_dalsi, p_nemuzu,
-          p_blok, p_prani_blok, p_hodin_prumer);
+          p_blok, p_prani_blok, p_hodin_prumer, p_sloty_rez);
 end;
 $$;
 
-revoke all on function public.odeslat_dotaznik(text, text, integer, jsonb, text, jsonb, jsonb, integer, integer, integer, text, jsonb, jsonb, jsonb, integer, jsonb, integer) from public;
-grant execute on function public.odeslat_dotaznik(text, text, integer, jsonb, text, jsonb, jsonb, integer, integer, integer, text, jsonb, jsonb, jsonb, integer, jsonb, integer) to anon, authenticated;
+revoke all on function public.odeslat_dotaznik(text, text, integer, jsonb, text, jsonb, jsonb, integer, integer, integer, text, jsonb, jsonb, jsonb, integer, jsonb, integer, jsonb) from public;
+grant execute on function public.odeslat_dotaznik(text, text, integer, jsonb, text, jsonb, jsonb, integer, integer, integer, text, jsonb, jsonb, jsonb, integer, jsonb, integer, jsonb) to anon, authenticated;
 
 -- pohled (select *) se při přidání sloupce sám nerozšíří
 create or replace view public.dotaznik_posledni
