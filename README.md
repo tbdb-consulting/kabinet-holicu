@@ -80,7 +80,10 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   `20261126170000_analytika_holici_z_importu.sql`, nasazeno v SQL Editoru). Nahráno importem CSV v administraci
   Supabase: 81 931 rezervací 2024–2026 z Reservanta, zákazníci jen jako pseudonymy (klíč smazán), 45 holičů.
   Schéma není přes API dostupné (ověřeno: PGRST106). Chybí: přiřazení holičů k provozovnám, počet křesel,
-  nájem holičů z přepisu. Data jsou jen v Supabase a ve složce klienta `Data\Reservanto`, nikdy v repozitáři.
+  nájem holičů z přepisu (přiřazení a křesla OP 6 / ZV 4 doplněny migrací 20261126180000; Masna a Naproti bez křesel).
+  První obsazenost Po–Pá 9–18 (12 měsíců): Old Place 50 %, Zverimex 58 %. Pozor: špička OP 8 a ZV 5 současných
+  rezervací převyšuje počet křesel – ověřit s Tomem (víc křesel, holič jinde, nebo dvojí rezervace).
+  Data jsou jen v Supabase a ve složce klienta `Data\Reservanto`, nikdy v repozitáři.
 - **Cíl vyhodnocení (Keksa 23. 11. 2026):** z odpovědí určit atraktivitu bloků; výstupem je dražba bloků,
   nebo cena bloku podle atraktivity (žádanější dražší, méně žádané levnější).
 - **Zkušební data (Keksa 23. 11. 2026):** `testdata/generuj_zkusebni.py` vyrobí vymyšlené odpovědi všech 21 holičů
