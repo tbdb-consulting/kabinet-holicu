@@ -71,6 +71,8 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   když holiči odpadne zákazník (klíč `moji_zakaznici`); `zruseni` vypadlo (spojené s ním). Databáze beze změny.
 - **26. 11. 2026 (Keksa):** sekce „Co by se ti v appce hodilo“ je hned na začátku jako 1 (má nadchnout), ostatní 2–10.
   Nová volba „Appka za mě vyřeší EET“ (klíč `eet`, migrace `20261126140000_dotaznik_volba_eet.sql`, nasazená a ověřená 26. 11.).
+- **Cena fáze 1 (Keksa a Tom 26. 11. 2026):** pevně 20 h × 990 Kč/h = 19 800 Kč, nad rámec na režii TBDB;
+  fáze 2 a 3 až po osvědčení fáze 1. Hodiny dál do výkazu, bez podrobného rozpisu.
 - **Další kroky po schůzce 26. 11. 2026:** doladit znění dotazníku pro holiče; Tom se sejde s holiči, představí
   projekt a nasdílí dotazník (mohou ho vyplňovat společně a diskutovat); Tom dodá data z Reservanta; z odpovědí
   a dat Reservanta fáze 0 a rozhodnutí, kudy dál. Poznámky: složka klienta `Zápisy/261126_poznamky_ze_schuzky.md`.
