@@ -76,6 +76,11 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
 - **Další kroky po schůzce 26. 11. 2026:** doladit znění dotazníku pro holiče; Tom se sejde s holiči, představí
   projekt a nasdílí dotazník (mohou ho vyplňovat společně a diskutovat); Tom dodá data z Reservanta; z odpovědí
   a dat Reservanta fáze 0 a rozhodnutí, kudy dál. Poznámky: složka klienta `Zápisy/261126_poznamky_ze_schuzky.md`.
+- **Historická data v databázi (26. 11. 2026):** schéma `analytika` (migrace `20261126160000_analytika_historie.sql`,
+  `20261126170000_analytika_holici_z_importu.sql`, nasazeno v SQL Editoru). Nahráno importem CSV v administraci
+  Supabase: 81 931 rezervací 2024–2026 z Reservanta, zákazníci jen jako pseudonymy (klíč smazán), 45 holičů.
+  Schéma není přes API dostupné (ověřeno: PGRST106). Chybí: přiřazení holičů k provozovnám, počet křesel,
+  nájem holičů z přepisu. Data jsou jen v Supabase a ve složce klienta `Data\Reservanto`, nikdy v repozitáři.
 - **Cíl vyhodnocení (Keksa 23. 11. 2026):** z odpovědí určit atraktivitu bloků; výstupem je dražba bloků,
   nebo cena bloku podle atraktivity (žádanější dražší, méně žádané levnější).
 - **Zkušební data (Keksa 23. 11. 2026):** `testdata/generuj_zkusebni.py` vyrobí vymyšlené odpovědi všech 21 holičů
