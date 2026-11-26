@@ -71,7 +71,14 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 </div>
 
 <div class="karta">
-<h2>1. Kdo jsi</h2>
+<h2>1. Co by se ti v appce hodilo</h2>
+<p>Zaškrtni, co bys používal(a). Nic se nebude dít bez tebe – pošleš to sám (sama), nebo si nastavíš, ať to jede samo.</p>
+<div id="dalsi"></div>
+<textarea id="napad" maxlength="1000" placeholder="Napadá tě ještě něco?" style="margin-top:8px"></textarea>
+</div>
+
+<div class="karta">
+<h2>2. Kdo jsi</h2>
 <select id="jmeno" required>
 <option value="">– vyber své jméno –</option>
 <optgroup label="Old Place" id="ogOP"></optgroup>
@@ -89,7 +96,7 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 </div>
 
 <div class="karta">
-<h2>2. Jak dlouhé bloky ti sedí</h2>
+<h2>3. Jak dlouhé bloky ti sedí</h2>
 <p>Křeslo si budeš brát po blocích, ve všední dny mezi 8 a 20. Co ti vyhovuje nejvíc?</p>
 <div id="bloky" class="volby" style="flex-direction:column">
 <label><input type="radio" name="blok" value="3"><b>3 hodiny</b> – 4 bloky za den:<br><span class="mala">8–11 · 11–14 · 14–17 · 17–20</span></label>
@@ -101,8 +108,8 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 </div>
 
 <div class="karta">
-<h2>3. Kolik směn za měsíc</h2>
-<div id="smenyPred" class="mala">Nejdřív vyber délku bloku v sekci 2.</div>
+<h2>4. Kolik směn za měsíc</h2>
+<div id="smenyPred" class="mala">Nejdřív vyber délku bloku v sekci 3.</div>
 <div id="smenyBox" style="display:none">
 <p>Směna = jeden blok. U tebe tedy <b>1 směna = <span class="blokH"></span></b>.</p>
 <p style="margin-bottom:4px">Pro představu:</p>
@@ -116,8 +123,8 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 </div>
 
 <div class="karta">
-<h2>4. Kdy se ti to hodí</h2>
-<div id="mrizkaPred" class="mala">Nejdřív vyber délku bloku v sekci 2.</div>
+<h2>5. Kdy se ti to hodí</h2>
+<div id="mrizkaPred" class="mala">Nejdřív vyber délku bloku v sekci 3.</div>
 <div id="mrizkaBox" style="display:none">
 <p style="margin-bottom:2px">Klepáním u každého bloku vyber, jak moc ho chceš:</p><div class="leg4"><div><span style="background:var(--v3)"></span>určitě chci</div><div><span style="background:var(--v2)"></span>spíše chci</div><div><span style="background:var(--v1)"></span>spíše nechci</div><div><span style="background:var(--v0)"></span>určitě nechci</div></div>
 <table id="mrizka"></table>
@@ -126,7 +133,7 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 </div>
 
 <div class="karta">
-<h2>5. Kdy určitě nemůžeš <span class="mala">(nepovinné)</span></h2>
+<h2>6. Kdy určitě nemůžeš <span class="mala">(nepovinné)</span></h2>
 <p>Označ hodiny, kdy běžně nemůžeš (škola, druhá práce, děti…). Klepnutím na den označíš celý den.</p>
 <p class="mala" style="margin:4px 0 8px"><span class="leg"><span style="background:#c62828;margin-left:0"></span>určitě nemůžu<span style="background:#eceff1"></span>můžu</span></p>
 <table id="nemuzu"></table>
@@ -134,7 +141,7 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 </div>
 
 <div class="karta">
-<h2>6. Kolik hodin v kuse dáš</h2>
+<h2>7. Kolik hodin v kuse dáš</h2>
 <p>Nejkratší rezervace, která se ti ještě vyplatí, a nejdelší, kterou v kuse zvládneš. Někdo dá 8 hodin, jiný 6 – obojí je v pohodě.</p>
 <table id="delky"></table>
 <button type="button" id="stejne" class="mala" style="margin-top:8px;background:none;border:1px solid var(--li);border-radius:6px;padding:6px 10px;cursor:pointer;color:var(--b)">Použít pondělí pro všechny dny</button>
@@ -143,7 +150,7 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 </div>
 
 <div class="karta">
-<h2>7. Jak to je teď</h2>
+<h2>8. Jak to je teď</h2>
 <label for="volno" style="display:block;font-weight:bold;font-size:13.5px;margin-bottom:4px">Kolik křesel je tam, kde stříháš, teď většinou volných?</label>
 <select id="volno"><option value="">– vyber –</option></select>
 <label for="hodin3" style="display:block;font-weight:bold;font-size:13.5px;margin:12px 0 4px">Kolik hodin měsíčně teď zhruba stříháš?</label>
@@ -153,7 +160,7 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 </div>
 
 <div class="karta">
-<h2>8. Kdy jsi měl(a) křeslo v posledních týdnech <span class="mala">(nepovinné)</span></h2>
+<h2>9. Kdy jsi měl(a) křeslo v posledních týdnech <span class="mala">(nepovinné)</span></h2>
 <p>Stačí poslední 4 týdny, bez víkendů.</p>
 <div class="volby">
 <label><input type="radio" name="slotyStav" value="ano">vyplním teď</label>
@@ -174,13 +181,6 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 <p class="mala" id="tSouhrn" style="margin-top:8px"></p>
 </div>
 <div class="chyba" id="e6"></div>
-</div>
-
-<div class="karta">
-<h2>9. Co by se ti v appce hodilo</h2>
-<p>Zaškrtni, co bys používal(a). Nic se nebude dít bez tebe – pošleš to sám (sama), nebo si nastavíš, ať to jede samo.</p>
-<div id="dalsi"></div>
-<textarea id="napad" maxlength="1000" placeholder="Napadá tě ještě něco?" style="margin-top:8px"></textarea>
 </div>
 
 <div class="karta">
@@ -326,7 +326,8 @@ const FUNKCE=[
  ['interval','Zákazník si nastaví, kdy se mu to hodí, a když se mi v tu dobu uvolní místo, dostane zprávu.'],
  ['nabidnout','Pustit svoje křeslo ostatním, když se mi to nehodí.'],
  ['prevzit','Vidět, když někdo křeslo pouští, a vzít si ho.'],
- ['chat','Psát si s ostatními přímo v appce.']];
+ ['chat','Psát si s ostatními přímo v appce.'],
+ ['eet','<b>Appka za mě vyřeší EET</b>, až bude zase potřeba.']];
 $('dalsi').innerHTML=FUNKCE.map(([k,t])=>'<label class="fce"><input type="checkbox" value="'+k+'"><span>'+t+'</span></label>').join('');
 
 
