@@ -25,6 +25,9 @@ Web: https://tbdb-consulting.github.io/kabinet-holicu/ (kořen = prototyp aplika
 - **Klíčová funkce pro holiče (Keksa a Tom 26. 11. 2026):** když holiči odpadne zákazník, aplikace pošle zprávu
   přes WhatsApp jeho zákazníkům, kterým se blíží obvyklý čas na střih, a kdo chce, zaskočí. Holiče to zajímá,
   protože jinak by hodinu stál. Ve fázi 3 má přednost.
+- **Reservanto se ve fázi 3 nejspíš úplně nahradí (Keksa a Tom 26. 11. 2026):** zákazníci budou postupně při návštěvě
+  vyzváni, ať si stáhnou aplikaci nebo se zaregistrují ve webové aplikaci, a další rezervaci udělají už tam.
+  Datový model proto od začátku počítat se zákazníky a jejich rezervacemi u holiče, ne jen s křesly.
 
 ## Obecná pravidla TBDB (platí i v cloudu a z telefonu)
 
