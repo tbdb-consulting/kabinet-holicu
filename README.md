@@ -80,6 +80,9 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
 - **Historická data v databázi (26. 11. 2026):** schéma `analytika` (migrace `20261126160000_analytika_historie.sql`,
   `20261126170000_analytika_holici_z_importu.sql`, nasazeno v SQL Editoru). Nahráno importem CSV v administraci
   Supabase: 81 931 rezervací 2024–2026 z Reservanta, zákazníci jen jako pseudonymy (klíč smazán), 45 holičů.
+  **Důsledek smazaného klíče** (smazán před Tomem na schůzce 26. 11. 2026, přepis Tom 2): nový export z Reservanta
+  dá stejnému zákazníkovi jiný kód, takže se s dnešními daty nepropojí. Přehledům to nevadí; historie zákazníků
+  pro fázi 3 („komu se blíží střih“) se musí sbírat až v aplikaci.
   Schéma není přes API dostupné (ověřeno: PGRST106). Chybí: přiřazení holičů k provozovnám, počet křesel,
   nájem holičů z přepisu (přiřazení a křesla OP 6 / ZV 4 doplněny migrací 20261126180000; Masna a Naproti bez křesel).
   První obsazenost Po–Pá 9–18 (12 měsíců): Old Place 50 %, Zverimex 58 %. Pozor: špička OP 8 a ZV 5 současných
@@ -267,8 +270,9 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   s více hodinami – sleva na hodiny nad hranicí (hranice po 10 h, sleva 0–60 %), strop měsíčního nájmu (3 000–20 000 Kč)
   a paušál. Koeficient sazeb se hledá bisekcí na celkovém příjmu včetně slev a stropu. Tabulka holičů má sloupec
   „Zvýhodnění“, nový graf „Nájem podle počtu hodin“ (dnešní pásma, křivka kalkulace při průměrné sazbě, body holičů).
-- 27. 11. 2026 (Keksa): EET 2.0 v aplikaci chce Keksa stihnout do 1. 1. 2027 (SOAP 1.1, podpis WS-Security
-  RSA-SHA256 / exc-c14n certifikátem holiče, server podporuje CORS – viz popis rozhraní v1.2 na eet.gov.cz).
+- ~~27. 11. 2026 (Keksa): EET 2.0 v aplikaci chce Keksa stihnout do 1. 1. 2027~~ **Neplatí – změněno 27. 11. 2026
+  ve 23:28, EET je možná varianta pro fázi 3 (viz další bod).** Technika zůstává: SOAP 1.1, podpis WS-Security
+  RSA-SHA256 / exc-c14n certifikátem holiče, server podporuje CORS – viz popis rozhraní v1.2 na eet.gov.cz.
 - 27. 11. 2026 večer (Keksa): **EET 2.0 v aplikaci přesunuto z fáze 1 jako možná varianta pro fázi 3.** Do té doby si holiči
   evidenci zařídí sami (MOJE eet, aplikace jiného dodavatele, EET OFF); podklad pro holiče na Disku
   `Claude outputs\261127_KABINET_EET2_pro_holice.pdf`. Text u „Naše aplikace“ na stránce `web/prehledy/eet/` upraven.
