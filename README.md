@@ -111,6 +111,11 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   Migrace `20261127140000_dotaznik_najem.sql` nasazená přes SQL Editor; ověřeno curl (s nájmem, bez něj i stará podoba
   se uloží, chybný měsíc a 90 000 Kč vrátí chybu), zkušební řádky smazané (tabulka prázdná).
 
+- **27. 11. 2026 (Keksa):** v sekci 8 dotazníku otázka „Máš křeslo jen pro sebe?“ (ano / ano, ale občas na něm stříhá
+  i někdo jiný / ne, sdílím; nepovinné). Ukládá se do sloupce `najem` jako klíč `vyhradni` (`ano` / `castecne` / `ne`).
+  Migrace `20261127210000_dotaznik_vyhradni_kreslo.sql` mění jen kontrolu ve funkci `odeslat_dotaznik` (parametry stejné),
+  nasazená a ověřená (chybná hodnota odmítnuta, správná uložena v transakci s rollbackem, nic nezůstalo).
+
 ## Přehledy (27. 11. 2026)
 
 - Stránka `web/prehledy/` (po zveřejnění https://tbdb-consulting.github.io/kabinet-holicu/prehledy/): přihlášení

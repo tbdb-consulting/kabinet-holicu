@@ -156,6 +156,12 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 <label for="hodin3" style="display:block;font-weight:bold;font-size:13.5px;margin:12px 0 4px">Kolik hodin měsíčně teď zhruba stříháš?</label>
 <input type="number" id="hodin3" min="0" max="300" step="1" inputmode="numeric" placeholder="např. 80">
 <p class="mala" style="margin-top:6px">Stačí od oka. Když nevíš, nech prázdné.</p>
+<p style="font-weight:bold;font-size:13.5px;margin:12px 0 4px">Máš křeslo jen pro sebe? <span class="mala" style="font-weight:normal">(nepovinné)</span></p>
+<div class="volby">
+<label><input type="radio" name="vyhradni" value="ano">Ano, nikdo jiný na něm nestříhá</label>
+<label><input type="radio" name="vyhradni" value="castecne">Ano, ale občas na něm stříhá i někdo jiný</label>
+<label><input type="radio" name="vyhradni" value="ne">Ne, křeslo sdílím</label>
+</div>
 <label for="najemPrumer" style="display:block;font-weight:bold;font-size:13.5px;margin:12px 0 4px">Kolik jsi průměrně platil(a) za nájem za měsíc? <span class="mala" style="font-weight:normal">(Kč, nepovinné)</span></label>
 <input type="number" id="najemPrumer" min="0" max="50000" step="100" inputmode="numeric" placeholder="např. 6000">
 <p style="font-weight:bold;font-size:13.5px;margin:12px 0 4px">A kolik v posledních třech měsících? <span class="mala" style="font-weight:normal">(Kč, nepovinné)</span></p>
@@ -368,7 +374,8 @@ $('f').addEventListener('submit',async e=>{
  const najem={prumer:cislo('najemPrumer'),mesice:{}};
  NAJEM_MES.forEach(m=>{const v=cislo('najem'+m.klic);if(v!==null)najem.mesice[m.klic]=v});
  if([najem.prumer,...Object.values(najem.mesice)].some(v=>v!==null&&(isNaN(v)||v<0||v>50000))){$('e5').textContent='Nájem: číslo v korunách 0–50 000, nebo nech prázdné.';ok=false}
- const najemVyplnen=najem.prumer!==null||Object.keys(najem.mesice).length>0;
+ const vyhr=document.querySelector('input[name=vyhradni]:checked');if(vyhr)najem.vyhradni=vyhr.value;
+ const najemVyplnen=najem.prumer!==null||Object.keys(najem.mesice).length>0||!!vyhr;
  const sst=(document.querySelector('input[name=slotyStav]:checked')||{}).value||null;
  if(sst==='ano'&&!Object.keys(sloty).length){$('e6').textContent='Označ hodiny aspoň v jednom týdnu, nebo dej „přeskočím“.';ok=false}
  if(!ok){document.querySelector('.chyba:not(:empty)').scrollIntoView({block:'center'});return}
