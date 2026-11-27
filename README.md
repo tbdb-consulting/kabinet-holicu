@@ -140,6 +140,18 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   za 11/2025–10/2026 vychází 96 000 Kč měsíčně proti dnešním 92 500–100 200 Kč).
 - 27. 11. 2026 (Keksa): nápovědy po najetí myší (v mobilu ťuknutím) u filtrů, čísel v dlaždicích, legend, nadpisů
   i buněk všech tabulek a polí kalkulačky. Texty v objektu `NAP` ve stránce; co má nápovědu, je podtržené tečkami.
+- 27. 11. 2026 (Keksa, podle schůzky s Tomem 26. 11.): migrace `20261127180000_analytika_dohody_vychozi_stav.sql`
+  (nasazená a ověřená v SQL Editoru): dohody s holiči (`prehled_dohody` / `prehled_ulozit_dohodu` / `prehled_smazat_dohodu`,
+  tabulka `analytika.najem_dohoda`), obsazenost bez holičů s výhradním křeslem (`prehled_obsazenost_sdilena`)
+  a výchozí stav (`prehled_vychozi_stav` / `prehled_ulozit_vychozi_stav`, tabulka `analytika.vychozi_stav`).
+  Stránka: karta „Dohody s holiči“ (zadávání přímo v přehledech, jména holičů jen v databázi), dohoda přepíše nájem
+  podle pásem, výhradní křeslo platí ve variantách pevnou částku (pole „Výhradní křeslo Kč/měs“) a jeho hodiny
+  se hodinově neúčtují; dlaždice ukazují výhradní a sdílená křesla. Výchozí stav: řádek pod dlaždicemi s tlačítkem
+  pro uložení, porovnání v dlaždicích, čárkovaná čára v grafu vytíženosti, řádek v porovnání variant.
+  Uložený výchozí stav za 11/2025–10/2026: vytíženost 7–22 h OP 36,0 %, ZV 44,7 %; 9–19 h OP 48,0 %, ZV 57,8 %;
+  odstříhané hodiny OP 726, ZV 606 měsíčně. Nájem do výchozího stavu zatím uložený není – až po zadání dohod.
+  Varianta „Bloky podle zájmu – návrh 90 / 75 / 40 Kč“ (oblíbené časy 90, ostatní 75, neoblíbené 40 Kč/h;
+  97 600 Kč měsíčně proti dnešním 92 500–100 200 Kč). Částky jsou návrh k diskusi, ne Tomovo rozhodnutí.
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
 - Další kroky: Tom jako `majitel`, Kuba jako `odpovedny` s omezeným pohledem (zatím nerozhodnuto, co uvidí);
   vlastní odesílání e-mailů (SMTP), protože vestavěné posílá jen členům týmu Supabase a málo zpráv za hodinu.
