@@ -37,6 +37,8 @@ select,input[type=number]{font:inherit;font-size:13px;padding:4px 7px;border:1px
 .pos input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--b)}
 .pos output{font-weight:bold;font-variant-numeric:tabular-nums;white-space:nowrap}
 .pos .vych{grid-column:1/-1;font-size:11.5px;color:var(--mu)}
+.leg{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--se);margin:6px 0}
+.leg span{display:inline-flex;align-items:center;gap:6px}
 .tl{font:inherit;font-size:12.5px;color:var(--b);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tl{color:#86b6ef}}
 .dlazdice{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:14px}
@@ -76,7 +78,7 @@ th[data-tip],.nap{text-decoration:underline dotted var(--mu);text-underline-offs
     <h2>Zkušební kalkulace proti dnešku</h2>
     <p class="mala">Posuvníky mění pravidla nájmu, všechno se hned přepočítá. Vedle každého výsledku je dnešní stav (pásma 3 500 / 6 000 / 8 000–10 000 Kč
     a dohody s holiči). Sazba hodiny = koeficient × vytíženost hodiny<sup>sklon</sup>; koeficient se dopočítá tak, aby Tom vybral
-    zvolené procento dnešního nájmu. Čísla jsou za průměrný měsíc zvoleného období, u holičů za měsíc, kdy stříhali. Nic se tu neukládá
+    zvolené procento dnešního nájmu (i se slevou nad hranicí, stropem a paušálem). Čísla jsou za průměrný měsíc zvoleného období, u holičů za měsíc, kdy stříhali. Nic se tu neukládá
     (nastavení si pamatuje jen tento prohlížeč).</p>
     <div class="filtry">
       <label>Období <select id="obdobi"></select></label>
@@ -87,6 +89,15 @@ th[data-tip],.nap{text-decoration:underline dotted var(--mu);text-underline-offs
   </div>
 
   <div class="dlazdice" id="dlazdice"></div>
+
+  <div class="karta">
+    <h2>Nájem podle počtu hodin</h2>
+    <p class="mala">Kolik holič zaplatí za měsíc podle toho, kolik hodin odstříhá: dnes (pásma) a podle kalkulace. Kroužky jsou jednotliví holiči
+    (bez výhradního křesla), čárka spojuje jejich dnešek s kalkulací. Křivka kalkulace počítá s průměrnou sazbou; skutečný nájem holiče závisí i na tom,
+    ve kterých hodinách stříhá. Po najetí na kroužek podrobnosti.</p>
+    <div class="leg" id="graf-legenda"></div>
+    <div id="graf"></div>
+  </div>
 
   <div class="karta">
     <h2>Holiči: dnes a podle kalkulace</h2>
@@ -129,7 +140,7 @@ function barvaPct(p){const i=Math.max(0,Math.min(9,Math.floor(p/10))),s=tmavy()?
 const POS=[
   {sk:'Tom: kolik vybrat'},
   {k:'cil',n:'Příjem z nájmu proti dnešku',v:0,min:-30,max:30,st:1,f:v=>(v>0?'+':v<0?'−':'±')+Math.abs(v)+' %',tip:'Kolik má Tom celkem vybrat oproti dnešku. 0 % = stejně jako dnes. Koeficient sazeb se podle toho dopočítá.'},
-  {k:'pausal',n:'Paušál na holiče',v:0,min:0,max:3000,st:50,f:v=>nf(v)+' Kč/měs',tip:'Pevná částka, kterou každý holič (bez výhradního křesla) platí měsíčně navíc k hodinám. Hodinové sazby se o ni sníží, aby celkový příjem zůstal podle prvního posuvníku.'},
+  {k:'pausal',n:'Paušál na holiče (zvýhodní holiče s více hodinami)',v:0,min:0,max:3000,st:50,f:v=>nf(v)+' Kč/měs',tip:'Pevná částka, kterou každý holič (bez výhradního křesla) platí měsíčně navíc k hodinám. Hodinové sazby se o ni sníží, aby celkový příjem zůstal podle prvního posuvníku.'},
   {k:'vyhr',n:'Výhradní křeslo',v:10000,min:0,max:20000,st:100,f:v=>nf(v)+' Kč/měs',tip:'Kolik platí holič s výhradním křeslem (podle dohod v přehledech). Jeho hodiny se hodinově neúčtují.'},
   {sk:'Sazba za hodinu křesla'},
   {k:'sklon',n:'Sklon podle vytíženosti',v:1,min:0,max:2,st:0.05,f:v=>nf(v,2),tip:'0 = jednotná sazba pro všechny hodiny. 1 = sazba přímo úměrná vytíženosti hodiny (dvakrát vytíženější hodina = dvakrát dražší). Nad 1 = vytížené hodiny ještě dražší, slabé levnější.'},
@@ -138,6 +149,10 @@ const POS=[
   {k:'zaokr',n:'Zaokrouhlit sazby na',v:5,min:1,max:10,st:1,f:v=>nf(v)+' Kč',tip:'Na kolik Kč se sazby zaokrouhlí.'},
   {k:'spol',n:'Sazby provozoven',v:0,min:0,max:1,st:1,f:v=>v?'společné pro obě':'zvlášť pro každou',tip:'Zvlášť: každá provozovna má svůj koeficient a vybere poměrně stejně jako dnes. Společné: stejná hodina stojí v obou stejně.'},
   {k:'koef',n:'Koeficient bloků',v:1,min:1,max:1.5,st:0.01,f:v=>nf(v,2)+' ×',tip:'Rezervace se platí po celých blocích. 1 = platí se jen skutečně obsazené hodiny; 1,20 = o pětinu víc placených hodin. Při stejném cílovém příjmu se sazby úměrně sníží.'},
+  {sk:'Zvýhodnění holičů s více hodinami'},
+  {k:'hranice',n:'Levnější hodiny nad',v:80,min:10,max:200,st:10,f:v=>nf(v)+' h/měs',tip:'Od kolika odstříhaných hodin měsíčně je každá další hodina levnější (posuvník „Sleva na hodiny nad hranicí“).'},
+  {k:'sleva',n:'Sleva na hodiny nad hranicí',v:0,min:0,max:60,st:1,f:v=>v?nf(v)+' %':'vypnuto',tip:'O kolik procent jsou levnější hodiny nad hranicí. Hodiny pod hranicí stojí normálně, takže nevzniká skok. 0 = vypnuto.'},
+  {k:'strop',n:'Strop měsíčního nájmu',v:20000,min:3000,max:20000,st:100,f:v=>v>=20000?'bez stropu':nf(v)+' Kč/měs',tip:'Nájem holiče (bez výhradního křesla) nepřesáhne tuto částku, hodiny nad strop jsou zadarmo. Úplně vpravo = bez stropu.'},
   {sk:'Holiči: poptávka a ceny střihů'},
   {k:'zmena',n:'Změna obsazenosti po zavedení',v:0,min:-30,max:30,st:1,f:v=>(v>0?'+':v<0?'−':'±')+Math.abs(v)+' %',tip:'O kolik víc (+) nebo míň (−) by holiči stříhali. Sazby zůstanou, mění se nájem i tržba holičů a tím i příjem Toma.'},
   {k:'cp',n:'Cena pánského střihu',v:500,min:300,max:900,st:10,f:v=>nf(v)+' Kč',tip:'Průměrná cena (Keksa 27. 11. 2026: 500 Kč).'},
@@ -204,44 +219,75 @@ sb.auth.onAuthStateChange((ev,s)=>{if(spusteno&&s)return;spusteno=!!s;setTimeout
 
 // ---------- výpočet ----------
 let V=null; // výsledek posledního přepočtu
+// nájem holiče = min(strop, hodinová část × podíl slevy nad hranicí + paušál); výhradní křeslo = pevná částka
 function prepocitej(){
   const z=1+S.zmena/100,mn=+S.smin,mx=S.smax>=400?Infinity:+S.smax,zk=+S.zaokr;
+  const strop=S.strop>=20000?Infinity:+S.strop,sl=S.sleva/100,hr=+S.hranice;
   const orez=v=>Math.min(mx,Math.max(mn,v)),zao=v=>orez(Math.round(v/zk)*zk);
+  const fA=H=>H>0&&sl>0?(Math.min(H,hr)+(1-sl)*Math.max(0,H-hr))/H:1;
+  const sazbaK=(k,u)=>k>0?zao(k*Math.pow(Math.max(u||0,1e-6),S.sklon)):orez(0);
   const klic=p=>S.spol?'*':p;
-  // dnešní příjem Toma (za průměrný měsíc období) a cíl
+  // nájem holiče za měsíc, kdy stříhal, při koeficientu k a změně obsazenosti zz
+  function najemH(h,k,zz){
+    if(h.vyhr)return {n:S.vyhr,bez:S.vyhr,B:0};
+    const u=OBS[klic(h.prov)].u;let B=0;
+    h.sloty.forEach(s2=>{B+=s2.h/h.mes*zz*S.koef*sazbaK(k,u[s2.den+'|'+s2.hod])});
+    const H=h.hod/h.mes*zz,bez=B+S.pausal;
+    return {n:Math.min(strop,B*fA(H)+S.pausal),bez:Math.min(Infinity,bez),B};
+  }
   const dnesProv={};HOL.forEach(h=>dnesProv[h.prov]=(dnesProv[h.prov]||0)+h.dnes/K.mesicu);
   const skupiny=S.spol?[['*',PROV.map(p=>p.provozovna)]]:PROV.map(p=>[p.provozovna,[p.provozovna]]);
   const koef={},stav={};
   skupiny.forEach(([g,provs])=>{
     const hs=HOL.filter(h=>provs.includes(h.prov));
-    const dnes=hs.reduce((a,h)=>a+h.dnes/K.mesicu,0);
-    const pevne=hs.reduce((a,h)=>a+(h.vyhr?S.vyhr:S.pausal)*h.mes/K.mesicu,0);
-    const cil=dnes*(1+S.cil/100)-pevne;
-    // obsazené hodiny (bez výhradních) po slotech, za průměrný měsíc, × koeficient bloků
-    const w={};hs.filter(h=>!h.vyhr).forEach(h=>h.sloty.forEach(s=>{const k=s.den+'|'+s.hod;w[k]=(w[k]||0)+s.h/K.mesicu*S.koef}));
-    const u=OBS[g].u,b=Object.entries(w).map(([k,m])=>({m,x:Math.pow(Math.max(u[k]||0,1e-6),S.sklon)}));
-    const g1=kk=>b.reduce((a,c)=>a+c.m*orez(kk*c.x),0),g2=kk=>b.reduce((a,c)=>a+c.m*zao(kk*c.x),0);
-    let k=0;stav[g]='';
-    if(cil<=0||!b.length){stav[g]=cil<=0?'nula':'';koef[g]=0;return}
-    const M=b.reduce((a,c)=>a+c.m,0);if(mn*M>cil)stav[g]='min';else if(mx*M<cil)stav[g]='max';
-    let lo=0,hi=1;while(g1(hi)<cil&&hi<1e9)hi*=2;for(let i=0;i<50;i++){const mid=(lo+hi)/2;if(g1(mid)<cil)lo=mid;else hi=mid}
-    k=(lo+hi)/2;let best=k,bd=Math.abs(g2(k)-cil);
-    if(!stav[g])for(let i=-300;i<=300;i++){const kk=k*(1+i/3000),d=Math.abs(g2(kk)-cil);if(d<bd-0.01){bd=d;best=kk}}
-    koef[g]=best;
+    const cil=hs.reduce((a,h)=>a+h.dnes/K.mesicu,0)*(1+S.cil/100);
+    const tot=k=>hs.reduce((a,h)=>a+najemH(h,k,1).n*h.mes/K.mesicu,0);
+    stav[g]='';
+    if(tot(0)>=cil){koef[g]=0;stav[g]='nula';return}
+    let lo=0,hi=1;while(tot(hi)<cil&&hi<1e7)hi*=2;
+    if(tot(hi)<cil){koef[g]=hi;stav[g]=strop<Infinity?'strop':'max';return}
+    for(let i=0;i<50;i++){const mid=(lo+hi)/2;if(tot(mid)<cil)lo=mid;else hi=mid}
+    koef[g]=Math.abs(tot(lo)-cil)<=Math.abs(tot(hi)-cil)?lo:hi;
+    if(mn>0&&koef[g]===0)stav[g]='min';
   });
-  const sazba=(prov,klicSlotu)=>{const g=klic(prov);const u=OBS[g].u[klicSlotu]||0;return koef[g]?zao(koef[g]*Math.pow(Math.max(u,1e-6),S.sklon)):(mn||0)};
-  // holiči: za měsíc, kdy stříhal
+  const sazba=(prov,klicSlotu)=>{const g=klic(prov);return sazbaK(koef[g],OBS[g].u[klicSlotu])};
   const R=HOL.map(h=>{
     const hod=h.hod/h.mes,trzbaDnes=(h.d*S.cd+h.p*S.cp+h.n*S.cn)/h.mes,dnes=h.dnes/h.mes;
-    let najem;
-    if(h.vyhr)najem=S.vyhr;
-    else najem=h.sloty.reduce((a,s)=>a+s.h/h.mes*z*S.koef*sazba(h.prov,s.den+'|'+s.hod),0)+S.pausal;
-    const trzba=trzbaDnes*z;
-    return {h,hod,hodK:hod*z,dnes,najem,trzbaDnes,trzba,vydDnes:trzbaDnes-dnes,vyd:trzba-najem,
-      kchDnes:hod?dnes/hod:null,kch:hod?(h.vyhr?najem/(hod*z):(najem-S.pausal)/(hod*z*S.koef)):null};
+    const r=najemH(h,koef[klic(h.prov)],z),trzba=trzbaDnes*z,najem=r.n;
+    return {h,hod,hodK:hod*z,dnes,najem,zvyh:r.bez-r.n,B:r.B,trzbaDnes,trzba,vydDnes:trzbaDnes-dnes,vyd:trzba-najem,
+      kchDnes:hod?dnes/hod:null,kch:hod?najem/(hod*z):null};
   });
-  V={R,koef,stav,sazba,dnesProv};
-  kresliDlazdice();kresliHolice();kresliSazby();
+  V={R,koef,stav,sazba,dnesProv,strop,fA};
+  kresliDlazdice();kresliGraf();kresliHolice();kresliSazby();
+}
+
+// graf: měsíční nájem podle odstříhaných hodin, dnes (pásma) a kalkulace, body = holiči bez výhradního křesla
+function kresliGraf(){
+  const R=V.R.filter(r=>!r.h.vyhr);if(!R.length){$('graf').innerHTML='';return}
+  const W=Math.max(320,$('graf').clientWidth||640),Hh=300,L=58,Rm=12,Tm=12,Bm=34;
+  const xmax=Math.ceil(Math.max(...R.map(r=>Math.max(r.hod,r.hodK)))/20)*20+10;
+  const hodK=R.reduce((a,r)=>a+r.hodK*S.koef*r.h.mes,0),Bsum=R.reduce((a,r)=>a+r.B*r.h.mes,0),prum=hodK?Bsum/hodK:0; // průměrná sazba
+  const kalk=H=>Math.min(V.strop,prum*S.koef*H*V.fA(H)+S.pausal),dnes=H=>H<60?3500:H<120?6000:9000;
+  const ymax=Math.ceil(Math.max(...R.map(r=>Math.max(r.dnes,r.najem)),kalk(xmax),9000)/2000)*2000;
+  const x=v=>L+v/xmax*(W-L-Rm),y=v=>Tm+(Hh-Tm-Bm)*(1-v/ymax);
+  const c1=getComputedStyle(document.documentElement).getPropertyValue('--s1').trim(),c2=getComputedStyle(document.documentElement).getPropertyValue('--s2').trim();
+  const mriz=getComputedStyle(document.documentElement).getPropertyValue('--mrizka').trim(),se=getComputedStyle(document.documentElement).getPropertyValue('--se').trim(),kar=getComputedStyle(document.documentElement).getPropertyValue('--karta').trim();
+  let s2='<svg width="100%" viewBox="0 0 '+W+' '+Hh+'" role="img" aria-label="Měsíční nájem podle odstříhaných hodin, dnes a podle kalkulace" style="font:11px Verdana,sans-serif">';
+  for(let v=0;v<=ymax;v+=2000)s2+='<line x1="'+L+'" x2="'+(W-Rm)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="'+mriz+'"/><text x="'+(L-6)+'" y="'+(y(v)+4)+'" text-anchor="end" fill="'+se+'">'+nf(v)+'</text>';
+  for(let v=0;v<=xmax;v+=20)s2+='<text x="'+x(v)+'" y="'+(Hh-Bm+16)+'" text-anchor="middle" fill="'+se+'">'+v+'</text>';
+  s2+='<text x="'+((L+W-Rm)/2)+'" y="'+(Hh-4)+'" text-anchor="middle" fill="'+se+'">odstříhané hodiny za měsíc</text>';
+  // křivky
+  let d1='M'+x(0)+','+y(3500)+' L'+x(60)+','+y(3500)+' L'+x(60)+','+y(6000)+' L'+x(120)+','+y(6000)+' L'+x(120)+','+y(9000)+' L'+x(xmax)+','+y(9000);
+  let d2='';for(let H=0;H<=xmax;H+=1)d2+=(H?'L':'M')+x(H)+','+y(kalk(H))+' ';
+  s2+='<path d="'+d1+'" fill="none" stroke="'+c2+'" stroke-width="2" stroke-dasharray="6 4"/><path d="'+d2+'" fill="none" stroke="'+c1+'" stroke-width="2"/>';
+  // holiči: dnes → kalkulace
+  R.forEach(r=>{const tip='<b>'+esc(r.h.holic)+'</b> ('+esc(r.h.prov)+')<br>dnes: '+nf(r.hod)+' h, '+kc(r.dnes)+'<br>kalkulace: '+nf(r.hodK)+' h, <b>'+kc(r.najem)+'</b>'+(r.zvyh>=1?'<br>zvýhodnění −'+kc(r.zvyh):'');
+    s2+='<line x1="'+x(r.hod)+'" y1="'+y(r.dnes)+'" x2="'+x(r.hodK)+'" y2="'+y(r.najem)+'" stroke="'+se+'" stroke-width="1" opacity=".5"/>'
+      +'<circle cx="'+x(r.hod)+'" cy="'+y(r.dnes)+'" r="4.5" fill="'+kar+'" stroke="'+c2+'" stroke-width="2"'+T(tip)+'/>'
+      +'<circle cx="'+x(r.hodK)+'" cy="'+y(r.najem)+'" r="5" fill="'+c1+'" stroke="'+kar+'" stroke-width="2"'+T(tip)+'/>'});
+  $('graf').innerHTML=s2+'</svg>';
+  $('graf-legenda').innerHTML='<span><svg width="26" height="10"><line x1="0" y1="5" x2="26" y2="5" stroke="'+c2+'" stroke-width="2" stroke-dasharray="6 4"/></svg> dnes (pásma, nad 120 h střed 8 000–10 000 Kč), ○ holič dnes</span>'
+    +'<span><svg width="26" height="10"><line x1="0" y1="5" x2="26" y2="5" stroke="'+c1+'" stroke-width="2"/></svg> kalkulace při průměrné sazbě '+nf(prum,1)+' Kč/h, ● holič podle kalkulace</span>';
 }
 
 // ---------- výstupy ----------
@@ -253,7 +299,7 @@ function kresliDlazdice(){
   const vse=tom(R),hodDnes=R.reduce((a,r)=>a+r.hod*r.h.mes,0),hodK=R.reduce((a,r)=>a+r.hodK*r.h.mes,0);
   const vic=R.filter(r=>r.najem-r.dnes>=50).length,min=R.filter(r=>r.dnes-r.najem>=50).length;
   const vydD=R.reduce((a,r)=>a+r.vydDnes*r.h.mes/K.mesicu,0),vydK=R.reduce((a,r)=>a+r.vyd*r.h.mes/K.mesicu,0);
-  const pozn=Object.entries(V.stav).filter(([g,s])=>s).map(([g,s])=>(g==='*'?'Obě provozovny':g)+': '+(s==='min'?'nejnižší sazba je moc vysoko, cíl nejde splnit':s==='max'?'nejvyšší sazba je moc nízko, cíl nejde splnit':'pevné platby pokryjí celý cíl, sazby jsou 0'));
+  const pozn=Object.entries(V.stav).filter(([g,s])=>s).map(([g,s])=>(g==='*'?'Obě provozovny':g)+': '+(s==='min'?'nejnižší sazba je moc vysoko, cíl nejde splnit':s==='max'?'nejvyšší sazba je moc nízko, cíl nejde splnit':s==='strop'?'strop nájmu je moc nízko, cíl nejde splnit':'pevné platby pokryjí celý cíl, sazby jsou 0'));
   let h='<div class="dl"'+T('Kolik Tom vybere za průměrný měsíc období: dnes podle pásem a dohod, a podle kalkulace.')+'><div class="jm">Tom: nájem celkem / měs</div><div class="cislo">'+kc(vse[1])+'</div><div class="pod">dnes '+kc(vse[0])+rozdil(vse[0],vse[1])+'</div></div>';
   PROV.forEach(p=>{const t=tom(poProv(p.provozovna));
     h+='<div class="dl"'+T('Příjem z nájmu provozovny za průměrný měsíc.')+'><div class="jm">'+esc(p.provozovna)+' / měs</div><div class="cislo">'+kc(t[1])+'</div><div class="pod">dnes '+kc(t[0])+rozdil(t[0],t[1])+'</div></div>'});
@@ -268,10 +314,10 @@ function kresliHolice(){
   const sl=[['holic','Holič',1,'Holič podle Reservanta.'],['prov','Provozovna',1,'Kde stříhá nejčastěji.'],
     ['hod','Hodin/měs',0,'Odstříhané hodiny za měsíc, kdy stříhal; při změně obsazenosti i nová hodnota.'],
     ['dnes','Nájem dnes',0,'Dnes podle pásem (střed rozpětí) nebo dohody.'],['najem','Nájem kalkulace',0,'Podle kalkulace: hodiny × koeficient bloků × sazby jeho hodin + paušál, u výhradního křesla pevná částka.'],
-    ['rozd','Rozdíl',0,'Kalkulace minus dnes. Červeně = holič zaplatí víc.'],['kch','Kč za hodinu',0,'Kolik platí za hodinu křesla: dnes → kalkulace.'],
+    ['rozd','Rozdíl',0,'Kalkulace minus dnes. Červeně = holič zaplatí víc.'],['zvyh','Zvýhodnění',0,'O kolik je nájem nižší díky slevě nad hranicí a stropu (proti stejným sazbám bez zvýhodnění).'],['kch','Kč za hodinu',0,'Nájem ÷ odstříhané hodiny: dnes → kalkulace.'],
     ['trzba','Tržba/měs',0,'Střihy podle typu × ceny z posuvníků.'],['vyd','Výdělek/měs',0,'Tržba minus nájem: dnes → kalkulace. Bez dalších nákladů a daní.'],
     ['podil','Nájem z tržby',0,'Jakou část tržby dá holič na nájem: dnes → kalkulace.']];
-  const val=(r,k)=>({holic:r.h.holic,prov:r.h.prov,hod:r.hod,dnes:r.dnes,najem:r.najem,rozd:r.najem-r.dnes,kch:r.kch,trzba:r.trzba,vyd:r.vyd,podil:r.trzba?r.najem/r.trzba:null})[k];
+  const val=(r,k)=>({holic:r.h.holic,prov:r.h.prov,hod:r.hod,dnes:r.dnes,najem:r.najem,rozd:r.najem-r.dnes,zvyh:r.zvyh,kch:r.kch,trzba:r.trzba,vyd:r.vyd,podil:r.trzba?r.najem/r.trzba:null})[k];
   R.sort((a,b)=>{const x=val(a,HS.k),y=val(b,HS.k);if(x==null)return 1;if(y==null)return -1;return HS.d*(typeof x==='string'?x.localeCompare(y,'cs'):x-y)||a.h.holic.localeCompare(b.h.holic,'cs')});
   let t='<table><tr>'+sl.map(([k,n,l,tip])=>'<th'+(l?' class="l"':'')+' data-sort="'+k+'"'+T(tip+' Kliknutím seřadíš.')+'>'+n+'<span class="sipka">'+(HS.k===k?(HS.d>0?' ▲':' ▼'):'')+'</span></th>').join('')+'</tr>';
   const sip=(a,b,d=0,j='')=>a==null?'–':nf(a,d)+j+(Math.abs(b-a)>=(d?0.05:0.5)?' → <b>'+nf(b,d)+j+'</b>':'');
@@ -279,9 +325,9 @@ function kresliHolice(){
   R.forEach(r=>{s.dnes+=r.dnes;s.najem+=r.najem;s.trzba+=r.trzba;s.vydD+=r.vydDnes;s.vyd+=r.vyd;
     t+='<tr><td>'+esc(r.h.holic)+(r.h.vyhr?' <span class="mala"'+T('Výhradní křeslo: platí pevnou částku z posuvníku.')+'>(výhradní)</span>':'')+'</td><td class="l">'+esc(r.h.prov)+'</td>'
       +'<td>'+sip(r.hod,r.hodK,0,' h')+'</td><td class="dnes">'+kc(r.dnes)+'</td><td><b>'+kc(r.najem)+'</b></td>'
-      +'<td>'+rozdil(r.dnes,r.najem,true)+'</td><td>'+(r.kchDnes==null?'–':sip(r.kchDnes,r.kch,0,' Kč'))+'</td><td>'+sip(r.trzbaDnes,r.trzba,0,' Kč')+'</td>'
+      +'<td>'+rozdil(r.dnes,r.najem,true)+'</td><td>'+(r.zvyh>=1?'<span class="plus">−'+kc(r.zvyh)+'</span>':'–')+'</td><td>'+(r.kchDnes==null?'–':sip(r.kchDnes,r.kch,0,' Kč'))+'</td><td>'+sip(r.trzbaDnes,r.trzba,0,' Kč')+'</td>'
       +'<td>'+sip(r.vydDnes,r.vyd,0,' Kč')+'</td><td>'+(r.trzba?sip(r.dnes/r.trzbaDnes*100,r.najem/r.trzba*100,0,' %'):'–')+'</td></tr>'});
-  t+='<tr class="celkem"><td>Součet zobrazených</td><td></td><td></td><td class="dnes">'+kc(s.dnes)+'</td><td>'+kc(s.najem)+'</td><td>'+rozdil(s.dnes,s.najem,true)+'</td><td></td><td>'+kc(s.trzba)+'</td><td>'+kc(s.vydD)+' → '+kc(s.vyd)+'</td><td></td></tr>';
+  t+='<tr class="celkem"><td>Součet zobrazených</td><td></td><td></td><td class="dnes">'+kc(s.dnes)+'</td><td>'+kc(s.najem)+'</td><td>'+rozdil(s.dnes,s.najem,true)+'</td><td></td><td></td><td>'+kc(s.trzba)+'</td><td>'+kc(s.vydD)+' → '+kc(s.vyd)+'</td><td></td></tr>';
   $('holici').innerHTML=t+'</table>';
   $('pocet').textContent=R.length+' holičů · součet je za měsíc, kdy každý stříhal';
 }
@@ -324,6 +370,7 @@ document.addEventListener('click',e=>{
   const th=e.target.closest('#holici th[data-sort]');if(!th)return;const k=th.dataset.sort;
   HS=HS.k===k?{k,d:-HS.d}:{k,d:k==='holic'||k==='prov'?1:-1};kresliHolice();
 });
+addEventListener('resize',()=>{if(V)kresliGraf()});
 // nápovědy po najetí myší, v mobilu ťuknutím
 function tip(e,html){const t=$('tip');t.innerHTML=html;t.style.display='block';
   const w=t.offsetWidth,h=t.offsetHeight;let x=e.clientX+12,y=e.clientY+12;

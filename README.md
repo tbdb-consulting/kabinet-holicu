@@ -188,6 +188,10 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   nájmu z tržby) a tabulka sazeb po dnech a hodinách. Migrace `20261127200000_analytika_holic_hodiny.sql` (nasazená,
   ověřená, součet 15 991 h sedí s přehledy): `prehled_holic_hodiny` = hodiny holiče po dnech a hodinách, jeden řádek
   na holiče (API vrací najednou nejvýš 1 000 řádků). Nastavení posuvníků si pamatuje jen prohlížeč.
+- 27. 11. 2026 (Keksa, výběr z `Otázky\261127_zvyhodneni_holicu_s_vice_hodinami.html`): simulace zvýhodňuje holiče
+  s více hodinami – sleva na hodiny nad hranicí (hranice po 10 h, sleva 0–60 %), strop měsíčního nájmu (3 000–20 000 Kč)
+  a paušál. Koeficient sazeb se hledá bisekcí na celkovém příjmu včetně slev a stropu. Tabulka holičů má sloupec
+  „Zvýhodnění“, nový graf „Nájem podle počtu hodin“ (dnešní pásma, křivka kalkulace při průměrné sazbě, body holičů).
 - 27. 11. 2026 (Keksa): EET 2.0 v aplikaci chce Keksa stihnout do 1. 1. 2027 (SOAP 1.1, podpis WS-Security
   RSA-SHA256 / exc-c14n certifikátem holiče, server podporuje CORS – viz popis rozhraní v1.2 na eet.gov.cz).
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
