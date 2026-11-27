@@ -119,6 +119,10 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
 - Oprávnění: tabulka `analytika.opravneni` (e-mail → role admin / majitel / odpovedny). Funkce `public.prehled_*`
   pustí jen admina a majitele, anon nemá ani právo je volat (ověřeno curl 42501), cizí e-mail dostane chybu 42501.
   E-maily oprávněných se vkládají ručně v SQL Editoru, do repozitáře nepatří. Teď je zapsaný jen admin (Keksa).
+- 27. 11. 2026 odpoledne (Keksa): graf vytíženosti po měsících v % s porovnáním provozoven (funkce
+  `prehled_vytizenost_mesic`, Po–Pá 9–18 h, migrace `20261127150000_analytika_vytizenost_mesic.sql`, za 12 měsíců
+  OP 49,9 %, ZV 58,6 %); tabulka po dnech a hodinách má v políčku čísla všech provozoven „OP / ZV“ a barvy po 10 %
+  (stupnice viridis, 0–9 % šedě).
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
 - Další kroky: Tom jako `majitel`, Kuba jako `odpovedny` s omezeným pohledem (zatím nerozhodnuto, co uvidí);
   vlastní odesílání e-mailů (SMTP), protože vestavěné posílá jen členům týmu Supabase a málo zpráv za hodinu.
