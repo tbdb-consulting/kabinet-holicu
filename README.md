@@ -180,6 +180,14 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
 - 27. 11. 2026 (Keksa): řádek „Společná sazba obou“ – jedna sazba pro obě provozovny (vytíženost hodiny = obsazená
   křesla obou / všechna sdílená křesla, jeden koeficient na celkový dnešní příjem), pod ním kolik by vybrala každá
   provozovna. V tabulce ceny po dnech a hodinách volba „společná sazba obou provozoven“, druhé tlačítko ji uloží jako variantu.
+- 27. 11. 2026 (Keksa): stránka `web/prehledy/simulace/` (odkaz „Simulace nájmu →“ v záhlaví přehledů) pro zkušební
+  kalkulace proti dnešku. Posuvníky: příjem Toma proti dnešku, paušál, výhradní křeslo, sklon sazby podle vytíženosti
+  (0 = jednotná, 1 = poměrová), nejnižší / nejvyšší sazba, zaokrouhlení, společné / zvláštní sazby, koeficient bloků,
+  změna obsazenosti, ceny střihů. Dlaždice (Tom celkem a po provozovnách, průměrná cena hodiny, kolik holičů zaplatí
+  víc / méně, výdělek holičů), tabulka holičů dnes → kalkulace (nájem, Kč/h, tržba, výdělek = tržba − nájem, podíl
+  nájmu z tržby) a tabulka sazeb po dnech a hodinách. Migrace `20261127200000_analytika_holic_hodiny.sql` (nasazená,
+  ověřená, součet 15 991 h sedí s přehledy): `prehled_holic_hodiny` = hodiny holiče po dnech a hodinách, jeden řádek
+  na holiče (API vrací najednou nejvýš 1 000 řádků). Nastavení posuvníků si pamatuje jen prohlížeč.
 - 27. 11. 2026 (Keksa): EET 2.0 v aplikaci chce Keksa stihnout do 1. 1. 2027 (SOAP 1.1, podpis WS-Security
   RSA-SHA256 / exc-c14n certifikátem holiče, server podporuje CORS – viz popis rozhraní v1.2 na eet.gov.cz).
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
