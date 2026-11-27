@@ -74,7 +74,7 @@ h3{font-size:14.5px;margin:18px 0 4px}
 .ed label{display:flex;flex-direction:column;gap:3px}
 .ed input{width:120px}
 .ed .sir input{width:240px;max-width:100%}
-#pomer input,#pomer select,#dohody input,#dohody select,#kalk input,#kalk select{font:inherit;font-size:13px;padding:5px 7px;border:1px solid var(--li);border-radius:5px;background:var(--karta);color:var(--text)}
+#prava input,#prava select,#pomer input,#pomer select,#dohody input,#dohody select,#kalk input,#kalk select{font:inherit;font-size:13px;padding:5px 7px;border:1px solid var(--li);border-radius:5px;background:var(--karta);color:var(--text)}
 .ed-tab td,.ed-tab th{text-align:left}
 .ed-tab input{width:90px}
 .ed-tl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0 4px}
@@ -200,6 +200,18 @@ th[data-tip],.nap{text-decoration:underline dotted var(--mu);text-underline-offs
     <span class="mala" id="dohody-stav"></span>
   </div>
 
+  <div class="karta skryte" id="prava">
+    <h2>Uživatelé a práva <span class="mala">(vidí jen admin)</span></h2>
+    <p class="mala">Kdo se smí přihlásit do přehledů a co uvidí. Přihlašuje se odkazem do e-mailu, bez hesla.
+    <b>Admin</b> = všechno včetně této karty. <b>Majitel</b> = přehledy, simulace, EET a část Přednost na stránce ledna, bez správy práv.
+    <b>Odpovědný</b> = zatím nikam (co uvidí, ještě není rozhodnuté).
+    Firma prázdná = všechny firmy. Pozor: odkaz pro přihlášení zatím chodí jen na e-maily členů týmu Supabase,
+    pro ostatní (třeba Toma) je potřeba nastavit vlastní odesílání e-mailů (SMTP).</p>
+    <div class="tab-obal" id="prava-tab"></div>
+    <div class="ed" id="prava-form"></div>
+    <span class="mala" id="prava-stav"></span>
+  </div>
+
   <p class="mala">Zdroj: export rezervací z Reservanta, bez jmen a kontaktů zákazníků. Holiči přiřazení k provozovně, kde stříhají nejčastěji.</p>
 </div>
 </main>
@@ -294,6 +306,7 @@ async function start(session){
   $('kdo').textContent=session.user.email;$('odhlasit').classList.remove('skryte');
   const {data:r,error}=await sb.rpc('prehled_role');
   if(error||!r?.length||!r[0].role){ukaz('bez-pristupu');return}
+  MOJE_ROLE=r[0].role;MUJ_EMAIL=r[0].email;
   try{await nacti()}catch(err){ukaz('nacitam');$('nacitam').innerHTML='<span class="chyba">Data se nepodařilo načíst: '+esc(err.message)+'</span>'}
 }
 
@@ -319,6 +332,7 @@ async function nacti(){
   $('obdobi').closest('label').dataset.tip=NAP.obdobi;$('fransizy').closest('label').dataset.tip=NAP.fransizy;
   $('hod-od').closest('label').dataset.tip=$('hod-do').closest('label').dataset.tip=NAP.hodiny;
   await nactiScenare();nastavKalk();nastavDohody();nastavHolice();nastavPomer();
+  if(MOJE_ROLE==='admin'){nastavPrava();await nactiPrava()}
   [DOH,VS]=await Promise.all([rpc('prehled_dohody'),rpc('prehled_vychozi_stav')]);
   for(let h=0;h<24;h++){$('hod-od').add(new Option(h+':00',h,false,h===7));$('hod-do').add(new Option((h+1)+':00',h+1,false,h+1===22))}
   $('hod-od').onchange=$('hod-do').onchange=e=>{
@@ -907,6 +921,43 @@ function nastavPomer(){
       if(POMER_MIN!==''&&POMER_MAX!==''&&+POMER_MIN>+POMER_MAX){$('pomer-stav').innerHTML='<span class="chyba">Nejnižší sazba je vyšší než nejvyšší.</span>';return}
       $('pomer-stav').textContent='';kresliPomerVysledky()}});
   $('pomer').addEventListener('click',e=>{if(e.target.id==='pomer-ulozit')ulozPomer(false);else if(e.target.id==='pomer-ulozit-spol')ulozPomer(true)});
+}
+
+// ---------- uživatelé a práva (jen admin; funkce prehled_opravneni / _ulozit_ / _smazat_) ----------
+let MOJE_ROLE=null,MUJ_EMAIL=null,PRAVA=[];
+const ROLE={admin:'admin',majitel:'majitel',odpovedny:'odpovědný'};
+async function nactiPrava(){PRAVA=await rpc('prehled_opravneni');kresliPrava()}
+function kresliPrava(){
+  $('prava').classList.remove('skryte');
+  const fdt=s=>{const d=new Date(s);return d.getDate()+'. '+(d.getMonth()+1)+'. '+d.getFullYear()};
+  $('prava-tab').innerHTML='<table><tr><th>E-mail</th><th class="l">Role</th><th class="l">Firma</th><th class="l">Poznámka</th><th>Od</th><th></th></tr>'
+    +PRAVA.map(p=>'<tr><td>'+esc(p.email)+(p.email===MUJ_EMAIL?' <span class="mala">(ty)</span>':'')+'</td><td class="l">'+esc(ROLE[p.role]||p.role)+'</td><td class="l">'+esc(p.firma||'všechny')+'</td><td class="l">'+esc(p.poznamka||'')+'</td><td>'+fdt(p.vytvoreno)+'</td>'
+      +'<td><button type="button" class="prepinac" data-upravit="'+esc(p.email)+'"'+T('Načte účet do formuláře pod tabulkou, tam změníš roli, firmu nebo poznámku.')+'>upravit</button>'
+      +(p.email===MUJ_EMAIL?'':' <button type="button" class="odebrat" data-smazat-ucet="'+esc(p.email)+'" title="Odebrat přístup">✕</button>')+'</td></tr>').join('')+'</table>';
+  tipyTabulky($('prava-tab'),['Přihlašovací e-mail.','Co smí vidět (viz popis nahoře).','Data které firmy uvidí. Všechny = i franšízy.','Poznámka, třeba kdo to je.','Kdy byl přístup přidán.','']);
+  const firmy=[...new Set(PROV.map(p=>p.firma))];
+  if(!$('pr-email'))$('prava-form').innerHTML='<label'+T('E-mail, kterým se bude přihlašovat. Malými písmeny.')+'>E-mail<input type="email" id="pr-email" placeholder="jmeno@example.cz" style="width:220px"></label>'
+    +'<label'+T('Admin = všechno včetně správy práv. Majitel = přehledy bez správy práv. Odpovědný = zatím nikam.')+'>Role<select id="pr-role"><option value="majitel">majitel</option><option value="odpovedny">odpovědný</option><option value="admin">admin</option></select></label>'
+    +'<label'+T('Data které firmy uvidí. Všechny = i franšízy.')+'>Firma<select id="pr-firma"><option value="">všechny</option>'+firmy.map(f=>'<option>'+esc(f)+'</option>').join('')+'</select></label>'
+    +'<label class="sir"'+T('Třeba kdo to je a proč má přístup.')+'>Poznámka<input type="text" id="pr-pozn" maxlength="200"></label>'
+    +'<button type="button" class="hl-tl" id="pr-ulozit" style="margin-top:0">Uložit přístup</button>';
+}
+function nastavPrava(){
+  $('prava').addEventListener('click',async e=>{
+    const u=e.target.closest('[data-upravit]'),s=e.target.closest('[data-smazat-ucet]');
+    try{
+      if(u){const p=PRAVA.find(x=>x.email===u.dataset.upravit);$('pr-email').value=p.email;$('pr-role').value=p.role;$('pr-firma').value=p.firma||'';$('pr-pozn').value=p.poznamka||'';$('pr-email').focus();return}
+      if(s){if(!confirm('Odebrat přístup pro '+s.dataset.smazatUcet+'? Přestane vidět přehledy.'))return;await rpc('prehled_smazat_opravneni',{p_email:s.dataset.smazatUcet})}
+      else if(e.target.id==='pr-ulozit'){
+        const em=$('pr-email').value.trim().toLowerCase();if(!em){$('prava-stav').innerHTML='<span class="chyba">Vyplň e-mail.</span>';return}
+        const ex=PRAVA.find(x=>x.email===em);
+        if(!confirm((ex?'Změnit přístup pro ':'Přidat přístup pro ')+em+' jako '+ROLE[$('pr-role').value]+'?'))return;
+        await rpc('prehled_ulozit_opravneni',{p_email:em,p_role:$('pr-role').value,p_firma:$('pr-firma').value||null,p_poznamka:$('pr-pozn').value.trim()||null});
+        $('pr-email').value='';$('pr-pozn').value='';
+      }else return;
+      $('prava-stav').textContent='Uloženo.';await nactiPrava();
+    }catch(err){$('prava-stav').innerHTML='<span class="chyba">Neuloženo: '+esc(err.message)+'</span>'}
+  });
 }
 
 // ---------- dohody s holiči ----------
