@@ -168,6 +168,11 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   `prehled_holici_sluzby` = počty dámských / pánských / neurčených střihů na holiče. Neurčený („Střih – Kabinet holičů“,
   většina rezervací) se na stránce EET počítá cenou pánského, jde změnit. Za 11/2025–10/2026: 21 holičů, odhad tržby
   medián asi 404 000 Kč ročně, nad 1 mil. Kč jeden holič, nad 800 000 Kč tři.
+- 27. 11. 2026 (Keksa): karta „Poměrová hodinová sazba podle vytíženosti“ v přehledech. Sazba každé hodiny v týdnu =
+  koeficient × vytíženost sdílených křesel; koeficient zvlášť pro provozovnu tak, aby vybrala jako dnes (střed rozpětí),
+  výhradní křesla pevně. Po zaokrouhlení (1 / 5 / 10 Kč) se koeficient doladí. Za 11/2025–10/2026 (po 5 Kč): OP cíl
+  58 250 Kč → 58 276 Kč, průměr 80 Kč/h, nejvíc 115 Kč/h; ZV cíl 38 083 Kč → 38 067 Kč, průměr 63 Kč/h, nejvíc 85 Kč/h.
+  Tlačítko uloží sazby jako hodinovou variantu kalkulace (řádky po dnech, sousední hodiny se stejnou sazbou sloučené).
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
 - Další kroky: Tom jako `majitel`, Kuba jako `odpovedny` s omezeným pohledem (zatím nerozhodnuto, co uvidí);
   vlastní odesílání e-mailů (SMTP), protože vestavěné posílá jen členům týmu Supabase a málo zpráv za hodinu.
