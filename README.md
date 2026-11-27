@@ -105,7 +105,7 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
 - **Leden 2027, mobil (Keksa 23. 11. 2026):** aplikace se bude používat hlavně v mobilu. Nápovědy u všech prvků (myš: najetí,
   mobil: klepnutí, zmizí po 4,5 s), výrazný přepínač 4h/3h pod menu a barva podle varianty (modrá 4 h, zelená 3 h),
   na mobilu rozvrh po dnech (křesla × bloky) a férovost na kartách.
-- **Leden 2027, přednost holičů (Keksa 27. 11. 2026, rozhodnutí v `CLAUDE.md`; jen v repozitáři, nezveřejněno):**
+- **Leden 2027, přednost holičů (Keksa 27. 11. 2026, rozhodnutí v `CLAUDE.md`; zveřejněno 27. 11. 2026 se souhlasem Keksy, ověřeno na živém webu):**
   nová část „6. Přednost 🔒“ v `web/leden-2027.html`.
   - *Pevný blok* (holič, den v týdnu, čas, platí od–do, poznámka) se přidělí jako první – před dražbou i rozdělením
     podle přání, nikdo jiný ho nedostane. Dražba pak draží jen křesla, která po pevných blocích zůstala volná.
