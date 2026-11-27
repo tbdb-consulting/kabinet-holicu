@@ -754,6 +754,12 @@ function nastavHolice(){
 // sazba(den, hodina) = k × vytíženost sdílených křesel v té hodině, oříznutá na rozpětí min–max;
 // k tak, aby provozovna vybrala jako dnes. Po zaokrouhlení se k doladí.
 let POMER_ZAOKR=5,POMER_MIN='',POMER_MAX='',POMER_POHLED='';
+// nápověda k políčku: průměrně obsazená křesla v té hodině a součet hodin křesel za průměrný měsíc
+const DNY_G=['pondělí','úterý','středy','čtvrtku','pátku','soboty','neděle'];
+function popisObs(pr,kres,den,mesicne){
+  const k=kontext(),n=k.dny[den]/k.mesicu;
+  return 'obsazeno v průměru '+nf(pr,1)+' z '+kres+' křesel ('+nf(kres?pr/kres*100:0)+' %)<br>za měsíc '+nf(mesicne,1)+' hodin křesel ('+nf(n,1)+' '+DNY_G[den-1]+' × '+nf(pr,1)+' křesel × 1 h)';
+}
 // najde koeficient tak, aby součet sazeb × obsazené hodiny byl co nejblíž cíli (s rozpětím a zaokrouhlením)
 function resPomer(bunky,cil,zaokr){
   const M=bunky.reduce((a,b)=>a+b.m,0);
@@ -836,7 +842,7 @@ function kresliPomerVysledky(){
   for(let h=hod[0];h<=hod[hod.length-1];h++)t+='<th>'+h+'–'+(h+1)+'</th>';t+='</tr>';
   for(let d=1;d<=7;d++){t+='<tr><td class="den">'+DNY[d-1]+'</td>';
     for(let h=hod[0];h<=hod[hod.length-1];h++){const v=R.map(r=>({r,x:m[r.prov+'|'+d+'|'+h]}));
-      const tip='<b>'+DNY[d-1]+' '+h+':00–'+(h+1)+':00</b><br>'+v.map(({r,x})=>esc(r.prov)+': '+(x?'<b>'+nf(x.s)+' Kč/h</b>, vytíženost '+nf(x.u*100)+' %, obsazeno '+nf(x.m,1)+' h měsíčně':'nic obsazeno')).join('<br>');
+      const tip='<b>'+DNY[d-1]+' '+h+':00–'+(h+1)+':00</b>'+v.map(({r,x})=>'<br><b>'+esc(r.prov)+': '+(x?nf(x.s)+' Kč/h</b><br>'+popisObs(x.pr,r.ks,d,x.m):'</b>nic obsazeno')).join('');
       t+='<td><div class="bunka" data-tip="'+esc(tip)+'">'+v.map(({r,x})=>'<span class="n" style="'+barvaPct(x?x.u*100:0)+';border-top-color:'+barva(r.prov)+'">'+(x?nf(x.s):'–')+'</span>').join('<span class="lom">/</span>')+'</div></td>'}
     t+='</tr>'}
   $('pomer-tab').innerHTML=t+'</table></div><p class="mala">Barva políčka = vytíženost (stejná stupnice jako tabulka vytíženosti výše). Hodiny bez jediné rezervace nemají sazbu (–).</p>';
@@ -848,7 +854,8 @@ function kresliPomerPrehled(R,hod){
   if(!POMER_POHLED)POMER_POHLED=R.length>1?'*':R[0].prov;
   const SPv=POMER_POHLED==='spol'?pomerovaSpolecna(R,POMER_ZAOKR):null;if(POMER_POHLED==='spol'&&!SPv)POMER_POHLED='*';
   const vyber=SPv?[SPv]:POMER_POHLED==='*'?R:R.filter(r=>r.prov===POMER_POHLED);
-  const bun={};vyber.forEach(r=>r.bunky.forEach(x=>{const c=bun[x.den+'|'+x.hod]??={m:0,ms:0,u:0,n:0};c.m+=x.m;c.ms+=x.m*x.s;c.u+=x.u;c.n++}));
+  const bun={};vyber.forEach(r=>r.bunky.forEach(x=>{const c=bun[x.den+'|'+x.hod]??={m:0,ms:0,u:0,n:0,pr:0};c.m+=x.m;c.ms+=x.m*x.s;c.u+=x.u;c.n++;c.pr+=x.pr}));
+  const kresV=vyber.reduce((a,r)=>a+r.ks,0); // sdílená křesla zobrazených provozoven
   const saz=c=>c&&c.m?c.ms/c.m:null;
   const vse=Object.values(bun).map(saz).filter(v=>v!=null),smax=Math.max(...vse),smin=Math.min(...vse);
   const pct=v=>smax>smin?(v-smin)/(smax-smin)*99:50; // barva od nejlevnější po nejdražší hodinu
@@ -864,7 +871,7 @@ function kresliPomerPrehled(R,hod){
   for(let h=hod[0];h<=hod[hod.length-1];h++){
     t+='<tr><td>'+h+':00–'+(h+1)+':00</td>';
     for(let d=1;d<=7;d++){const c=bun[d+'|'+h],v=saz(c);
-      t+='<td'+(v!=null?' style="'+barvaPct(pct(v))+'"'+T('<b>'+DNY[d-1]+' '+h+':00–'+(h+1)+':00</b><br>'+nf(v,1)+' Kč/h'+(POMER_POHLED==='*'?' (vážený průměr obou provozoven)':'')+'<br>obsazeno '+nf(c.m,1)+' h měsíčně'):'')+'>'+fmt(v)+'</td>'}
+      t+='<td'+(v!=null?' style="'+barvaPct(pct(v))+'"'+T('<b>'+DNY[d-1]+' '+h+':00–'+(h+1)+':00 · '+nf(v,1)+' Kč/h</b>'+(POMER_POHLED==='*'?' (vážený průměr sazeb obou provozoven)':'')+'<br>'+popisObs(c.pr,kresV,d,c.m)):'')+'>'+fmt(v)+'</td>'}
     const ph=agg(k=>+k.split('|')[1]===h);t+='<td class="souc">'+fmt(ph)+'</td></tr>'}
   t+='<tr class="souc-r"><td>Průměr dne</td>'+DNY.map((x,i)=>'<td class="souc">'+fmt(agg(k=>+k.split('|')[0]===i+1))+'</td>').join('')+'<td class="souc"><b>'+fmt(agg(()=>true))+'</b></td></tr>';
   $('pomer-prehled').innerHTML=t+'</table></div><p class="mala">Průměry jsou vážené obsazenými hodinami: víc obsazená hodina má větší váhu. Barva = sazba od nejlevnější po nejdražší hodinu v tabulce (stejná stupnice jako vytíženost: dražší = dál na stupnici). Prázdné políčko (–) = hodina bez rezervací.</p>';
