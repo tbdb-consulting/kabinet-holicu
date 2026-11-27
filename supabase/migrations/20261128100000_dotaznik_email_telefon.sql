@@ -1,4 +1,4 @@
--- Dotazník: e-mail a telefon holiče (Keksa 28. 11. 2026). Na stránce povinné, v databázi nepovinné,
+-- Dotazník: e-mail a telefon holiče (Keksa 27. 11. 2026). Na stránce povinné, v databázi nepovinné,
 -- aby starší verze stránky ukládaly dál. K čemu: pozvánka a přihlášení do aplikace, zprávy o volném křesle.
 -- Kontakty jsou jen v tabulce dotaznik_odpoved (RLS bez pravidel, z webu je nikdo nečte), do repozitáře nepatří.
 

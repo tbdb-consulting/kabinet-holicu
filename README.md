@@ -166,13 +166,13 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   stejné přihlášení jako přehledy, sdílené na doméně) s rolí admin nebo majitel (`prehled_role`). Bez přihlášení se
   přednost nekreslí a rozpis v částech 3–5 se počítá bez ní. Přihlašuje se v přehledech, pak stačí obnovit stránku.
 
-- **28. 11. 2026 (Keksa):** v přehledech karta „Uživatelé a práva“ (vidí jen admin): seznam účtů z `analytika.opravneni`,
+- **27. 11. 2026 (Keksa):** v přehledech karta „Uživatelé a práva“ (vidí jen admin): seznam účtů z `analytika.opravneni`,
   přidání / změna role, firmy a poznámky, odebrání přístupu. Migrace `20261128090000_analytika_sprava_opravneni.sql`
   (`prehled_opravneni`, `prehled_ulozit_opravneni`, `prehled_smazat_opravneni`, jen pro admina), nasazená a ověřená:
   nejde smazat sám sebe ani odebrat / sesadit posledního admina, neplatný e-mail odmítnut, zkušební účet přidán a smazán.
   Role odpovědný zatím nemá přístup nikam. Odkaz pro přihlášení chodí zatím jen členům týmu Supabase (chybí SMTP).
 
-- **28. 11. 2026 (Keksa):** dotazník má v části „2. Kdo jsi“ povinný e-mail a telefon (na stránce povinné, v databázi
+- **27. 11. 2026 (Keksa):** dotazník má v části „2. Kdo jsi“ povinný e-mail a telefon (na stránce povinné, v databázi
   nepovinné kvůli starším verzím stránky). Sloupce `email` (malými písmeny) a `telefon` (jen číslice a +) v `dotaznik_odpoved`,
   parametry `p_email`, `p_telefon` funkce `odeslat_dotaznik`. Migrace `20261128100000_dotaznik_email_telefon.sql`, nasazená
   a ověřená (chybné odmítnuty, správné uloženy v transakci s rollbackem, starší volání bez kontaktu funguje).
