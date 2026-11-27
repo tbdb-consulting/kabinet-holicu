@@ -179,7 +179,8 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   Kontakty jsou jen v databázi (RLS bez pravidel, z webu je nikdo nečte), do repozitáře ani na web nepatří.
 - **Přihlašovací e-maily (28. 11. 2026):** šablona „Magic link or OTP“ v Supabase je česky (předmět „Tvůj odkaz pro přihlášení –
   Kabinet holičů“). Vlastní SMTP přes Gmail TBDB (tbdb.consulting@gmail.com, smtp.gmail.com:587) je vyplněné, ale **neuložené** –
-  chybí heslo aplikace, které vytvoří a zadá Keksa. Do té doby chodí odkazy jen členům týmu Supabase.
+  chybí heslo aplikace, které vytvoří a zadá Keksa a uloží do firemního trezoru KeePass (`<Data TBDB>\_trezor\TBDB_trezor.kdbx`,
+  skupina „Google tbdb.consulting“, postup `tbdb\Navody\trezor_keepass.md`). Do té doby chodí odkazy jen členům týmu Supabase.
 - **Web kabinetholicu.cz (zjištěno 27. 11. 2026):** běží na **Wixu** (generator „Wix.com Website Builder“, DNS na
   ns10/ns11.wixdns.net, www → cdn3.wixdns.net). Doménu má registrovanou INTERNET CZ (Forpsi), držitel „Kabinet Toma holiče“,
   platnost do 14. 4. 2027. Na doméně nejsou MX záznamy (žádný e-mail @kabinetholicu.cz). Přístup: Tom pozve TBDB do webu
