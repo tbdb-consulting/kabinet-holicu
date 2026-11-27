@@ -84,6 +84,12 @@ h3{font-size:14.5px;margin:18px 0 4px}
 tr.akt-r td{background:var(--mrizka);font-weight:bold}
 td.akt-c{font-weight:bold;outline:2px solid var(--s1);outline-offset:-2px}
 [data-tip]{cursor:help}
+th[data-sort]{cursor:pointer;user-select:none}
+.sipka{color:var(--b);font-size:11px}
+.filtr-r th{text-decoration:none;vertical-align:top;padding:2px 4px 6px}
+.filtr-r input,.filtr-r select{font:inherit;font-size:12px;padding:3px 4px;border:1px solid var(--li);border-radius:4px;background:var(--karta);color:var(--text);width:58px;margin:1px 0}
+.filtr-r input[type=search]{width:110px}
+.filtr-r select{width:auto;max-width:120px}
 button[data-tip],select[data-tip],input[data-tip],label[data-tip]{cursor:pointer}
 th[data-tip],.nap{text-decoration:underline dotted var(--mu);text-underline-offset:3px}
 .dl .cislo.nap{text-decoration-thickness:2px}
@@ -157,8 +163,10 @@ th[data-tip],.nap{text-decoration:underline dotted var(--mu);text-underline-offs
   <div class="karta">
     <h2>Holiči</h2>
     <p class="mala">Průměr na měsíc, ve kterém holič aspoň jednou stříhal. <b>Kč za hodinu</b> = nájem podle dnešních pásem za zvolené období
-    děleno odstříhanými hodinami ve stejném období (celý den, filtr hodin se tu nepoužije). U pásma nad 120 h je rozpětí 8 000–10 000 Kč.</p>
+    děleno odstříhanými hodinami ve stejném období (celý den, filtr hodin se tu nepoužije). U pásma nad 120 h je rozpětí 8 000–10 000 Kč.
+    Kliknutím na nadpis sloupce seřadíte, pod nadpisy jsou filtry (čísla od–do).</p>
     <div class="tab-obal" id="holici"></div>
+    <p class="mala" id="holici-pocet"></p>
   </div>
 
   <div class="karta" id="dohody">
@@ -288,7 +296,7 @@ async function nacti(){
   $('obdobi').onchange=nactiObdobi;$('fransizy').onchange=kresli;
   $('obdobi').closest('label').dataset.tip=NAP.obdobi;$('fransizy').closest('label').dataset.tip=NAP.fransizy;
   $('hod-od').closest('label').dataset.tip=$('hod-do').closest('label').dataset.tip=NAP.hodiny;
-  await nactiScenare();nastavKalk();nastavDohody();
+  await nactiScenare();nastavKalk();nastavDohody();nastavHolice();
   [DOH,VS]=await Promise.all([rpc('prehled_dohody'),rpc('prehled_vychozi_stav')]);
   for(let h=0;h<24;h++){$('hod-od').add(new Option(h+':00',h,false,h===7));$('hod-do').add(new Option((h+1)+':00',h+1,false,h+1===22))}
   $('hod-od').onchange=$('hod-do').onchange=e=>{
@@ -649,17 +657,70 @@ function kresliRozpad(pp){
 }
 
 // ---------- holiči ----------
+// řazení a filtry: HS = podle čeho se řadí, HF = hodnoty filtrů (zůstávají při překreslení)
+let HS={k:'hod',d:-1},HF={},HR=[];
+const HSL=[{k:'holic',n:'Holič',typ:'text',tip:'hHolic'},{k:'prov',n:'Provozovna',typ:'vyber',tip:'hProv'},{k:'mes',n:'Měsíců',typ:'cislo',tip:'hMes'},
+  {k:'hod',n:'Hodin',typ:'cislo',tip:'hHod'},{k:'rez',n:'Rezervací',typ:'cislo',tip:'hRez'},{k:'zak',n:'Zákazníků',typ:'cislo',tip:'hZak'},
+  {k:'naj',n:'Nájem dnes',typ:'cislo',tip:'hNaj'},{k:'kch',n:'Kč za hodinu',typ:'cislo',tip:'hKcH'}];
+const bezDiakr=t=>String(t??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const rozpeti=(a,b,f)=>Math.round(a)===Math.round(b)?f(a):f(a).replace(/\s*Kč$/,'')+'–'+f(b);
 function kresliHolice(){
   const pp=new Set(provozovny().map(p=>p.provozovna)),m={};
   HOL.filter(x=>pp.has(x.provozovna)).forEach(x=>{const k=x.holic;(m[k]??={holic:k,prov:x.provozovna,mes:0,hod:0,rez:0,zak:0,naj:0,najMax:0}).mes++;
     m[k].hod+= +x.hodin;m[k].rez+= +x.rezervaci;m[k].zak+= +x.zakazniku;m[k].naj+= +(x.najem_min||0);m[k].najMax+= +(x.najem_max??x.najem_min??0);if(x.dohoda)m[k].doh=x.dohoda});
-  const r=Object.values(m).sort((a,b)=>b.hod/b.mes-a.hod/a.mes);
-  const rozpeti=(a,b,f)=>Math.round(a)===Math.round(b)?f(a):f(a).replace(/\s*Kč$/,'')+'–'+f(b);
-  let t='<table><tr><th>Holič</th><th class="l">Provozovna</th><th>Měsíců</th><th>Hodin</th><th>Rezervací</th><th>Zákazníků</th><th>Nájem dnes</th><th>Kč za hodinu</th></tr>';
-  r.forEach(x=>{const h=x.hod>0;t+='<tr><td>'+esc(x.holic)+'</td><td class="l">'+esc(x.prov)+'</td><td>'+x.mes+'</td><td>'+nf(x.hod/x.mes)+'</td><td>'+nf(x.rez/x.mes)+'</td><td>'+nf(x.zak/x.mes)+'</td><td'+(x.doh?T('Podle dohody: '+(ZPUSOB[x.doh.zpusob]||x.doh.zpusob)+' za '+nf(x.doh.castka)+' Kč měsíčně (v měsících, kdy platí).'):'')+'>'+rozpeti(x.naj/x.mes,x.najMax/x.mes,kc)+(x.doh?' *':'')
-    +'</td><td data-tip="'+esc(NAP.hKcH+'<br>Nájem za celé období '+rozpeti(x.naj,x.najMax,kc)+' / '+nf(x.hod)+' h')+'">'+(h?rozpeti(x.naj/x.hod,x.najMax/x.hod,v=>nf(v,0)+' Kč'):'–')+'</td></tr>'});
-  $('holici').innerHTML=r.length?t+'</table>':'<p class="mala">Žádná data.</p>';
-  tipyTabulky($('holici'),['hHolic','hProv','hMes','hHod','hRez','hZak','hNaj','hKcH']);
+  HR=Object.values(m).map(x=>({...x,v:{holic:x.holic,prov:x.prov,mes:x.mes,hod:x.hod/x.mes,rez:x.rez/x.mes,zak:x.zak/x.mes,
+    naj:(x.naj+x.najMax)/2/x.mes,kch:x.hod>0?(x.naj+x.najMax)/2/x.hod:null}}));
+  if(!HR.length){$('holici').innerHTML='<p class="mala">Žádná data.</p>';$('holici-pocet').innerHTML='';return}
+  const provs=[...new Set(HR.map(x=>x.prov))].sort((a,b)=>a.localeCompare(b,'cs'));
+  const pole=(k,ph,w)=>'<input type="number" data-f="'+k+'" placeholder="'+ph+'" value="'+esc(HF[k]??'')+'" step="any">';
+  let t='<table class="holici-tab"><thead><tr>'+HSL.map(c=>'<th'+(c.typ==='vyber'||c.k==='holic'?' class="l"':'')+' data-sort="'+c.k+'" data-tip="'+esc(NAP[c.tip]+'<br><i>Kliknutím seřadíte, dalším kliknutím obrátíte pořadí.</i>')+'">'
+      +c.n+'<span class="sipka">'+(HS.k===c.k?(HS.d>0?' ▲':' ▼'):'')+'</span></th>').join('')+'</tr><tr class="filtr-r">'
+    +HSL.map(c=>{
+      if(c.typ==='text')return '<th class="l" data-tip="Filtr: část jména, bez ohledu na háčky a velikost písmen."><input type="search" data-f="holic" placeholder="hledat" value="'+esc(HF.holic??'')+'"></th>';
+      if(c.typ==='vyber')return '<th class="l" data-tip="Filtr: jen holiči z vybrané provozovny."><select data-f="prov"><option value="">všechny</option>'+provs.map(p=>'<option'+(HF.prov===p?' selected':'')+'>'+esc(p)+'</option>').join('')+'</select></th>';
+      let x='<th data-tip="'+esc('Filtr: od–do, obě hranice včetně. Prázdné = bez omezení.'+(c.k==='naj'?' Výběr nahoře: jen holiči s dohodou nebo bez ní.':'')+(c.k==='hod'?' Pásma dnešního nájmu: do 60, 60–120, nad 120 h.':''))+'">';
+      if(c.k==='naj')x+='<select data-f="doh"><option value="">všichni</option><option value="ano"'+(HF.doh==='ano'?' selected':'')+'>s dohodou</option><option value="ne"'+(HF.doh==='ne'?' selected':'')+'>bez dohody</option></select><br>';
+      if(c.k==='hod')x+='<select data-f="pasmo"><option value="">všechna pásma</option>'+[['0-60','do 60 h'],['60-120','60–120 h'],['120-','nad 120 h']].map(([v,n])=>'<option value="'+v+'"'+(HF.pasmo===v?' selected':'')+'>'+n+'</option>').join('')+'</select><br>';
+      return x+pole(c.k+'_od','od')+pole(c.k+'_do','do')+'</th>'}).join('')
+    +'</tr></thead><tbody id="holici-telo"></tbody></table>';
+  $('holici').innerHTML=t;
+  kresliHoliceTelo();
+}
+function holicVyhovuje(x){
+  if(HF.holic&&!bezDiakr(x.holic).includes(bezDiakr(HF.holic)))return false;
+  if(HF.prov&&x.prov!==HF.prov)return false;
+  if(HF.doh==='ano'&&!x.doh||HF.doh==='ne'&&x.doh)return false;
+  if(HF.pasmo){const [a,b]=HF.pasmo.split('-');if(x.v.hod<+a||(b!==''&&x.v.hod>=+b))return false}
+  for(const c of HSL){if(c.typ!=='cislo')continue;const v=x.v[c.k],od=HF[c.k+'_od'],doo=HF[c.k+'_do'];
+    if((od!=null&&od!=='')||(doo!=null&&doo!=='')){if(v==null)return false;const r=Math.round(v);
+      if(od!=null&&od!==''&&r<+od)return false;if(doo!=null&&doo!==''&&r>+doo)return false}}
+  return true;
+}
+function kresliHoliceTelo(){
+  const tb=$('holici-telo');if(!tb)return;
+  const c=HSL.find(c=>c.k===HS.k);
+  const r=HR.filter(holicVyhovuje).sort((a,b)=>{const x=a.v[HS.k],y=b.v[HS.k];
+    if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;
+    return HS.d*(typeof x==='string'?x.localeCompare(y,'cs'):x-y)||a.holic.localeCompare(b.holic,'cs')});
+  tb.innerHTML=r.map(x=>{const h=x.hod>0;return '<tr><td>'+esc(x.holic)+'</td><td class="l">'+esc(x.prov)+'</td><td>'+x.mes+'</td><td>'+nf(x.hod/x.mes)+'</td><td>'+nf(x.rez/x.mes)+'</td><td>'+nf(x.zak/x.mes)
+    +'</td><td'+(x.doh?T('Podle dohody: '+(ZPUSOB[x.doh.zpusob]||x.doh.zpusob)+' za '+nf(x.doh.castka)+' Kč měsíčně (v měsících, kdy platí).'):'')+'>'+rozpeti(x.naj/x.mes,x.najMax/x.mes,kc)+(x.doh?' *':'')
+    +'</td><td data-tip="'+esc(NAP.hKcH+'<br>Nájem za celé období '+rozpeti(x.naj,x.najMax,kc)+' / '+nf(x.hod)+' h')+'">'+(h?rozpeti(x.naj/x.hod,x.najMax/x.hod,v=>nf(v,0)+' Kč'):'–')+'</td></tr>'}).join('')
+    ||'<tr><td colspan="8" class="l mala">Filtrům nikdo neodpovídá.</td></tr>';
+  tipyTabulky(tb,HSL.map(c=>c.tip));
+  const aktivni=Object.values(HF).some(v=>v!=null&&v!=='');
+  $('holici-pocet').innerHTML='Zobrazeno '+r.length+' z '+HR.length+' holičů · řazeno podle sloupce „'+c.n+'“ '+(HS.d>0?'vzestupně':'sestupně')
+    +(aktivni?' · <button type="button" class="prepinac" id="holici-zrusit">zrušit filtry</button>':'');
+}
+function nastavHolice(){
+  const e=$('holici');
+  e.closest('.karta').addEventListener('click',ev=>{
+    if(ev.target.id==='holici-zrusit'){HF={};kresliHolice();return}
+    const th=ev.target.closest('th[data-sort]');if(!th)return;
+    const k=th.dataset.sort;HS=HS.k===k?{k,d:-HS.d}:{k,d:HSL.find(c=>c.k===k).typ==='cislo'?-1:1};
+    e.querySelectorAll('th[data-sort] .sipka').forEach(s=>s.textContent=s.parentNode.dataset.sort===HS.k?(HS.d>0?' ▲':' ▼'):'');
+    kresliHoliceTelo();
+  });
+  e.addEventListener('input',ev=>{const f=ev.target.dataset.f;if(!f)return;HF[f]=ev.target.value;kresliHoliceTelo()});
 }
 
 // ---------- dohody s holiči ----------

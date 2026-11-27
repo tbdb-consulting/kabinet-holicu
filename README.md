@@ -152,6 +152,9 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   odstříhané hodiny OP 726, ZV 606 měsíčně. Nájem do výchozího stavu zatím uložený není – až po zadání dohod.
   Varianta „Bloky podle zájmu – návrh 90 / 75 / 40 Kč“ (oblíbené časy 90, ostatní 75, neoblíbené 40 Kč/h;
   97 600 Kč měsíčně proti dnešním 92 500–100 200 Kč). Částky jsou návrh k diskusi, ne Tomovo rozhodnutí.
+- 27. 11. 2026 (Keksa): tabulka Holiči se řadí kliknutím na kterýkoli nadpis sloupce (podruhé obráceně, čísla podle hodnoty,
+  jména česky) a má řádek filtrů: jméno (bez ohledu na háčky), provozovna, pásmo hodin, s dohodou / bez, u všech číselných
+  sloupců od–do. Filtry i řazení zůstávají při změně období.
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
 - Další kroky: Tom jako `majitel`, Kuba jako `odpovedny` s omezeným pohledem (zatím nerozhodnuto, co uvidí);
   vlastní odesílání e-mailů (SMTP), protože vestavěné posílá jen členům týmu Supabase a málo zpráv za hodinu.
