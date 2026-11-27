@@ -172,6 +172,11 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   nejde smazat sám sebe ani odebrat / sesadit posledního admina, neplatný e-mail odmítnut, zkušební účet přidán a smazán.
   Role odpovědný zatím nemá přístup nikam. Odkaz pro přihlášení chodí zatím jen členům týmu Supabase (chybí SMTP).
 
+- **28. 11. 2026 (Keksa):** dotazník má v části „2. Kdo jsi“ povinný e-mail a telefon (na stránce povinné, v databázi
+  nepovinné kvůli starším verzím stránky). Sloupce `email` (malými písmeny) a `telefon` (jen číslice a +) v `dotaznik_odpoved`,
+  parametry `p_email`, `p_telefon` funkce `odeslat_dotaznik`. Migrace `20261128100000_dotaznik_email_telefon.sql`, nasazená
+  a ověřená (chybné odmítnuty, správné uloženy v transakci s rollbackem, starší volání bez kontaktu funguje).
+  Kontakty jsou jen v databázi (RLS bez pravidel, z webu je nikdo nečte), do repozitáře ani na web nepatří.
 - **Web kabinetholicu.cz (zjištěno 27. 11. 2026):** běží na **Wixu** (generator „Wix.com Website Builder“, DNS na
   ns10/ns11.wixdns.net, www → cdn3.wixdns.net). Doménu má registrovanou INTERNET CZ (Forpsi), držitel „Kabinet Toma holiče“,
   platnost do 14. 4. 2027. Na doméně nejsou MX záznamy (žádný e-mail @kabinetholicu.cz). Přístup: Tom pozve TBDB do webu

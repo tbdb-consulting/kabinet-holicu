@@ -17,7 +17,7 @@ main{max-width:640px;margin:0 auto;padding:16px 16px 60px}
 h2{font-size:15px;color:var(--b);margin:0 0 8px}
 p{margin:0 0 8px}
 .mala{font-size:12.5px;color:var(--se)}
-select,input[type=number],input[type=text],textarea{width:100%;font:15px Verdana,sans-serif;padding:8px 10px;border:1px solid var(--li);border-radius:6px;background:#fff}
+select,input[type=number],input[type=text],input[type=email],input[type=tel],textarea{width:100%;font:15px Verdana,sans-serif;padding:8px 10px;border:1px solid var(--li);border-radius:6px;background:#fff}
 textarea{min-height:70px;resize:vertical}
 .volby{display:flex;flex-wrap:wrap;gap:8px}
 .volby label{flex:1 1 140px;border:1px solid var(--li);border-radius:6px;padding:8px 10px;cursor:pointer}
@@ -86,6 +86,11 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 <option value="__jine">Nejsem v seznamu…</option>
 </select>
 <input type="text" id="jmenoJine" placeholder="Tvoje jméno" maxlength="60" style="display:none;margin-top:8px">
+<div class="kontakt" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+<label style="flex:1 1 220px;font-size:13.5px;font-weight:bold">E-mail<input type="email" id="email" required maxlength="200" autocomplete="email" inputmode="email" placeholder="tvuj@email.cz" style="margin-top:4px"></label>
+<label style="flex:1 1 160px;font-size:13.5px;font-weight:bold">Telefon<input type="tel" id="telefon" required maxlength="20" autocomplete="tel" inputmode="tel" placeholder="777 123 456" style="margin-top:4px"></label>
+</div>
+<p class="mala" style="margin-top:6px">Pošleme ti na ně pozvánku do appky a dáme vědět, když se uvolní křeslo. Nikde jinde je neukážeme.</p>
 <h2 style="margin-top:14px">Kde chceš stříhat</h2>
 <div class="volby">
 <label><input type="radio" name="prov" value="OP">Old Place</label>
@@ -358,6 +363,8 @@ $('f').addEventListener('submit',async e=>{
  if(sel==='__jine')jmeno=$('jmenoJine').value.trim();else if(sel)jmeno=sel.split('|')[1];
  const prov=(document.querySelector('input[name=prov]:checked')||{}).value;
  if(!jmeno||!prov){$('e1').textContent='Ještě vyber své jméno a kde chceš stříhat.';ok=false}
+ const email=$('email').value.trim().toLowerCase(),tel=$('telefon').value.replace(/[^0-9+]/g,'');
+ if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)||!/^\+?[0-9]{9,15}$/.test(tel)){$('e1').textContent=($('e1').textContent?$('e1').textContent+' ':'')+'Vyplň svůj e-mail a telefon (aspoň 9 číslic).';ok=false}
  if(!blok){$('e2b').textContent='Ještě vyber délku bloku.';ok=false}
  const smen=parseInt($('smen').value,10),hodin=blok&&!isNaN(smen)?smen*blok:NaN;
  if(blok&&(isNaN(smen)||smen<0||smen>60))  {$('e2').textContent='Napiš, kolik směn za měsíc chceš (0–60).';ok=false}
@@ -390,7 +397,7 @@ $('f').addEventListener('submit',async e=>{
  const funkce=[...document.querySelectorAll('#dalsi input:checked')].map(x=>x.value);
  const data={p_jmeno:jmeno,p_provozovna:prov,p_hodin:hodin,p_blok:blok,p_prani_blok:blok?prani[blok]:null,p_delka:delka,p_poznamka:$('poznamka').value.trim()||null,
   p_smen:smen,p_odhad_volno:vol==='nevim'?null:+vol,p_hodin_prumer:h3,p_sloty_stav:sst,p_sloty:sst==='ano'?sloty:null,p_sloty_rez:sst==='ano'?rez:null,
-  p_dalsi:{funkce:funkce,napad:$('napad').value.trim()||null},p_nemuzu:nemuzu,p_najem:najemVyplnen?najem:null};
+  p_dalsi:{funkce:funkce,napad:$('napad').value.trim()||null},p_nemuzu:nemuzu,p_najem:najemVyplnen?najem:null,p_email:email,p_telefon:tel};
  if(TEST){$('f').style.display='none';$('diky').style.display='block';$('testVystup').style.display='block';$('testVystup').textContent='Uložilo by se:\n'+JSON.stringify(data,null,1);return}
  $('odeslat').disabled=true;
  try{
