@@ -105,6 +105,37 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
 - **Leden 2027, mobil (Keksa 23. 11. 2026):** aplikace se bude používat hlavně v mobilu. Nápovědy u všech prvků (myš: najetí,
   mobil: klepnutí, zmizí po 4,5 s), výrazný přepínač 4h/3h pod menu a barva podle varianty (modrá 4 h, zelená 3 h),
   na mobilu rozvrh po dnech (křesla × bloky) a férovost na kartách.
+- **Leden 2027, přednost holičů (Keksa 27. 11. 2026, rozhodnutí v `CLAUDE.md`; jen v repozitáři, nezveřejněno):**
+  nová část „6. Přednost 🔒“ v `web/leden-2027.html`.
+  - *Pevný blok* (holič, den v týdnu, čas, platí od–do, poznámka) se přidělí jako první – před dražbou i rozdělením
+    podle přání, nikdo jiný ho nedostane. Dražba pak draží jen křesla, která po pevných blocích zůstala volná.
+    Čas se zadává v hodinách, takže platí pro obě varianty (16–20 je ve 3h blocích 17–20). Když na pevný blok
+    nezbude křeslo, rozpis to hlásí („bez křesla“); když holič v přáních ten čas „nemůže“, seznam ukáže „nemůže!“.
+  - *Úroveň 1–3* (platí od–do, poznámka): spravedlivé rozdělení běží nejdřív pro holiče s úrovní 3, pak 2, pak 1
+    (jen ve dnech platnosti a do podílu jejich hodin úměrného těm dnům), nakonec pro všechny. Uvnitř úrovně dosavadní
+    algoritmus (přednost má, kdo má splněno nejméně). V dražbě rozhoduje úroveň jen při stejné ceně.
+  - Náhoda při shodě je nově pevná podle holiče, dne a bloku, takže porovnání s předností a bez ní ukazuje jen dopad
+    přednosti. Proto se o pár hodin posunula výchozí čísla (3h bez přednosti 1 893 h místo 1 866 h).
+  - *Porovnání* bez přednosti a s ní: dlaždice (kolik hodin se přesunulo, splnění, hodiny ve chtěných blocích,
+    obsazenost) a tabulka po holičích (hodiny a bloky bez → s, rozdíl, splněno, ve chtěných). Přepínač „Použít
+    přednost v rozpisu“ přepne části 3–5. Záznam změn přednosti i ručních úprav (kdo, kdy, co) pod porovnáním.
+  - *Ruční úprava* v části 4: zaškrtnout „✎ Upravit ručně“ a klepnout na blok → vybrat holiče nebo volno
+    (u jména je, co zadal v přáních a kolik hodin má). Holič z jiného křesla ve stejný čas se přesune. Pevný blok jde
+    přesunout jen po potvrzení upozornění, „nemůže“ podle přání také. Úpravy se dají vrátit; změna pravidel,
+    přednosti nebo nová simulace dražby je zruší (zapíše se to).
+  - Ukázka (vymyšlená, poznámky „UKÁZKA“): Matěj úroveň 3, Jakub úroveň 2 od 11. 1., Michal pevně pátek 16–20,
+    Klára pevně čtvrtek 16–20 do 15. 1. Výsledek 4h: přesunuty jen 4 h (Josef 96 → 92 h), obsazenost 1 916 → 1 912 h,
+    splnění dál 96–100 %. 3h: přesunuto 36 h od 5 holičů ke 3, nejhorší splnění 91 → 88 %, obsazenost 1 893 → 1 866 h.
+    Při 80% poptávce tedy přednost mění hlavně to, *které* bloky kdo dostane, ne kolik hodin; úroveň pomůže jen
+    u bloků, o které se soupeří.
+  - V simulaci vidí porovnání každý, kdo stránku otevře (zkušební data). V aplikaci přednost a porovnání jen Tom
+    a provozní, holiči jen svůj rozpis bez značek 📌.
+  - Návrh databáze: `supabase/migrations/20261127220000_rozpis_prednost_NAVRH.sql` – **nenasazovat**, nevyzkoušeno
+    v Postgresu. Schéma `rozpis`: `prednost` (holič, typ pevný blok / úroveň, hodnota, platí od–do, poznámka, autor),
+    `prednost_zmena` (záznam změn plněný triggerem: co bylo před a po, kdo, kdy), `uprava` (ruční úpravy rozpisu,
+    přesun pevného bloku jen s `potvrzeno`). Přístup jen přes funkce `public.prednost_*` pro roli admin a majitel.
+  - **Otevřené pro Keksu/Toma:** má úroveň platit i v dražbě jinak než při stejné ceně? Má holič s pevným blokem
+    platit za něj stejnou sazbu (teď ano)? Smí provozní ručně upravovat rozpis, nebo jen Tom?
 - **Otevřené:** po přechodu na Pro probudit vixen-dev.
 - **27. 11. 2026 (Keksa):** v sekci 8 nepovinně průměrný měsíční nájem a nájem za poslední 3 celé měsíce zvlášť
   (měsíce se počítají podle dne vyplnění). Sloupec `najem` jsonb `{"prumer":…, "mesice":{"RRRR-MM":…}}`, 0–50 000 Kč.

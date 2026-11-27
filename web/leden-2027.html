@@ -160,6 +160,29 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 .fkk .hl{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
 .fkk dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:0;font-size:12.5px}
 .fkk dt{color:var(--se)}.fkk dd{margin:0;text-align:right}
+/* přednost a ruční úpravy */
+.zamek{background:#fff3c4;border:1px solid #e6c65c;border-radius:6px;padding:7px 10px;font-size:13px}
+.prep{display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer}
+.prep input{width:18px;height:18px}
+.prForm summary{list-style:none;display:inline-block}
+.prForm summary::-webkit-details-marker{display:none}
+.prForm[open] summary{background:var(--b);color:#fff}
+.parametry select{width:100%;margin-top:2px}
+.plus{color:var(--ok);font-weight:bold}.minus{color:var(--chyba);font-weight:bold}
+.srovP td.c{text-align:right;white-space:nowrap}
+.srovP tr.pr td{background:#fff8e1!important}
+.ur{display:inline-block;background:var(--b);color:#fff;border-radius:9px;font-size:10.5px;font-weight:bold;padding:0 6px;margin-left:4px}
+.ur.p{background:#8d6e00}
+.xb{border:1px solid var(--li);background:#fff;border-radius:5px;cursor:pointer;color:var(--chyba);font:bold 13px Verdana,sans-serif;padding:2px 8px}
+.varovani{background:var(--hot);border-left:4px solid var(--chyba);padding:6px 9px;border-radius:4px;font-size:13px}
+.blk.edit{cursor:pointer;box-shadow:0 0 0 1px #9fb3c8 inset}
+.blk.edit:hover{box-shadow:0 0 0 2px var(--b) inset}
+#upr{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:12px}
+#upr.skryt{display:none}
+.upr-in{background:#fff;border-radius:10px;padding:16px;max-width:420px;width:100%;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.upr-in label{display:block;font-size:13px}
+.upr-in select{width:100%;font-size:14px;padding:6px;margin-top:3px}
+@media(max-width:700px){#upr{align-items:flex-end;padding:0}.upr-in{border-radius:12px 12px 0 0;max-width:none}.srovP{font-size:11px}.srovP td,.srovP th{padding:3px 2px}.srovP .ur{margin-left:2px;padding:0 4px}.srovP .cip{padding:0 3px}}
 </style>
 </head>
 <body>
@@ -176,6 +199,7 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <button data-t="drazba" data-tip="Holandská dražba bloků, o které je zájem větší než počet křesel.">3. Dražba žádaných bloků</button>
 <button data-t="rozvrh" data-tip="Výsledný rozvrh křesel po týdnech a dnech.">4. Rozvrh</button>
 <button data-t="ferovost" data-tip="Kolik kdo dostal, kolik zaplatí a srovnání 4h a 3h bloků.">5. Férovost a nájem</button>
+<button data-t="prednost" data-tip="Přednost vybraných holičů (pevné bloky a úroveň 1–3) a porovnání rozpisu s ní a bez ní. Jen pro Toma a provozního.">6. Přednost 🔒</button>
 </nav>
 <div id="varLista">
 <button data-v="4" onclick="zvolVar(4)" data-tip="Den rozdělený na 3 bloky po 4 hodinách, jak navrhuje mail. Přání holičů se berou ze sekce 3a dotazníku."><b>4hodinové bloky</b><small>8–12 · 12–16 · 16–20</small></button>
@@ -195,7 +219,9 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <li><b>Pravidla</b> nastavuje majitel nebo pověřený pracovník provozovny: sazbu za hodinu, poměr ranních a odpoledních hodin a pravidla dražby.</li>
 <li><b>Přání:</b> každý holič do 15. zadá, kolik hodin chce a které dny a bloky „chce / může / nemůže“.</li>
 <li><b>Dražba:</b> bloky, o které má zájem víc holičů, než je křesel (typicky čtvrtek a pátek odpoledne), se zčásti vydraží. Cena klesá, dokud někdo neklikne „Beru“.</li>
-<li><b>Rozvrh:</b> zbytek rozdělí systém spravedlivě. Přednost má vždy ten, kdo má zatím splněno nejméně ze svých hodin.</li>
+<li><b>Rozvrh:</b> zbytek rozdělí systém spravedlivě. Přednost má ten, kdo má zatím splněno nejméně ze svých hodin; holiči s úrovní přednosti od Toma si vybírají dřív.</li>
+<li><b>Přednost (jen Tom):</b> majitel může vybrané holiče upřednostnit pevnými bloky nebo úrovní 1–3. V části 6 se dá zkusit a porovnat rozpis s ní a bez ní.</li>
+<li><b>Ruční úprava:</b> před schválením jde v rozvrhu klepnutím změnit, kdo v bloku stříhá.</li>
 <li><b>Férovost a nájem:</b> u každého holiče je vidět, kolik dostal, kolik z toho chtěl, jaký má poměr ráno/odpoledne a kolik zaplatí.</li>
 </ul>
 <p class="mala">Rozdělení jde přepnout mezi 4h bloky (8–12, 12–16, 16–20) a 3h bloky (8–11, 11–14, 14–17, 17–20), každá varianta bere přání holičů ze své mřížky v dotazníku (3a, nebo 3b). Srovnání obou je v části Férovost a nájem. Rezervace se skládají ze souvislých bloků u jednoho křesla a jejich délka respektuje nejkratší a nejdelší rezervaci, kterou holič pro daný den zadal. U 3h bloků se chtěné hodiny dorovnají na nejbližší násobek 3. Pro jednoduchost jen pracovní dny . Šestihodinové bloky, víkendy, časy 7–8 a 20–22, burzu směn a přihlašování přidá skutečná aplikace. Počty křesel: Old Place 6, Zverimex 4 (<i>počet ve Zverimexu je zatím nepotvrzený</i>).</p>
@@ -224,7 +250,7 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <label data-tip="Jak často cena klesne ve skutečné aplikaci. Holiči dostanou upozornění.">Cena klesá každých (minut, ve skutečné dražbě)<input id="pInterval" type="number" value="30" min="1"></label>
 <label data-tip="Aby žádané bloky neskoupil jeden holič.">Nejvýš vydražených balíčků na holiče za měsíc<input id="pMax" type="number" value="2" min="0" max="10"></label>
 </div>
-<p style="margin-top:12px"><button class="btn" onclick="prepocitat();ukaz('prani')" data-tip="Spočítá dražbu a rozvrh znovu s novými pravidly.">Přepočítat měsíc →</button></p>
+<p style="margin-top:12px"><button class="btn" onclick="zrusUpravy();prepocitat();ukaz('prani')" data-tip="Spočítá dražbu a rozvrh znovu s novými pravidly.">Přepočítat měsíc →</button></p>
 </div>
 </section>
 
@@ -276,9 +302,11 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <div class="tydny" id="rTydny"></div>
 <div class="tydny" id="rDny"></div>
 <label data-tip="Zvýrazní bloky holiče a pod rozvrhem ukáže celý jeho leden.">Holič <select id="rHolic" onchange="kresliRozvrh()"><option value="">–</option></select></label>
+<label class="prep" data-tip="Návrh rozpisu před schválením. Zapněte a klepněte na blok – můžete ho dát jinému holiči nebo uvolnit. Pevný blok z přednosti jde přesunout jen vědomě, s upozorněním."><input type="checkbox" id="rUpr" onchange="kresliRozvrh()"> ✎ Upravit ručně</label>
 </div>
+<div id="rStav" class="mala"></div>
 <div class="rleg" id="rLeg"></div>
-<p class="mala"><span class="hvezda">★</span> = vydraženo · čárkovaně = volné křeslo k dokoupení · klepnutím na jméno v legendě holiče zvýrazníte</p>
+<p class="mala"><span class="hvezda">★</span> = vydraženo · 📌 = pevný blok z přednosti · ✎ = ručně upraveno · čárkovaně = volné křeslo k dokoupení · klepnutím na jméno v legendě holiče zvýrazníte</p>
 <div id="rozvrh" class="posuv"></div>
 <div id="rHolicMesic" class="hmes"></div>
 </div>
@@ -298,12 +326,60 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 </div>
 </section>
 
+<section id="t-prednost" class="skryt">
+<div class="karta">
+<h2>6. Přednost holičů<span class="vb" data-tip="Právě zobrazená varianta délky bloků. Přepíná se nahoře pod menu."></span></h2>
+<p class="zamek">🔒 Přednost nastavuje jen Tom. Porovnání vidí Tom a provozní, <b>holiči ne</b> – každý holič vidí jen svůj rozpis, bez značky přednosti.</p>
+<p>Tom může vybrané holiče upřednostnit, nájem se tím nemění:</p>
+<ul>
+<li><b>Pevný blok</b> – holič dostane konkrétní den a čas ve své provozovně na celé období od–do, ještě před dražbou a rozdělováním podle přání. Nikdo jiný ho nedostane.</li>
+<li><b>Úroveň 1–3</b> – když o stejný blok stojí víc holičů, vyhraje vyšší úroveň. Ve stejné úrovni rozhoduje algoritmus jako dosud (přednost má ten, kdo má zatím splněno nejméně). V dražbě rozhoduje úroveň jen při stejné ceně.</li>
+</ul>
+<label class="prep"><input type="checkbox" id="pZap" onchange="PREDN_ZAP=this.checked;ulozPrednost();zapis('Přednost v rozpisu '+(PREDN_ZAP?'zapnuta':'vypnuta'));zrusUpravy();prepocitat()"> Použít přednost v rozpisu (části 3–5)</label>
+<h3>Nastavená přednost</h3>
+<div id="prSeznam" class="posuv"></div>
+<details class="prForm" id="prForm"><summary class="btn sv">+ Přidat přednost</summary>
+<div class="parametry" style="margin-top:8px">
+<label>Holič<select id="fH"></select></label>
+<label>Druh<select id="fTyp" onchange="prFormTyp()"><option value="uroven">úroveň přednosti</option><option value="pevny">pevný blok</option></select></label>
+<label id="fUrL" data-tip="3 = nejvyšší. Při sporu o blok vyhraje vyšší úroveň.">Úroveň<select id="fUr"><option>1</option><option>2</option><option selected>3</option></select></label>
+<label id="fDenL" class="skryt">Den<select id="fDen"></select></label>
+<label id="fBlL" class="skryt" data-tip="Blok v právě zobrazené variantě délky bloků.">Čas<select id="fBl"></select></label>
+<label>Platí od<input id="fOd" type="date"></label>
+<label>Platí do<input id="fDo" type="date"></label>
+<label>Poznámka (povinná)<input id="fPozn" type="text" maxlength="200" placeholder="proč má přednost"></label>
+</div>
+<p class="chyba" id="fChyba"></p>
+<button class="btn" onclick="pridejPrednost()">Uložit přednost</button>
+</details>
+<p><button class="btn sv" onclick="ukazkaPrednosti()" data-tip="Vrátí vymyšlenou ukázku přednosti pro čtyři zkušební holiče.">Načíst ukázku</button><button class="btn sv" onclick="smazPrednost(null)" data-tip="Odebere všechnu přednost.">Odebrat vše</button></p>
+<h3>Rozpis bez přednosti a s ní<span class="ti" data-tip="Stejná přání a stejná pravidla rozdělená dvakrát: jednou bez přednosti, jednou s ní. Rozdíly u holičů bez přednosti jsou to, o co kvůli přednosti přišli nebo co získali.">?</span></h3>
+<div class="souhrn" id="prSouhrn"></div>
+<div id="prSrov" class="posuv" style="margin-top:10px"></div>
+<h3>Záznam změn</h3>
+<div id="prZaznam" class="log mala"></div>
+<p class="mala">V aplikaci se každá změna přednosti i ruční úprava rozpisu uloží s autorem a časem. Tady jen v tomto prohlížeči do zavření stránky; nastavená přednost se pamatuje v prohlížeči.</p>
+</div>
+</section>
+
+<div id="upr" class="skryt" role="dialog" aria-modal="true">
+<div class="upr-in">
+<h3 style="margin-top:0">Ruční úprava rozpisu</h3>
+<p id="uprCo"></p>
+<p id="uprVar" class="varovani skryt"></p>
+<label>Kdo v tomto bloku stříhá<select id="uprH"></select></label>
+<p class="mala" id="uprInfo"></p>
+<p><button class="btn" onclick="ulozUpravu()">Uložit úpravu</button><button class="btn sv" onclick="zavriUpravu()">Zrušit</button></p>
+</div>
+</div>
+
 </main>
 <script>
 // ---------- základ ----------
 const DNY=['Po','Út','St','Čt','Pá'];
-const BLOKY4=[{k:'R',t:'8–12',pred:4,po:0},{k:'S',t:'12–16',pred:2,po:2},{k:'O',t:'16–20',pred:0,po:4}];
-const BLOKY3=[{k:'A',t:'8–11',pred:3,po:0},{k:'B',t:'11–14',pred:3,po:0},{k:'C',t:'14–17',pred:0,po:3},{k:'D',t:'17–20',pred:0,po:3}];
+const BLOKY4=[{k:'R',t:'8–12',h0:8,h1:12,pred:4,po:0},{k:'S',t:'12–16',h0:12,h1:16,pred:2,po:2},{k:'O',t:'16–20',h0:16,h1:20,pred:0,po:4}];
+const BLOKY3=[{k:'A',t:'8–11',h0:8,h1:11,pred:3,po:0},{k:'B',t:'11–14',h0:11,h1:14,pred:3,po:0},{k:'C',t:'14–17',h0:14,h1:17,pred:0,po:3},{k:'D',t:'17–20',h0:17,h1:20,pred:0,po:3}];
+const KAZDY=['každé pondělí','každé úterý','každou středu','každý čtvrtek','každý pátek'];
 let VAR=4, BLOKY=BLOKY4, L=4;
 function nastavVar(v){VAR=v;BLOKY=v===3?BLOKY3:BLOKY4;L=v}
 const PROV=[{id:'OP',nazev:'Old Place',kresla:6},{id:'ZV',nazev:'Zverimex',kresla:4}];
@@ -316,7 +392,7 @@ function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15
 function kc(n){return Math.round(n).toLocaleString('cs-CZ')+' Kč'}
 function num(id){return parseFloat($(id).value)||0}
 
-function dnyMesice(){const r=[];const d=new Date(ROK,MESIC,1);while(d.getMonth()===MESIC){const wd=(d.getDay()+6)%7;const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(wd<5&&!SVATKY.includes(iso))r.push({wd,txt:DNY[wd]+' '+d.getDate()+'. '+(d.getMonth()+1)+'.'});d.setDate(d.getDate()+1)}return r}
+function dnyMesice(){const r=[];const d=new Date(ROK,MESIC,1);while(d.getMonth()===MESIC){const wd=(d.getDay()+6)%7;const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(wd<5&&!SVATKY.includes(iso))r.push({wd,iso,txt:DNY[wd]+' '+d.getDate()+'. '+(d.getMonth()+1)+'.'});d.setDate(d.getDate()+1)}return r}
 const DATA_DNY=dnyMesice();
 $('mesicNazev').textContent='leden '+ROK;
 
@@ -327,79 +403,142 @@ function vymysli(){
  return ODPOVEDI.map((o,i)=>({jmeno:o.j,prov:o.p,pref:VAR===3?o.y:o.x,delka:o.d,cil:o.h,id:i,barva:BARVY[i%BARVY.length],wtp:Math.round((50+r()*45)/5)*5}));
 }
 
+// ---------- přednost holičů (Keksa 27. 11. 2026) ----------
+// Tom může vybrané holiče upřednostnit: (1) pevné bloky – dostane je před dražbou i rozdělováním podle přání,
+// nikdo jiný je nedostane; (2) úroveň 1–3 – při sporu o blok vyhraje vyšší úroveň, ve stejné úrovni rozhoduje
+// dosavadní algoritmus. Každá přednost má platnost od–do a poznámku. Nájem se tím nemění.
+const MES_OD=DATA_DNY[0].iso, MES_DO=DATA_DNY[DATA_DNY.length-1].iso;
+const UKAZKA_PREDNOSTI=[
+ {j:'Matěj',typ:'uroven',hodnota:3,od:'2027-01-01',do:'2027-01-31',pozn:'UKÁZKA, vymyšleno – stálý holič, ať má jistotu'},
+ {j:'Jakub',typ:'uroven',hodnota:2,od:'2027-01-11',do:'2027-01-31',pozn:'UKÁZKA, vymyšleno – zaučuje nového holiče'},
+ {j:'Michal',typ:'pevny',hodnota:{wd:4,h0:16,h1:20},od:'2027-01-01',do:'2027-01-31',pozn:'UKÁZKA, vymyšleno – pátek večer pro stálé zákazníky'},
+ {j:'Klára',typ:'pevny',hodnota:{wd:3,h0:16,h1:20},od:'2027-01-01',do:'2027-01-15',pozn:'UKÁZKA, vymyšleno – na dva týdny'}];
+let PREDNOST=UKAZKA_PREDNOSTI.map((p,i)=>({...p,id:i+1,autor:'Tom (majitel)'})), PREDN_ZAP=true, UPRAVY=[], ZAZNAM=[];
+try{const s=JSON.parse(localStorage.getItem('kh-prednost')||'null');if(s&&Array.isArray(s.p)){PREDNOST=s.p;PREDN_ZAP=s.zap!==false}}catch(e){}
+function ulozPrednost(){try{localStorage.setItem('kh-prednost',JSON.stringify({p:PREDNOST,zap:PREDN_ZAP}))}catch(e){}}
+function zapis(co){ZAZNAM.unshift({kdy:new Date(),kdo:'Tom (majitel)',co})}
+// bloky právě zobrazené varianty, které pevný blok pokrývá (víc než z poloviny)
+function blokyPevne(v){return BLOKY.map((bl,b)=>(Math.min(bl.h1,v.h1)-Math.max(bl.h0,v.h0))>(bl.h1-bl.h0)/2?b:-1).filter(b=>b>=0)}
+function platiDen(p,di){const d=DATA_DNY[di].iso;return d>=p.od&&d<=p.do}
+// deterministická „náhoda“ pro shodu: stejný holič, den a blok dopadne stejně s předností i bez ní
+function nah(...a){let x=(seed*2654435761)>>>0;for(const v of a){x=Math.imul(x^(v+0x9e3779b9),0x85ebca6b)>>>0;x^=x>>>13}return x/4294967296}
+
 // ---------- výpočet měsíce ----------
 // Rezervace = souvislý úsek bloků v jednom dni u jednoho křesla. Délka v hodinách musí být mezi
 // nejkratší a nejdelší rezervací, kterou holič pro ten den v týdnu zadal (sekce 4 dotazníku).
 function minB(h,wd){const d=h.delka[wd];return d?Math.max(1,Math.ceil(d[0]/L)):0}
 function maxB(h,wd){const d=h.delka[wd];return d?Math.floor(d[1]/L):0}
 function bloky(h,di){const ix=[];h.busy[di].forEach((x,i)=>{if(x)ix.push(i)});return ix}
-function spocitej(){
- const r=rng(seed*31+5);
+// opt.prednost: použít přednost; opt.upravy: použít ruční úpravy rozpisu
+function spocitej(opt){
+ opt=opt||{prednost:PREDN_ZAP,upravy:true};
  const H=vymysli();
  const P={sazba:num('pSazba'),rano:num('pRano'),odpo:num('pOdpo'),prah:num('pPrah'),podil:num('pPodil'),start:num('pStart'),krok:Math.max(1,num('pKrok')),max:num('pMax')};
  const NB=BLOKY.length;
+ const PR=opt.prednost?PREDNOST:[];
  // obsazení: occ[prov][den][blok][kreslo]
  const occ={};PROV.forEach(p=>{occ[p.id]=DATA_DNY.map(()=>BLOKY.map(()=>Array(p.kresla).fill(null)))});
- H.forEach(h=>{h.busy=DATA_DNY.map(()=>BLOKY.map(()=>false));h.kres=DATA_DNY.map(()=>-1);h.hod=0;h.pred=0;h.po=0;h.chtene=0;h.najem=0;h.drazHod=0;h.drazNavic=0;h.vyhry=0;h.drazBloky={}});
- function prirad(h,di,b,k,cena,draz){occ[h.prov][di][b][k]={h:h.id,cena,draz};h.busy[di][b]=true;h.kres[di]=k;h.hod+=L;h.pred+=BLOKY[b].pred;h.po+=BLOKY[b].po;if(h.pref[DATA_DNY[di].wd][b]===2)h.chtene+=L;h.najem+=L*cena;if(draz){h.drazHod+=L;h.drazNavic+=L*(cena-P.sazba)}}
+ H.forEach(h=>{h.busy=DATA_DNY.map(()=>BLOKY.map(()=>false));h.kres=DATA_DNY.map(()=>-1);h.hod=0;h.pred=0;h.po=0;h.chtene=0;h.najem=0;h.drazHod=0;h.drazNavic=0;h.vyhry=0;h.drazBloky={};h.uroven=DATA_DNY.map(()=>0);h.prednost=[]});
+ const hJ=j=>H.find(h=>h.jmeno===j);
+ function prirad(h,di,b,k,cena,draz,pev){occ[h.prov][di][b][k]={h:h.id,cena,draz,pev:!!pev};h.busy[di][b]=true;h.kres[di]=k;h.hod+=L;h.pred+=BLOKY[b].pred;h.po+=BLOKY[b].po;if(h.pref[DATA_DNY[di].wd][b]===2)h.chtene+=L;h.najem+=L*cena;if(draz){h.drazHod+=L;h.drazNavic+=L*(cena-P.sazba)}}
  const volneKreslo=(h,di,bs,pref)=>{const o=occ[h.prov][di];const ok=k=>bs.every(b=>o[b][k]===null);if(pref>=0&&ok(pref))return pref;for(let k=0;k<o[0].length;k++)if(ok(k))return k;return -1};
- // poptávka
+ // 0) přednost: úrovně po dnech platnosti, pevné bloky přidělit jako první
+ const konflikty=[];
+ PR.forEach(p=>{const h=hJ(p.j);if(!h)return;h.prednost.push(p);
+  if(p.typ==='uroven'){DATA_DNY.forEach((d,di)=>{if(platiDen(p,di))h.uroven[di]=Math.max(h.uroven[di],p.hodnota)});return}
+  const bs=blokyPevne(p.hodnota);
+  DATA_DNY.forEach((d,di)=>{if(d.wd!==p.hodnota.wd||!platiDen(p,di))return;
+   const nove=bs.filter(b=>!h.busy[di][b]);if(!nove.length)return;
+   const k=volneKreslo(h,di,nove,h.kres[di]);
+   if(k<0){konflikty.push({p,di});return}
+   nove.forEach(b=>prirad(h,di,b,k,P.sazba,false,true))})});
+ // poptávka (přání holičů, bez ohledu na přednost)
  const popt={};PROV.forEach(p=>{popt[p.id]=[0,1,2,3,4].map(wd=>BLOKY.map((_,b)=>H.filter(h=>h.prov===p.id&&h.pref[wd][b]===2).length))});
- // loty
- const loty=[];
- PROV.forEach(p=>{for(let wd=0;wd<5;wd++)for(let b=0;b<NB;b++){const n=popt[p.id][wd][b];if(n>p.kresla*P.prah){const pocet=Math.ceil(p.kresla*P.podil/100);for(let k=0;k<pocet;k++)loty.push({prov:p.id,wd,b,k,pomer:n/p.kresla,zajem:n})}}});
- loty.sort((a,b)=>b.pomer-a.pomer||a.wd-b.wd);
+ // loty dražby: jen křesla volná po pevných blocích, zájem jen holičů, kteří blok nemají pevně
  const dnyWd=wd=>DATA_DNY.map((d,i)=>d.wd===wd?i:-1).filter(i=>i>=0);
+ const loty=[];
+ PROV.forEach(p=>{for(let wd=0;wd<5;wd++)for(let b=0;b<NB;b++){
+  const di=dnyWd(wd);
+  const volna=[...Array(p.kresla).keys()].filter(k=>di.every(d=>occ[p.id][d][b][k]===null));
+  const n=H.filter(h=>h.prov===p.id&&h.pref[wd][b]===2&&!di.every(d=>h.busy[d][b])).length;
+  if(volna.length&&n>volna.length*P.prah){const pocet=Math.min(volna.length,Math.ceil(volna.length*P.podil/100));for(let i=0;i<pocet;i++)loty.push({prov:p.id,wd,b,k:volna[i],pomer:n/volna.length,zajem:n})}}});
+ loty.sort((a,b)=>b.pomer-a.pomer||a.wd-b.wd);
  const lzePridat=(h,di,b)=>{const ix=bloky(h,di);if(ix.length>=maxB(h,DATA_DNY[di].wd))return false;return !ix.length||b===ix[0]-1||b===ix[ix.length-1]+1};
- loty.forEach(l=>{
+ loty.forEach((l,li)=>{
   const di=dnyWd(l.wd), hod=di.length*L;l.hod=hod;l.kroky=[];l.vitez=null;
   for(let cena=P.start;cena>=P.sazba;cena-=P.krok){
    l.kroky.push(cena);
-   const kand=H.filter(h=>h.prov===l.prov&&h.pref[l.wd][l.b]===2&&h.wtp>=cena&&h.vyhry<P.max&&!h.drazBloky[l.wd+'-'+l.b]&&h.cil-h.hod>=hod&&lzePridat(h,di[0],l.b));
-   if(kand.length){const v=kand[Math.floor(r()*kand.length)];l.vitez=v.id;l.cena=cena;l.souperi=kand.length-1;v.vyhry++;v.drazBloky[l.wd+'-'+l.b]=1;di.forEach(d=>prirad(v,d,l.b,l.k,cena,true));break}
+   const kand=H.filter(h=>h.prov===l.prov&&h.pref[l.wd][l.b]===2&&h.wtp>=cena&&h.vyhry<P.max&&!h.drazBloky[l.wd+'-'+l.b]&&h.cil-h.hod>=hod&&di.every(d=>!h.busy[d][l.b])&&lzePridat(h,di[0],l.b));
+   if(kand.length){
+    // při stejné ceně vyhraje vyšší úroveň přednosti, ve stejné úrovni los
+    const ur=h=>Math.max(...di.map(d=>h.uroven[d])), top=Math.max(...kand.map(ur)), nej=kand.filter(h=>ur(h)===top);
+    const v=nej.slice().sort((a,b)=>nah(li,a.id)-nah(li,b.id))[0];
+    l.vitez=v.id;l.cena=cena;l.souperi=kand.length-1;l.prednostVyhrala=top>0&&nej.length<kand.length;v.vyhry++;v.drazBloky[l.wd+'-'+l.b]=1;di.forEach(d=>prirad(v,d,l.b,l.k,cena,true));break}
   }
   if(l.vitez===null)l.cena=null;
  });
- // spravedlivé rozdělení zbytku
- const hotovo=new Set();
- for(let it=0;it<20000;it++){
-  const kand=H.filter(h=>!hotovo.has(h.id)&&h.cil-h.hod>L/2);
-  if(!kand.length)break;
-  kand.sort((a,b)=>(a.hod/a.cil)-(b.hod/b.cil)||a.id-b.id);
-  const h=kand[0];let best=null,bs=-1e9;
-  const predPct=h.hod?h.pred/h.hod*100:0, poPct=h.hod?h.po/h.hod*100:0, zbyva=h.cil-h.hod;
-  const bonus=b=>(BLOKY[b].po===0&&predPct<P.rano+5?150:0)+(BLOKY[b].pred===0&&poPct<P.odpo+5?150:0);
-  for(let di=0;di<DATA_DNY.length;di++){
-   const wd=DATA_DNY[di].wd, mx=maxB(h,wd), mn=minB(h,wd);if(!mx||mn>mx)continue;
-   const ix=bloky(h,di);
-   if(ix.length){ // prodloužit dnešní rezervaci
-    if(ix.length>=mx)continue;
-    [ix[0]-1,ix[ix.length-1]+1].forEach(b=>{
-     if(b<0||b>=NB)return;const pf=h.pref[wd][b];if(pf===0)return;
-     const k=volneKreslo(h,di,[b],h.kres[di]);if(k<0)return;
-     let s=pf*100+bonus(b)+(ix.length<mn?300:-20)+(k===h.kres[di]?0:-40)+r()*5;
-     if(s>bs){bs=s;best={di,bs:[b],k}}
-    });
-   }else{ // nová rezervace v nejkratší délce
-    if(zbyva<mn*L-L/2)continue;
-    for(let s0=0;s0+mn<=NB;s0++){
-     const run=Array.from({length:mn},(_,i)=>s0+i);
-     if(run.some(b=>h.pref[wd][b]===0))continue;
-     const k=volneKreslo(h,di,run,-1);if(k<0)continue;
-     let s=run.reduce((a,b)=>a+h.pref[wd][b]*100+bonus(b),0)/mn+15+r()*5;
-     if(s>bs){bs=s;best={di,bs:run,k}}
+ // spravedlivé rozdělení zbytku: nejdřív holiči s úrovní 3, pak 2, pak 1 (jen ve dnech platnosti a úměrně
+ // těm dnům), nakonec všichni. Uvnitř kola má přednost ten, kdo má zatím splněno nejméně ze svých hodin.
+ function kolo(kdo,denOk,cilH){
+  const hotovo=new Set();
+  for(let it=0;it<20000;it++){
+   const kand=kdo.filter(h=>!hotovo.has(h.id)&&cilH(h)-h.hod>L/2);
+   if(!kand.length)break;
+   kand.sort((a,b)=>(a.hod/a.cil)-(b.hod/b.cil)||a.id-b.id);
+   const h=kand[0];let best=null,bs=-1e9;
+   const predPct=h.hod?h.pred/h.hod*100:0, poPct=h.hod?h.po/h.hod*100:0, zbyva=cilH(h)-h.hod;
+   const bonus=b=>(BLOKY[b].po===0&&predPct<P.rano+5?150:0)+(BLOKY[b].pred===0&&poPct<P.odpo+5?150:0);
+   for(let di=0;di<DATA_DNY.length;di++){
+    if(!denOk(h,di))continue;
+    const wd=DATA_DNY[di].wd, mx=maxB(h,wd), mn=minB(h,wd);if(!mx||mn>mx)continue;
+    const ix=bloky(h,di);
+    if(ix.length){ // prodloužit dnešní rezervaci
+     if(ix.length>=mx)continue;
+     [ix[0]-1,ix[ix.length-1]+1].forEach(b=>{
+      if(b<0||b>=NB)return;const pf=h.pref[wd][b];if(pf===0)return;
+      const k=volneKreslo(h,di,[b],h.kres[di]);if(k<0)return;
+      let s=pf*100+bonus(b)+(ix.length<mn?300:-20)+(k===h.kres[di]?0:-40)+nah(h.id,di,b)*5;
+      if(s>bs){bs=s;best={di,bs:[b],k}}
+     });
+    }else{ // nová rezervace v nejkratší délce
+     if(zbyva<mn*L-L/2)continue;
+     for(let s0=0;s0+mn<=NB;s0++){
+      const run=Array.from({length:mn},(_,i)=>s0+i);
+      if(run.some(b=>h.pref[wd][b]===0))continue;
+      const k=volneKreslo(h,di,run,-1);if(k<0)continue;
+      let s=run.reduce((a,b)=>a+h.pref[wd][b]*100+bonus(b),0)/mn+15+nah(h.id,di,s0)*5;
+      if(s>bs){bs=s;best={di,bs:run,k}}
+     }
     }
    }
+   if(!best){hotovo.add(h.id);continue}
+   best.bs.forEach(b=>prirad(h,best.di,b,best.k,P.sazba,false));
   }
-  if(!best){hotovo.add(h.id);continue}
-  best.bs.forEach(b=>prirad(h,best.di,b,best.k,P.sazba,false));
  }
+ for(let u=3;u>=1;u--){
+  const kdo=H.filter(h=>h.uroven.includes(u));if(!kdo.length)continue;
+  kolo(kdo,(h,di)=>h.uroven[di]===u,h=>h.cil*h.uroven.filter(x=>x===u).length/DATA_DNY.length);
+ }
+ kolo(H,()=>true,h=>h.cil);
+ // ruční úpravy rozpisu (před schválením) – přepíšou výsledek algoritmu
+ const upravy=opt.upravy?UPRAVY.filter(u=>u.var===VAR):[];
+ upravy.forEach(u=>{const o=occ[u.prov][u.di][u.b];
+  if(u.h!==null)o.forEach((x,k)=>{if(x&&x.h===u.h&&k!==u.k)o[k]=null}); // holič nemůže sedět ve dvou křeslech
+  o[u.k]=u.h===null?null:{h:u.h,cena:P.sazba,draz:false,pev:false,ruc:true}});
+ prepocti(H,occ,P);
+ return {H,P,occ,popt,loty,konflikty,upravy:upravy.length,prednost:PR.length>0};
+}
+// hodiny, nájem a ostatní čísla holiče znovu z obsazení křesel (po ručních úpravách)
+function prepocti(H,occ,P){
+ H.forEach(h=>{h.busy=DATA_DNY.map(()=>BLOKY.map(()=>false));h.kres=DATA_DNY.map(()=>-1);h.hod=0;h.pred=0;h.po=0;h.chtene=0;h.najem=0;h.drazHod=0;h.drazNavic=0;h.pevHod=0;h.bloku=0});
+ PROV.forEach(p=>occ[p.id].forEach((den,di)=>den.forEach((kr,b)=>kr.forEach((o,k)=>{if(!o)return;const h=H[o.h];
+  h.busy[di][b]=true;h.kres[di]=k;h.hod+=L;h.bloku++;h.pred+=BLOKY[b].pred;h.po+=BLOKY[b].po;if(h.pref[DATA_DNY[di].wd][b]===2)h.chtene+=L;h.najem+=L*o.cena;
+  if(o.draz){h.drazHod+=L;h.drazNavic+=L*(o.cena-P.sazba)}if(o.pev)h.pevHod+=L}))));
  // kontrola délky rezervací
  H.forEach(h=>{h.rez=[];h.podMin=0;h.nadMax=0;DATA_DNY.forEach((d,di)=>{const ix=bloky(h,di);if(!ix.length)return;
   const n=ix.length, del=n*L, dl=h.delka[d.wd];h.rez.push(del);
   if(!dl||del<dl[0])h.podMin++;
   if(dl&&del>dl[1])h.nadMax++;})});
- return {H,P,occ,popt,loty};
 }
 
 // ---------- vykreslení ----------
@@ -408,7 +547,7 @@ function cip(h){return '<span class="cip" style="background:'+h.barva+'">'+h.jme
 function lotTxt(l){return PROV.find(p=>p.id===l.prov).nazev+' · '+['každé pondělí','každé úterý','každou středu','každý čtvrtek','každý pátek'][l.wd]+' '+BLOKY[l.b].t+' · křeslo '+(l.k+1)}
 function radekLogu(l){
  if(l.vitez===null)return '<div data-tip="Nikdo neklikl ani za základní sazbu, křeslo v tomto bloku se rozdělí běžným způsobem.">'+lotTxt(l)+': <span class="chyba">neprodáno</span> ani za '+D.P.sazba+' Kč/h → běžné rozdělení</div>';
- const h=D.H[l.vitez];return '<div data-tip="Balíček = stejné křeslo ve stejném bloku každý takový den v lednu ('+l.hod+' h). Vítěz platí cenu, při které klikl „Beru“; příplatek = (cena − základní sazba) × hodiny.">'+lotTxt(l)+' ('+l.hod+' h): '+cip(h)+' za <b>'+l.cena+' Kč/h</b>, příplatek '+kc(l.hod*(l.cena-D.P.sazba))+(l.souperi?' · v tu chvíli chtěli i další ('+l.souperi+')':'')+'</div>';
+ const h=D.H[l.vitez];return '<div data-tip="Balíček = stejné křeslo ve stejném bloku každý takový den v lednu ('+l.hod+' h). Vítěz platí cenu, při které klikl „Beru“; příplatek = (cena − základní sazba) × hodiny.">'+lotTxt(l)+' ('+l.hod+' h): '+cip(h)+' za <b>'+l.cena+' Kč/h</b>, příplatek '+kc(l.hod*(l.cena-D.P.sazba))+(l.souperi?' · v tu chvíli chtěli i další ('+l.souperi+')':'')+(l.prednostVyhrala?' · rozhodla úroveň přednosti':'')+'</div>';
 }
 function kresliLog(n){const L=D.loty.slice(0,n);$('dLog').innerHTML=D.loty.length?(L.map(radekLogu).join('')||'<span class="mala">Zatím nic.</span>'):'<span class="mala">Při těchto pravidlech není žádný blok žádaný, dražba se nekoná.</span>'}
 function zastavDrazbu(vysledek){
@@ -463,8 +602,9 @@ function rZmenaProv(){const pid=$('rProv').value;$('rHolic').innerHTML='<option 
 function rVyberHolice(id){$('rHolic').value=$('rHolic').value===String(id)?'':String(id);kresliRozvrh()}
 function rVyberTyden(i){rTyden=i;rDen=0;kresliRozvrh()}
 function kresliRozvrh(){
- const pid=$('rProv').value, p=PROV.find(x=>x.id===pid), zv=$('rHolic').value, W=tydny();
+ const pid=$('rProv').value, p=PROV.find(x=>x.id===pid), zv=$('rHolic').value, W=tydny(), U=$('rUpr').checked;
  if(rTyden>=W.length)rTyden=0;
+ $('rStav').innerHTML='<b>Návrh rozpisu – čeká na schválení.</b> Přednost '+(PREDN_ZAP&&PREDNOST.length?'zapnutá ('+PREDNOST.length+')':'vypnutá')+' · ručních úprav '+D.upravy+(D.upravy?' <button class="xb" style="color:var(--b)" onclick="zrusUpravy(true);prepocitat()" data-tip="Vrátí rozpis tak, jak ho navrhl algoritmus.">vrátit</button>':'')+(D.konflikty.length?' · <span class="chyba">'+D.konflikty.length+'× pevný blok bez volného křesla</span>':'');
  $('rTydny').innerHTML=W.map((w,i)=>'<button class="'+(i===rTyden?'akt':'')+'" onclick="rVyberTyden('+i+')" data-tip="Zobrazit tento týden.">'+DATA_DNY[w[0]].txt.split(' ').slice(1).join(' ')+'–'+DATA_DNY[w[w.length-1]].txt.split(' ').slice(1).join(' ')+'</button>').join('');
  const HP=D.H.filter(h=>h.prov===pid);
  $('rLeg').innerHTML=HP.map(h=>'<span class="'+(zv===String(h.id)?'akt':'')+'" style="background:'+h.barva+'22;color:'+h.barva+'" onclick="rVyberHolice('+h.id+')" data-tip="'+h.jmeno+': chtěl '+h.cil+' h, dostal '+h.hod+' h. Klepnutím zvýrazníte jeho bloky a ukážete jeho leden."><b>'+h.jmeno+'</b> '+h.hod+' h</span>').join('');
@@ -477,9 +617,9 @@ function kresliRozvrh(){
   for(let k=0;k<p.kresla;k++){
    s+='<tr><td class="kr" data-tip="Křeslo '+(k+1)+' v provozovně '+p.nazev+'.">K'+(k+1)+'</td>';
    BLOKY.forEach((bl,b)=>{const o=D.occ[pid][di][b][k];
-    if(!o){s+='<td><div class="blk vol" data-tip="Volné křeslo '+(k+1)+', '+DATA_DNY[di].txt+' '+bl.t+'. Kdokoli si ho může dokoupit za základní sazbu."><span>volno</span></div></td>';return}
+    if(!o){s+='<td><div class="blk vol'+(U?' edit':'')+'" data-u="'+pid+','+di+','+b+','+k+'" data-tip="Volné křeslo '+(k+1)+', '+DATA_DNY[di].txt+' '+bl.t+'. Kdokoli si ho může dokoupit za základní sazbu."><span>volno</span></div></td>';return}
     const h=D.H[o.h];
-    s+='<td><div class="blk'+(zv!==''&&+zv!==h.id?' dim':'')+'" style="background:'+h.barva+'1f;border-left-color:'+h.barva+'" data-tip="'+h.jmeno+' · '+DATA_DNY[di].txt+' '+bl.t+' · křeslo '+(k+1)+' · '+o.cena+' Kč/h'+(o.draz?' · vydraženo v dražbě (★)':' · přiděleno při spravedlivém rozdělení')+'"><span style="color:'+h.barva+';font-weight:bold">'+h.jmeno+(o.draz?' <span class="hvezda">★</span>':'')+'</span>'+(o.cena>D.P.sazba?'<span class="t">'+o.cena+' Kč/h</span>':'')+'</div></td>'});
+    s+='<td><div class="blk'+(zv!==''&&+zv!==h.id?' dim':'')+(U?' edit':'')+'" data-u="'+pid+','+di+','+b+','+k+'" style="background:'+h.barva+'1f;border-left-color:'+h.barva+'" data-tip="'+h.jmeno+' · '+DATA_DNY[di].txt+' '+bl.t+' · křeslo '+(k+1)+' · '+o.cena+' Kč/h'+puvod(o)+'"><span style="color:'+h.barva+';font-weight:bold">'+h.jmeno+znacka(o)+'</span>'+(o.cena>D.P.sazba?'<span class="t">'+o.cena+' Kč/h</span>':'')+'</div></td>'});
    s+='</tr>';
   }
   $('rozvrh').innerHTML=s+'</table>';
@@ -490,9 +630,9 @@ function kresliRozvrh(){
   s+='<tr><td class="kr" data-tip="Křeslo '+(k+1)+' v provozovně '+p.nazev+'.">Křeslo '+(k+1)+'</td>';
   dny.forEach(di=>{s+='<td><div class="stack">';
    BLOKY.forEach((bl,b)=>{const o=D.occ[pid][di][b][k];
-    if(!o){s+='<div class="blk vol" data-tip="Volné křeslo '+(k+1)+', '+DATA_DNY[di].txt+' '+bl.t+'. Kdokoli si ho může dokoupit za základní sazbu.">'+'<span>volno</span><span class="t">'+bl.t+'</span></div>';return}
+    if(!o){s+='<div class="blk vol'+(U?' edit':'')+'" data-u="'+pid+','+di+','+b+','+k+'" data-tip="Volné křeslo '+(k+1)+', '+DATA_DNY[di].txt+' '+bl.t+'. Kdokoli si ho může dokoupit za základní sazbu.">'+'<span>volno</span><span class="t">'+bl.t+'</span></div>';return}
     const h=D.H[o.h], pred=b>0&&D.occ[pid][di][b-1][k], spoj=pred&&pred.h===o.h;
-    s+='<div class="blk'+(spoj?' spoj':'')+(zv!==''&&+zv!==h.id?' dim':'')+'" style="background:'+h.barva+'1f;border-left-color:'+h.barva+'" data-tip="'+h.jmeno+' · '+DATA_DNY[di].txt+' '+bl.t+' · křeslo '+(k+1)+' · '+o.cena+' Kč/h'+(o.draz?' · vydraženo v dražbě (★)':' · přiděleno při spravedlivém rozdělení')+'"><span style="color:'+h.barva+';font-weight:bold">'+h.jmeno+(o.draz?' <span class="hvezda">★</span>':'')+'</span><span class="t">'+bl.t+(o.cena>D.P.sazba?' · '+o.cena+' Kč/h':'')+'</span></div>'});
+    s+='<div class="blk'+(spoj?' spoj':'')+(zv!==''&&+zv!==h.id?' dim':'')+(U?' edit':'')+'" data-u="'+pid+','+di+','+b+','+k+'" style="background:'+h.barva+'1f;border-left-color:'+h.barva+'" data-tip="'+h.jmeno+' · '+DATA_DNY[di].txt+' '+bl.t+' · křeslo '+(k+1)+' · '+o.cena+' Kč/h'+puvod(o)+'"><span style="color:'+h.barva+';font-weight:bold">'+h.jmeno+znacka(o)+'</span><span class="t">'+bl.t+(o.cena>D.P.sazba?' · '+o.cena+' Kč/h':'')+'</span></div>'});
    s+='</div></td>'});
   s+='</tr>';
  }
@@ -557,6 +697,95 @@ function kresliSrovnani(){const a=souhrnVar(4),b=souhrnVar(3);
  r('Nájem celkem',kc(a.najem),kc(b.najem))+
  r('Holičů mimo pravidlo ráno/odpoledne',a.porus,b.porus)+
  r('Rezervací mimo nejkratší–nejdelší délku',a.mimo+' z '+a.rez,b.mimo+' z '+b.rez)+'</table>'}
+// ---------- přednost: značky v rozvrhu ----------
+function puvod(o){return o.pev?' · pevný blok z přednosti (📌)':o.ruc?' · ručně upraveno (✎)':o.draz?' · vydraženo v dražbě (★)':' · přiděleno při spravedlivém rozdělení'}
+function znacka(o){return (o.draz?' <span class="hvezda">★</span>':'')+(o.pev?' 📌':'')+(o.ruc?' ✎':'')}
+// ---------- ruční úprava rozpisu ----------
+let uprCil=null;
+$('rozvrh').addEventListener('click',e=>{if(!$('rUpr').checked)return;const el=e.target.closest('[data-u]');if(!el)return;const [pid,di,b,k]=el.dataset.u.split(',');otevriUpravu(pid,+di,+b,+k)});
+function otevriUpravu(pid,di,b,k){
+ if(typeof tipHide==='function')tipHide();
+ const o=D.occ[pid][di][b][k], p=PROV.find(x=>x.id===pid), wd=DATA_DNY[di].wd;
+ uprCil={pid,di,b,k,puv:o?o.h:null,pev:!!(o&&o.pev)};
+ $('uprCo').innerHTML='<b>'+p.nazev+' · '+DATA_DNY[di].txt+' '+BLOKY[b].t+' · křeslo '+(k+1)+'</b><br>Teď: '+(o?cip(D.H[o.h])+puvod(o):'volno');
+ $('uprVar').classList.toggle('skryt',!uprCil.pev);
+ $('uprVar').innerHTML=uprCil.pev?'📌 Tohle je <b>pevný blok</b>, který Tom dal holiči '+D.H[o.h].jmeno+' jako přednost. Přesunout ho jde, ale jen vědomě – před uložením se ještě zeptám.':'';
+ const TX=['nemůže','může','chce'];
+ $('uprH').innerHTML='<option value="">– volno –</option>'+D.H.filter(h=>h.prov===pid).map(h=>{const jinde=D.occ[pid][di][b].findIndex((x,kk)=>x&&x.h===h.id&&kk!==k);
+  return '<option value="'+h.id+'"'+(o&&o.h===h.id?' selected':'')+'>'+h.jmeno+' – '+TX[h.pref[wd][b]]+' · '+h.hod+'/'+h.cil+' h'+(jinde>=0?' · teď v křesle '+(jinde+1):'')+'</option>'}).join('');
+ $('uprInfo').textContent='U jména: co holič pro tento blok zadal v přáních a kolik hodin má / chtěl. Když vyberete holiče, který v tu dobu sedí v jiném křesle, přesune se sem.';
+ $('upr').classList.remove('skryt');
+}
+function zavriUpravu(){$('upr').classList.add('skryt');uprCil=null}
+function ulozUpravu(){
+ const u=uprCil;if(!u)return;const v=$('uprH').value, h=v===''?null:+v;
+ if(h===u.puv){zavriUpravu();return}
+ if(u.pev&&!confirm('Pozor: přesouváte pevný blok, který Tom dal holiči '+D.H[u.puv].jmeno+' jako přednost.\n\nOpravdu ho chcete přesunout?'))return;
+ if(h!==null&&D.H[h].pref[DATA_DNY[u.di].wd][u.b]===0&&!confirm(D.H[h].jmeno+' v přáních zadal(a), že v tuto dobu nemůže. Přesto přidělit?'))return;
+ UPRAVY=UPRAVY.filter(x=>!(x.var===VAR&&x.prov===u.pid&&x.di===u.di&&x.b===u.b&&x.k===u.k));
+ UPRAVY.push({var:VAR,prov:u.pid,di:u.di,b:u.b,k:u.k,h});
+ zapis('Ruční úprava ('+VAR+'h bloky): '+PROV.find(p=>p.id===u.pid).nazev+' '+DATA_DNY[u.di].txt+' '+BLOKY[u.b].t+' křeslo '+(u.k+1)+': '+(u.puv===null?'volno':D.H[u.puv].jmeno)+' → '+(h===null?'volno':D.H[h].jmeno)+(u.pev?' (přesunut pevný blok, potvrzeno)':''));
+ zavriUpravu();prepocitat();
+}
+function zrusUpravy(zaznam){if(UPRAVY.length&&zaznam!==false)zapis(zaznam===true?'Ruční úpravy vráceny ('+UPRAVY.length+')':'Rozpis přepočítán, ruční úpravy ('+UPRAVY.length+') zrušeny');UPRAVY=[]}
+$('upr').addEventListener('click',e=>{if(e.target.id==='upr')zavriUpravu()});
+// ---------- přednost: nastavení ----------
+function prTxt(p){if(p.typ==='uroven')return 'úroveň '+p.hodnota;const bs=blokyPevne(p.hodnota);return 'pevný blok '+KAZDY[p.hodnota.wd]+' '+p.hodnota.h0+'–'+p.hodnota.h1+(bs.length&&(BLOKY[bs[0]].h0!==p.hodnota.h0||BLOKY[bs[bs.length-1]].h1!==p.hodnota.h1)?' (v '+VAR+'h blocích '+BLOKY[bs[0]].h0+'–'+BLOKY[bs[bs.length-1]].h1+')':'')}
+function datum(s){const d=s.split('-');return +d[2]+'. '+(+d[1])+'. '+d[0]}
+function kresliPrednost(){
+ $('pZap').checked=PREDN_ZAP;
+ if(!PREDNOST.length)$('prSeznam').innerHTML='<p class="mala">Žádná přednost – rozpis se dělí jen podle přání a pravidel.</p>';
+ else $('prSeznam').innerHTML='<table class="siroka"><tr><th>Holič</th><th>Přednost</th><th>Platí</th><th>Poznámka</th><th>Zadal</th><th></th></tr>'+PREDNOST.map(p=>{const h=D.H.find(x=>x.jmeno===p.j);
+  let var_='';if(p.typ==='pevny'&&h){const bs=blokyPevne(p.hodnota);if(bs.some(b=>h.pref[p.hodnota.wd][b]===0))var_=' <span class="chyba" data-tip="Holič v přáních zadal, že v tuto dobu nemůže.">nemůže!</span>';
+   const k=D.konflikty.filter(x=>x.p===p).length;if(k)var_+=' <span class="chyba" data-tip="V tyto dny už nebylo volné křeslo (jiné pevné bloky).">'+k+'× bez křesla</span>'}
+  p._var=var_;return '<tr><td>'+(h?cip(h):p.j)+'</td><td>'+prTxt(p)+var_+'</td><td style="white-space:nowrap">'+datum(p.od)+' – '+datum(p.do)+'</td><td>'+p.pozn+'</td><td>'+p.autor+'</td><td><button class="xb" onclick="smazPrednost('+p.id+')" data-tip="Odebrat tuto přednost.">✕</button></td></tr>'}).join('')+'</table>';
+ if(PREDNOST.length){$('prSeznam').innerHTML='<div class="fk-tab">'+$('prSeznam').innerHTML+'</div><div class="fk">'+PREDNOST.map(p=>{const h=D.H.find(x=>x.jmeno===p.j);return '<div class="fkk" style="--hb:'+(h?h.barva:'#1F4E78')+'"><div class="hl">'+(h?cip(h):p.j)+'<button class="xb" onclick="smazPrednost('+p.id+')">✕</button></div><b>'+prTxt(p)+'</b>'+(p._var||'')+'<div class="mala">'+datum(p.od)+' – '+datum(p.do)+' · zadal '+p.autor+'</div><div>'+p.pozn+'</div></div>'}).join('')+'</div>'}
+ // formulář
+ const fh=$('fH').value;$('fH').innerHTML=D.H.slice().sort((a,b)=>a.prov.localeCompare(b.prov)||a.jmeno.localeCompare(b.jmeno,'cs')).map(h=>'<option value="'+h.jmeno+'">'+h.jmeno+' ('+PROV.find(p=>p.id===h.prov).nazev+')</option>').join('');if(fh)$('fH').value=fh;
+ if(!$('fDen').options.length)$('fDen').innerHTML=DNY.map((d,i)=>'<option value="'+i+'">'+KAZDY[i]+'</option>').join('');
+ const fb=$('fBl').value;$('fBl').innerHTML=BLOKY.map(bl=>'<option value="'+bl.h0+'-'+bl.h1+'">'+bl.t+'</option>').join('');if(fb&&[...$('fBl').options].some(o=>o.value===fb))$('fBl').value=fb;
+ if(!$('fOd').value){$('fOd').value=MES_OD;$('fDo').value=MES_DO}
+ kresliZaznam();kresliSrovPrednost();
+}
+function prFormTyp(){const pev=$('fTyp').value==='pevny';$('fUrL').classList.toggle('skryt',pev);$('fDenL').classList.toggle('skryt',!pev);$('fBlL').classList.toggle('skryt',!pev)}
+function pridejPrednost(){
+ const od=$('fOd').value, do_=$('fDo').value, pozn=$('fPozn').value.trim(), typ=$('fTyp').value;
+ if(!od||!do_||do_<od){$('fChyba').textContent='Zadej platnost od–do (do nesmí být před od).';return}
+ if(!pozn){$('fChyba').textContent='Napiš poznámku, proč má holič přednost.';return}
+ const hb=$('fBl').value.split('-').map(Number);
+ const p={id:Math.max(0,...PREDNOST.map(x=>x.id))+1,j:$('fH').value,typ,hodnota:typ==='uroven'?+$('fUr').value:{wd:+$('fDen').value,h0:hb[0],h1:hb[1]},od,do:do_,pozn,autor:'Tom (majitel)'};
+ PREDNOST.push(p);$('fChyba').textContent='';$('fPozn').value='';$('prForm').open=false;
+ zapis('Přidána přednost: '+p.j+' – '+prTxt(p)+', '+datum(od)+' – '+datum(do_)+' („'+pozn+'“)');
+ ulozPrednost();zrusUpravy();prepocitat();
+}
+function smazPrednost(id){
+ if(id===null){if(!PREDNOST.length||!confirm('Odebrat všechnu přednost?'))return;zapis('Odebrána všechna přednost ('+PREDNOST.length+')');PREDNOST=[]}
+ else{const p=PREDNOST.find(x=>x.id===id);zapis('Odebrána přednost: '+p.j+' – '+prTxt(p));PREDNOST=PREDNOST.filter(x=>x.id!==id)}
+ ulozPrednost();zrusUpravy();prepocitat();
+}
+function ukazkaPrednosti(){PREDNOST=UKAZKA_PREDNOSTI.map((p,i)=>({...p,id:i+1,autor:'Tom (majitel)'}));zapis('Načtena ukázka přednosti (vymyšlená)');ulozPrednost();zrusUpravy();prepocitat()}
+function kresliZaznam(){$('prZaznam').innerHTML=ZAZNAM.length?ZAZNAM.map(z=>'<div>'+z.kdy.toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' · '+z.kdo+' · '+z.co+'</div>').join(''):'Zatím žádná změna.'}
+// ---------- přednost: porovnání bez ní a s ní ----------
+function kresliSrovPrednost(){
+ const A=spocitej({prednost:false,upravy:false}), B=spocitej({prednost:true,upravy:true});
+ const pct=(h)=>Math.round(h.hod/h.cil*100), cht=h=>h.hod?Math.round(h.chtene/h.hod*100):0;
+ const sg=(x,s)=>x>0?'<span class="plus">+'+x+(s||'')+'</span>':x<0?'<span class="minus">−'+(-x)+(s||'')+'</span>':'<span class="mala">0</span>';
+ const radky=B.H.map((h,i)=>({h,a:A.H[i],d:h.hod-A.H[i].hod})).sort((x,y)=>(y.h.prednost.length>0)-(x.h.prednost.length>0)||Math.abs(y.d)-Math.abs(x.d)||x.h.jmeno.localeCompare(y.h.jmeno,'cs'));
+ const ziskali=radky.filter(r=>r.d>0), ztratili=radky.filter(r=>r.d<0);
+ const sp=H=>{const s=H.map(pct);return Math.min(...s)+'–'+Math.max(...s)+' %'};
+ const chC=H=>Math.round(H.reduce((a,h)=>a+h.chtene,0)/Math.max(1,H.reduce((a,h)=>a+h.hod,0))*100);
+ const obs=H=>H.reduce((a,h)=>a+h.hod,0);
+ $('prSouhrn').innerHTML=
+  '<div class="dlazdice" data-tip="Holiči, kteří mají aspoň jednu přednost."><div class="h">'+B.H.filter(h=>h.prednost.length).length+'</div><div class="t">holičů s předností</div></div>'+
+  '<div class="dlazdice" data-tip="Kolik hodin se kvůli přednosti přesunulo od jedněch holičů k druhým (součet ztrát)."><div class="h">'+ztratili.reduce((a,r)=>a-r.d,0)+' h</div><div class="t">přesunuto od '+ztratili.length+' holičů k '+ziskali.length+'</div></div>'+
+  '<div class="dlazdice" data-tip="Přidělené / chtěné hodiny u holiče, který dopadl nejhůř a nejlíp."><div class="h">'+sp(B.H)+'</div><div class="t">splnění s předností (bez: '+sp(A.H)+')</div></div>'+
+  '<div class="dlazdice" data-tip="Kolik přidělených hodin padlo do bloků „chce“, za všechny holiče."><div class="h">'+chC(B.H)+' %</div><div class="t">hodin ve chtěných blocích (bez: '+chC(A.H)+' %)</div></div>'+
+  '<div class="dlazdice" data-tip="Rezervované hodiny křesel celkem."><div class="h">'+obs(B.H)+' h</div><div class="t">obsazeno celkem (bez: '+obs(A.H)+' h)</div></div>';
+ $('prSrov').innerHTML='<table class="siroka srovP"><tr><th>Holič</th><th data-tip="Přidělené hodiny (a počet bloků) bez přednosti → s předností.">Hodiny<br>bez→s</th><th data-tip="Kolik hodin holič přednostním rozdělením získal nebo ztratil.">±</th><th data-tip="Přidělené / chtěné hodiny bez přednosti → s předností.">Splněno<br>bez→s</th><th data-tip="Podíl přidělených hodin v blocích, které holič označil „chce“, bez → s.">Ve chtěných<br>bez→s</th></tr>'+
+  radky.map(r=>{const h=r.h,a=r.a;const ur=h.prednost.map(p=>p.typ==='uroven'?'<span class="ur" data-tip="Úroveň přednosti '+p.hodnota+', '+datum(p.od)+' – '+datum(p.do)+'.">'+p.hodnota+'</span>':'<span class="ur p" data-tip="Pevný blok '+prTxt(p)+', '+datum(p.od)+' – '+datum(p.do)+'.">📌</span>').join('');
+   return '<tr class="'+(h.prednost.length?'pr':'')+'"><td>'+cip(h)+ur+'</td><td class="c">'+a.hod+'→<b>'+h.hod+'</b> h<br><span class="mala">'+a.bloku+'→'+h.bloku+' bl.</span></td><td class="c">'+sg(r.d)+'</td><td class="c">'+pct(a)+'→<b>'+pct(h)+'</b> %</td><td class="c">'+cht(a)+'→<b>'+cht(h)+'</b> %</td></tr>'}).join('')+'</table>'+
+  '<p class="mala">Žlutě holiči s předností, pak podle velikosti změny. Ostatní holiči mají změnu jen proto, že jim přednost vzala nebo uvolnila blok. Úroveň pomůže jen u bloků, o které se soupeří – když holič chce hlavně málo žádaná rána, nezmění se skoro nic; malé posuny „ve chtěných“ dělá i pravidlo ráno/odpoledne.'+(B.upravy?' Sloupec „s“ obsahuje i ruční úpravy rozpisu ('+B.upravy+').':'')+(PREDN_ZAP?'':' <b>Přednost je teď v rozpisu vypnutá</b> – porovnání ukazuje, co by udělala.')+'</p>';
+}
 function prepniVar(){zvolVar(VAR===4?3:4)}
 function zvolVar(v){nastavVar(v);$('pVar').value=v;prepocitat()}
 function prepocitat(){
@@ -566,10 +795,10 @@ function prepocitat(){
  $('rProv').innerHTML=PROV.map(p=>'<option value="'+p.id+'">'+p.nazev+'</option>').join('');$('rProv').value=pv;
  $('rHolic').innerHTML='<option value="">–</option>'+D.H.filter(h=>h.prov===pv).map(h=>'<option value="'+h.id+'">'+h.jmeno+'</option>').join('');$('rHolic').value=hv;
  $('dInt').textContent=D.P.start?num('pInterval'):'';
- kresliPrani();kresliRozvrh();kresliFerovost();kresliSrovnani();kresliLog(0);
+ kresliPrani();kresliRozvrh();kresliFerovost();kresliSrovnani();kresliPrednost();kresliLog(0);
  $('dCo').textContent=D.loty.length?D.loty.length+' balíčků čeká na dražbu':'Dražba se nekoná';$('dCena').textContent='– Kč/h';$('dStav').innerHTML='&nbsp;';
 }
-function novaData(){seed=Math.floor(Math.random()*1e6);prepocitat();ukaz('prani')}
+function novaData(){seed=Math.floor(Math.random()*1e6);zrusUpravy();prepocitat();ukaz('prani')}
 function ukaz(t){if(typeof tipHide==='function')tipHide();document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('skryt',s.id!=='t-'+t));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('akt',b.dataset.t===t));window.scrollTo(0,0)}
 $('nav').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.t)ukaz(b.dataset.t)});
 // ---------- nápovědy (myš: najetí, mobil: klepnutí) ----------
