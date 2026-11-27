@@ -37,6 +37,12 @@ Web: https://tbdb-consulting.github.io/kabinet-holicu/ (kořen = prototyp aplika
 - **Historická data a přístup (Keksa a Tom 26. 11. 2026):** pseudonymizovaná historie z Reservanta do schématu
   `analytika` (bez jmen a kontaktů, nepřístupné z veřejného webu), nahrává Claude importem v administraci Supabase.
   Přehledy vidí jen Tom a TBDB; odpovědný pracovník (holič Kuba) jen vybraná data. Patří do fáze 1 za pevnou cenu.
+- **Přednost holičů při rozdělování směn (Keksa 27. 11. 2026, výběr z `Otázky\261127_prednost_holicu_pri_vyberu_smen.html`):**
+  Tom jako majitel může vybrané holiče upřednostnit, nemění se tím nájem. (1) Pevné bloky – Tom přidělí holiči konkrétní
+  bloky na období, dostane je před rozdělováním podle přání. (2) Úroveň přednosti 1–3 – při sporu o blok vyhraje vyšší
+  úroveň, ve stejné úrovni rozhoduje algoritmus jako dosud. (3) Ruční úprava rozpisu před schválením je nutnost.
+  Přednost vidí a mění jen Tom (holiči vidí jen svůj rozpis), každá má platnost od–do a poznámku, změny se zaznamenávají.
+  Před zavedením vyzkoušet v simulaci rozpisu (`web/leden-2027.html`).
 - **Více firem od začátku (Keksa 26. 11. 2026):** franšízové provozovny rezervují přes Reservanto pod Tomovým účtem
   a mohou později přejít na aplikaci. Datový model: firma → provozovna → holič → zákazník, data firem oddělená
   (řádkové zabezpečení podle firmy), role za firmu, EET za každého holiče nebo firmu zvlášť. Přechod po jedné
