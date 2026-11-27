@@ -329,6 +329,13 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <section id="t-prednost" class="skryt">
 <div class="karta">
 <h2>6. Přednost holičů<span class="vb" data-tip="Právě zobrazená varianta délky bloků. Přepíná se nahoře pod menu."></span></h2>
+<div id="prZamek">
+<p class="zamek">🔒 Tahle část je jen pro Toma a TBDB. Otevře se po přihlášení stejným e-mailem jako do přehledů.</p>
+<p id="prZamekStav" class="mala">Ověřuji přihlášení…</p>
+<p><a class="btn" href="prehledy/" id="prPrihlasit">Přihlásit se v přehledech</a></p>
+<p class="mala">Po přihlášení se sem vrať (stačí obnovit stránku). Bez přihlášení se rozpis v částech 3–5 počítá bez přednosti.</p>
+</div>
+<div id="prObsah" class="skryt">
 <p class="zamek">🔒 Přednost nastavuje jen Tom. Porovnání vidí Tom a provozní, <b>holiči ne</b> – každý holič vidí jen svůj rozpis, bez značky přednosti.</p>
 <p>Tom může vybrané holiče upřednostnit, nájem se tím nemění:</p>
 <ul>
@@ -360,6 +367,7 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <div id="prZaznam" class="log mala"></div>
 <p class="mala">V aplikaci se každá změna přednosti i ruční úprava rozpisu uloží s autorem a časem. Tady jen v tomto prohlížeči do zavření stránky; nastavená přednost se pamatuje v prohlížeči.</p>
 </div>
+</div>
 </section>
 
 <div id="upr" class="skryt" role="dialog" aria-modal="true">
@@ -374,6 +382,7 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 </div>
 
 </main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 // ---------- základ ----------
 const DNY=['Po','Út','St','Čt','Pá'];
@@ -413,6 +422,8 @@ const UKAZKA_PREDNOSTI=[
  {j:'Jakub',typ:'uroven',hodnota:2,od:'2027-01-11',do:'2027-01-31',pozn:'UKÁZKA, vymyšleno – zaučuje nového holiče'},
  {j:'Michal',typ:'pevny',hodnota:{wd:4,h0:16,h1:20},od:'2027-01-01',do:'2027-01-31',pozn:'UKÁZKA, vymyšleno – pátek večer pro stálé zákazníky'},
  {j:'Klára',typ:'pevny',hodnota:{wd:3,h0:16,h1:20},od:'2027-01-01',do:'2027-01-15',pozn:'UKÁZKA, vymyšleno – na dva týdny'}];
+// část 6 (přednost) jen po přihlášení s rolí admin nebo majitel (Supabase, stejně jako přehledy; Keksa 27. 11. 2026)
+let PRISTUP=false;
 let PREDNOST=UKAZKA_PREDNOSTI.map((p,i)=>({...p,id:i+1,autor:'Tom (majitel)'})), PREDN_ZAP=true, UPRAVY=[], ZAZNAM=[];
 try{const s=JSON.parse(localStorage.getItem('kh-prednost')||'null');if(s&&Array.isArray(s.p)){PREDNOST=s.p;PREDN_ZAP=s.zap!==false}}catch(e){}
 function ulozPrednost(){try{localStorage.setItem('kh-prednost',JSON.stringify({p:PREDNOST,zap:PREDN_ZAP}))}catch(e){}}
@@ -431,7 +442,7 @@ function maxB(h,wd){const d=h.delka[wd];return d?Math.floor(d[1]/L):0}
 function bloky(h,di){const ix=[];h.busy[di].forEach((x,i)=>{if(x)ix.push(i)});return ix}
 // opt.prednost: použít přednost; opt.upravy: použít ruční úpravy rozpisu
 function spocitej(opt){
- opt=opt||{prednost:PREDN_ZAP,upravy:true};
+ opt=opt||{prednost:PREDN_ZAP&&PRISTUP,upravy:true};
  const H=vymysli();
  const P={sazba:num('pSazba'),rano:num('pRano'),odpo:num('pOdpo'),prah:num('pPrah'),podil:num('pPodil'),start:num('pStart'),krok:Math.max(1,num('pKrok')),max:num('pMax')};
  const NB=BLOKY.length;
@@ -733,6 +744,7 @@ $('upr').addEventListener('click',e=>{if(e.target.id==='upr')zavriUpravu()});
 function prTxt(p){if(p.typ==='uroven')return 'úroveň '+p.hodnota;const bs=blokyPevne(p.hodnota);return 'pevný blok '+KAZDY[p.hodnota.wd]+' '+p.hodnota.h0+'–'+p.hodnota.h1+(bs.length&&(BLOKY[bs[0]].h0!==p.hodnota.h0||BLOKY[bs[bs.length-1]].h1!==p.hodnota.h1)?' (v '+VAR+'h blocích '+BLOKY[bs[0]].h0+'–'+BLOKY[bs[bs.length-1]].h1+')':'')}
 function datum(s){const d=s.split('-');return +d[2]+'. '+(+d[1])+'. '+d[0]}
 function kresliPrednost(){
+ if(!PRISTUP){['prSeznam','prSouhrn','prSrov','prZaznam'].forEach(id=>$(id).innerHTML='');return} // bez přihlášení nic nekreslit
  $('pZap').checked=PREDN_ZAP;
  if(!PREDNOST.length)$('prSeznam').innerHTML='<p class="mala">Žádná přednost – rozpis se dělí jen podle přání a pravidel.</p>';
  else $('prSeznam').innerHTML='<table class="siroka"><tr><th>Holič</th><th>Přednost</th><th>Platí</th><th>Poznámka</th><th>Zadal</th><th></th></tr>'+PREDNOST.map(p=>{const h=D.H.find(x=>x.jmeno===p.j);
@@ -815,6 +827,21 @@ document.addEventListener('click',e=>{if(!dotyk)return;const el=e.target.closest
 window.addEventListener('scroll',()=>{if(!dotyk)tipHide()},{passive:true});
 let rMob=MOBIL();window.addEventListener('resize',()=>{if(MOBIL()!==rMob){rMob=MOBIL();if(D)kresliRozvrh()}});
 prepocitat();
+// ---------- přístup k části 6: přihlášení přes Supabase, role admin nebo majitel ----------
+// Projekt Supabase kabinet-holicu v organizaci TBDB (veřejný publishable klíč smí být ve stránce).
+async function overPristup(){
+ let ok=false,stav='Nejsi přihlášený(á).';
+ try{
+  if(!window.supabase)throw new Error('knihovna se nenačetla');
+  const sb=window.SB||(window.SB=supabase.createClient('https://bgnzfrxnvkifvpmrilgd.supabase.co','sb_publishable_-CwxCS480OD5Hfx7N_OsHg_WuVoWOQj'));
+  const {data:{session}}=await sb.auth.getSession();
+  if(session){const {data,error}=await sb.rpc('prehled_role');const role=!error&&data&&data[0]&&data[0].role;
+   ok=role==='admin'||role==='majitel';stav=ok?'':'Přihlášený(á) jako '+session.user.email+', ale tahle část je jen pro majitele a TBDB.'}
+ }catch(e){stav='Přihlášení se nepodařilo ověřit: '+e.message}
+ PRISTUP=ok;$('prZamek').classList.toggle('skryt',ok);$('prObsah').classList.toggle('skryt',!ok);$('prZamekStav').textContent=stav;
+ const bylo=window.__PR_BYLO;window.__PR_BYLO=ok;if(ok||bylo)prepocitat();
+}
+overPristup();
 </script>
 </body>
 </html>

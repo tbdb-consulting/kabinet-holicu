@@ -149,6 +149,10 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   Při odpovědi „Ano…“ se ukáže pole „Kolik za něj platíš měsíčně?“ (Kč, nepovinné) → `najem.vyhradni_castka`, 0–50 000;
   migrace `20261127230000_dotaznik_vyhradni_castka.sql` (jen kontrola ve funkci), nasazená a ověřená stejně.
 
+- **27. 11. 2026 (Keksa):** část „6. Přednost 🔒“ na `web/leden-2027.html` se otevře jen po přihlášení (Supabase,
+  stejné přihlášení jako přehledy, sdílené na doméně) s rolí admin nebo majitel (`prehled_role`). Bez přihlášení se
+  přednost nekreslí a rozpis v částech 3–5 se počítá bez ní. Přihlašuje se v přehledech, pak stačí obnovit stránku.
+
 ## Přehledy (27. 11. 2026)
 
 - Stránka `web/prehledy/` (po zveřejnění https://tbdb-consulting.github.io/kabinet-holicu/prehledy/): přihlášení
