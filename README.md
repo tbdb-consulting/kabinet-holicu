@@ -180,10 +180,12 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   parametry `p_email`, `p_telefon` funkce `odeslat_dotaznik`. Migrace `20261128100000_dotaznik_email_telefon.sql`, nasazená
   a ověřená (chybné odmítnuty, správné uloženy v transakci s rollbackem, starší volání bez kontaktu funguje).
   Kontakty jsou jen v databázi (RLS bez pravidel, z webu je nikdo nečte), do repozitáře ani na web nepatří.
-- **Přihlašovací e-maily (28. 11. 2026):** šablona „Magic link or OTP“ v Supabase je česky (předmět „Tvůj odkaz pro přihlášení –
-  Kabinet holičů“). Vlastní SMTP přes Gmail TBDB (tbdb.consulting@gmail.com, smtp.gmail.com:587) je vyplněné, ale **neuložené** –
-  chybí heslo aplikace, které vytvoří a zadá Keksa a uloží do firemního trezoru KeePass (`<Data TBDB>\_trezor\TBDB_trezor.kdbx`,
-  skupina „Google tbdb.consulting“, postup `tbdb\Navody\trezor_keepass.md`). Do té doby chodí odkazy jen členům týmu Supabase.
+- **Přihlašovací e-maily (28. 11. 2026):** vlastní SMTP přes Gmail TBDB (tbdb.consulting@gmail.com, smtp.gmail.com:587)
+  je uložené a funguje – zkušební odkaz na adresu mimo tým Supabase odešel bez chyby a je v odeslané poště Gmailu TBDB.
+  Heslo aplikace zadal Keksa; patří do firemního trezoru KeePass (`<Data TBDB>\_trezor\TBDB_trezor.kdbx`, skupina
+  „Google tbdb.consulting“, postup `tbdb\Navody\trezor_keepass.md`). Česky jsou šablony „Magic link or OTP“ (přihlášení)
+  i „Confirm sign up“ (první přihlášení nové adresy), předmět „Tvůj odkaz pro přihlášení – Kabinet holičů“.
+  Supabase po zapnutí SMTP povoluje 30 e-mailů za hodinu.
 - **Web kabinetholicu.cz (zjištěno 27. 11. 2026):** běží na **Wixu** (generator „Wix.com Website Builder“, DNS na
   ns10/ns11.wixdns.net, www → cdn3.wixdns.net). Doménu má registrovanou INTERNET CZ (Forpsi), držitel „Kabinet Toma holiče“,
   platnost do 14. 4. 2027. Na doméně nejsou MX záznamy (žádný e-mail @kabinetholicu.cz). Přístup: Tom pozve TBDB do webu
