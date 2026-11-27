@@ -177,6 +177,9 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   oříznutá na rozpětí, koeficient hledaný bisekcí, aby příjem zůstal jako dnes; když rozpětí dnešní příjem nedovolí,
   stránka to napíše). Nová tabulka „Cena křesla po dnech a hodinách“: řádky hodiny, sloupce dny, průměr hodiny a dne
   (vážený obsazením), výběr provozovny nebo obou dohromady.
+- 27. 11. 2026 (Keksa): řádek „Společná sazba obou“ – jedna sazba pro obě provozovny (vytíženost hodiny = obsazená
+  křesla obou / všechna sdílená křesla, jeden koeficient na celkový dnešní příjem), pod ním kolik by vybrala každá
+  provozovna. V tabulce ceny po dnech a hodinách volba „společná sazba obou provozoven“, druhé tlačítko ji uloží jako variantu.
 - 27. 11. 2026 (Keksa): EET 2.0 v aplikaci chce Keksa stihnout do 1. 1. 2027 (SOAP 1.1, podpis WS-Security
   RSA-SHA256 / exc-c14n certifikátem holiče, server podporuje CORS – viz popis rozhraní v1.2 na eet.gov.cz).
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
