@@ -74,7 +74,7 @@ h3{font-size:14.5px;margin:18px 0 4px}
 .ed label{display:flex;flex-direction:column;gap:3px}
 .ed input{width:120px}
 .ed .sir input{width:240px;max-width:100%}
-#pomer select,#dohody input,#dohody select,#kalk input,#kalk select{font:inherit;font-size:13px;padding:5px 7px;border:1px solid var(--li);border-radius:5px;background:var(--karta);color:var(--text)}
+#pomer input,#pomer select,#dohody input,#dohody select,#kalk input,#kalk select{font:inherit;font-size:13px;padding:5px 7px;border:1px solid var(--li);border-radius:5px;background:var(--karta);color:var(--text)}
 .ed-tab td,.ed-tab th{text-align:left}
 .ed-tab input{width:90px}
 .ed-tl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0 4px}
@@ -82,6 +82,12 @@ h3{font-size:14.5px;margin:18px 0 4px}
 .hl-tl.sek{background:transparent;color:var(--text);border:1px solid var(--li)}
 .odebrat{background:none;border:0;color:var(--se);cursor:pointer;font-size:14px}
 tr.akt-r td{background:var(--mrizka);font-weight:bold}
+table.prehled-saz td,table.prehled-saz th{text-align:center;font-variant-numeric:tabular-nums}
+table.prehled-saz td:first-child{text-align:left;color:var(--se)}
+table.prehled-saz td.souc{background:var(--mrizka);font-weight:bold;color:var(--text)}
+table.prehled-saz tr.souc-r td{border-top:2px solid var(--li)}
+#pomer input{width:110px}
+#pomer select{width:auto;align-self:flex-start}
 .rozd{display:block;font-size:11.5px;font-weight:normal}
 .rozd.plus{color:var(--plus)}.rozd.minus{color:var(--minus)}.rozd.nula{color:var(--mu)}
 td.akt-c{font-weight:bold;outline:2px solid var(--s1);outline-offset:-2px}
@@ -169,7 +175,8 @@ th[data-tip],.nap{text-decoration:underline dotted var(--mu);text-underline-offs
     stejně jako dnes (střed dnešního rozpětí). Výhradní křesla platí dál pevnou částku z dohody. Počítá se celý týden a celý den, filtr hodin se nepoužije.</p>
     <div class="ed" id="pomer-volby"></div>
     <div class="tab-obal" id="pomer-souhrn"></div>
-    <div class="tab-obal" id="pomer-tab"></div>
+    <div id="pomer-tab"></div>
+    <div id="pomer-prehled"></div>
     <div class="ed-tl"><button type="button" class="hl-tl" id="pomer-ulozit">Uložit jako variantu kalkulace</button><span class="mala" id="pomer-stav"></span></div>
   </div>
 
@@ -742,64 +749,118 @@ function nastavHolice(){
 }
 
 // ---------- poměrová sazba podle vytíženosti ----------
-// sazba(den, hodina) = k × vytíženost sdílených křesel v té hodině; k tak, aby provozovna vybrala jako dnes.
-let POMER_ZAOKR=5;
+// sazba(den, hodina) = k × vytíženost sdílených křesel v té hodině, oříznutá na rozpětí min–max;
+// k tak, aby provozovna vybrala jako dnes. Po zaokrouhlení se k doladí.
+let POMER_ZAOKR=5,POMER_MIN='',POMER_MAX='',POMER_POHLED='';
 function pomerova(prov,zaokr){
   const p=PROV.find(x=>x.provozovna===prov);if(!p||!p.kresel)return null;
   const ks=Math.max(1,p.kresel-vyhradniHolici(prov).length),k=kontext();
   const dnes=spocitej(DNES.parametry,prov),vyhr=spocitej({typ:'hodiny',vychozi:0,koef:1,pausal:0,zmena:0,pasma:[]},prov).min;
   const cil=(dnes.min+dnes.max)/2-vyhr;
   const bunky=OBS_S.filter(x=>x.provozovna===prov&&+x.prumer>0).map(x=>({den:x.den,hod:x.hodina,u:+x.prumer/ks,m:+x.prumer*k.dny[x.den]/k.mesicu}));
-  const S=bunky.reduce((a,b)=>a+b.m*b.u,0);if(!S||cil<=0)return null;
-  const zao=v=>zaokr>0?Math.round(v/zaokr)*zaokr:v;
-  const soucet=kk=>bunky.reduce((a,b)=>a+b.m*zao(kk*b.u),0);
-  // po zaokrouhlení doladit koeficient, aby byl součet co nejblíž dnešku
-  let k0=cil/S,best=k0,bd=Math.abs(soucet(k0)-cil);
-  for(let i=-4000;i<=4000;i++){const kk=k0*(1+i/20000),d=Math.abs(soucet(kk)-cil);if(d<bd-0.01||(Math.abs(d-bd)<0.01&&Math.abs(kk-k0)<Math.abs(best-k0))){bd=d;best=kk}}
+  const M=bunky.reduce((a,b)=>a+b.m,0);if(!M||cil<=0)return null;
+  const mn=POMER_MIN===''?0:+POMER_MIN,mx=POMER_MAX===''?Infinity:+POMER_MAX;
+  const orez=v=>Math.min(mx,Math.max(mn,v));
+  const zao=v=>orez(zaokr>0?Math.round(v/zaokr)*zaokr:v);
+  const g=kk=>bunky.reduce((a,b)=>a+b.m*orez(kk*b.u),0),soucet=kk=>bunky.reduce((a,b)=>a+b.m*zao(kk*b.u),0);
+  let stav='';
+  if(mn*M>cil)stav='min';else if(mx*M<cil)stav='max';
+  // bisekce na neoříznutém součtu, pak doladění po zaokrouhlení
+  let lo=0,hi=1;while(g(hi)<cil&&hi<1e7)hi*=2;
+  for(let i=0;i<60;i++){const mid=(lo+hi)/2;if(g(mid)<cil)lo=mid;else hi=mid}
+  let k0=(lo+hi)/2,best=k0,bd=Math.abs(soucet(k0)-cil);
+  if(!stav)for(let i=-4000;i<=4000;i++){const kk=k0*(1+i/20000),d=Math.abs(soucet(kk)-cil);if(d<bd-0.01){bd=d;best=kk}}
   bunky.forEach(b=>b.s=zao(best*b.u));
-  return {prov,ks,dnes,vyhr,cil,k:best,bunky,celkem:soucet(best)+vyhr,max:Math.max(...bunky.map(b=>b.s)),
-    prumSaz:bunky.reduce((a,b)=>a+b.m*b.s,0)/bunky.reduce((a,b)=>a+b.m,0)};
+  const ss=bunky.map(b=>b.s);
+  return {prov,ks,dnes,vyhr,cil,k:best,bunky,stav,celkem:soucet(best)+vyhr,max:Math.max(...ss),min:Math.min(...ss),
+    prumSaz:bunky.reduce((a,b)=>a+b.m*b.s,0)/M,naMin:bunky.filter(b=>mn>0&&b.s<=mn).length,naMax:bunky.filter(b=>mx<Infinity&&b.s>=mx).length};
 }
 function kresliPomer(){
-  const pp=provozovny().filter(p=>p.kresel),R=pp.map(p=>pomerova(p.provozovna,POMER_ZAOKR)).filter(Boolean);
-  $('pomer-volby').innerHTML='<label'+T('Na kolik Kč se sazby zaokrouhlí. Koeficient se pak doladí, aby součet zůstal co nejblíž dnešku.')+'>Zaokrouhlit sazby na<select id="pomer-zaokr">'
-    +[[1,'1 Kč'],[5,'5 Kč'],[10,'10 Kč']].map(([v,n])=>'<option value="'+v+'"'+(POMER_ZAOKR===v?' selected':'')+'>'+n+'</option>').join('')+'</select></label>';
-  if(!R.length){$('pomer-souhrn').innerHTML='<p class="mala">Chybí data nebo počet křesel.</p>';$('pomer-tab').innerHTML='';return}
-  let s='<table><tr><th>Provozovna</th><th>Dnes</th><th>Poměrově</th><th>Rozdíl</th><th>Průměrná sazba</th><th>Nejvyšší sazba</th><th>Koeficient</th></tr>';
-  let a=0,b=0,c=0;
+  if(!$('pomer-zaokr')){
+    $('pomer-volby').innerHTML='<label'+T('Na kolik Kč se sazby zaokrouhlí. Koeficient se pak doladí, aby součet zůstal co nejblíž dnešku.')+'>Zaokrouhlit sazby na<select id="pomer-zaokr">'
+      +[[1,'1 Kč'],[5,'5 Kč'],[10,'10 Kč']].map(([v,n])=>'<option value="'+v+'"'+(POMER_ZAOKR===v?' selected':'')+'>'+n+'</option>').join('')+'</select></label>'
+      +'<label'+T('Žádná hodina nebude levnější. Málo vytížené hodiny pak zdraží a ostatní hodiny zlevní, aby celkový příjem zůstal jako dnes. Prázdné = bez omezení.')+'>Nejnižší sazba Kč/h<input type="number" id="pomer-min" min="0" step="5" placeholder="bez omezení" value="'+esc(POMER_MIN)+'"></label>'
+      +'<label'+T('Žádná hodina nebude dražší. Nejvytíženější hodiny pak zlevní a ostatní zdraží, aby celkový příjem zůstal jako dnes. Prázdné = bez omezení.')+'>Nejvyšší sazba Kč/h<input type="number" id="pomer-max" min="0" step="5" placeholder="bez omezení" value="'+esc(POMER_MAX)+'"></label>';
+  }
+  kresliPomerVysledky();
+}
+function pomerVysledky(){return provozovny().filter(p=>p.kresel).map(p=>pomerova(p.provozovna,POMER_ZAOKR)).filter(Boolean)}
+function kresliPomerVysledky(){
+  const R=pomerVysledky();
+  if(!R.length){$('pomer-souhrn').innerHTML='<p class="mala">Chybí data nebo počet křesel.</p>';$('pomer-tab').innerHTML='';$('pomer-prehled').innerHTML='';return}
+  let s='<table><tr><th>Provozovna</th><th>Dnes</th><th>Poměrově</th><th>Rozdíl</th><th>Průměrná sazba</th><th>Nejnižší</th><th>Nejvyšší</th><th>Koeficient</th></tr>';
+  let a=0,b=0;const pozn=[];
   R.forEach(r=>{const st=(r.dnes.min+r.dnes.max)/2,d=r.celkem-st;a+=st;b+=r.celkem;
-    s+='<tr><td>'+esc(r.prov)+'</td><td>'+rozsahKc(r.dnes.min,r.dnes.max)+'</td><td><b>'+nf(Math.round(r.celkem))+' Kč</b></td><td>'+(d>=0?'+':'−')+nf(Math.abs(Math.round(d)))+' Kč</td><td>'+nf(r.prumSaz,1)+' Kč/h</td><td>'+nf(r.max)+' Kč/h</td><td>'+nf(r.k,1)+'</td></tr>'});
-  if(R.length>1)s+='<tr><td><b>Celkem</b></td><td>'+nf(Math.round(a))+' Kč</td><td><b>'+nf(Math.round(b))+' Kč</b></td><td>'+(b-a>=0?'+':'−')+nf(Math.abs(Math.round(b-a)))+' Kč</td><td></td><td></td><td></td></tr>';
-  $('pomer-souhrn').innerHTML=s+'</table>';
+    s+='<tr><td>'+esc(r.prov)+'</td><td>'+rozsahKc(r.dnes.min,r.dnes.max)+'</td><td><b>'+nf(Math.round(r.celkem))+' Kč</b></td><td>'+(d>=0?'+':'−')+nf(Math.abs(Math.round(d)))+' Kč</td><td>'+nf(r.prumSaz,1)+' Kč/h</td><td>'+nf(r.min)+' Kč/h</td><td>'+nf(r.max)+' Kč/h</td><td>'+nf(r.k,1)+'</td></tr>';
+    if(r.stav==='min')pozn.push(esc(r.prov)+': už při nejnižší sazbě všude by provozovna vybrala víc než dnes – snižte nejnižší sazbu.');
+    else if(r.stav==='max')pozn.push(esc(r.prov)+': ani při nejvyšší sazbě všude by provozovna nevybrala jako dnes – zvyšte nejvyšší sazbu.');
+    else if(r.naMin||r.naMax)pozn.push(esc(r.prov)+': '+(r.naMin?r.naMin+' hodin v týdnu na nejnižší sazbě':'')+(r.naMin&&r.naMax?', ':'')+(r.naMax?r.naMax+' hodin na nejvyšší sazbě':'')+'.')});
+  if(R.length>1)s+='<tr><td><b>Celkem</b></td><td>'+nf(Math.round(a))+' Kč</td><td><b>'+nf(Math.round(b))+' Kč</b></td><td>'+(b-a>=0?'+':'−')+nf(Math.abs(Math.round(b-a)))+' Kč</td><td></td><td></td><td></td><td></td></tr>';
+  $('pomer-souhrn').innerHTML=s+'</table>'+(pozn.length?'<p class="mala">'+pozn.join('<br>')+'</p>':'');
   tipyTabulky($('pomer-souhrn'),['Provozovna.','Dnešní nájem za měsíc (pásma a dohody). Cílem je jeho střed.','Kolik by provozovna vybrala za měsíc s poměrovými sazbami (po zaokrouhlení), včetně výhradních křesel.',
-    'Poměrově minus střed dnešního nájmu. Nenulový jen kvůli zaokrouhlení sazeb.','Průměrná sazba vážená obsazenými hodinami.','Sazba nejvytíženější hodiny v týdnu.',
-    'Kč za hodinu při 100% vytíženosti sdílených křesel. Sazba hodiny = koeficient × vytíženost.']);
+    'Poměrově minus střed dnešního nájmu. Nenulový kvůli zaokrouhlení, nebo když rozpětí sazeb nedovolí dnešní příjem.','Průměrná sazba vážená obsazenými hodinami.','Nejlevnější hodina v týdnu.','Nejdražší hodina v týdnu.',
+    'Kč za hodinu při 100% vytíženosti sdílených křesel. Sazba hodiny = koeficient × vytíženost, oříznutá na rozpětí.']);
   // tabulka sazeb: dny × hodiny, v políčku sazby provozoven oddělené lomítkem
   const m={};R.forEach(r=>r.bunky.forEach(x=>m[r.prov+'|'+x.den+'|'+x.hod]=x));
   const hod=[...new Set(R.flatMap(r=>r.bunky.map(x=>x.hod)))].sort((x,y)=>x-y);
-  if(!hod.length){$('pomer-tab').innerHTML='';return}
-  let t='<h3>Sazby Kč za hodinu <span class="mala">('+R.map(r=>'<span class="znacka" style="background:'+barva(r.prov)+'"></span> '+esc(r.prov)).join(' / ')+')</span></h3><table class="heat"><tr><th></th>';
+  if(!hod.length){$('pomer-tab').innerHTML='';$('pomer-prehled').innerHTML='';return}
+  let t='<h3>Sazby Kč za hodinu, obě provozovny vedle sebe <span class="mala">('+R.map(r=>'<span class="znacka" style="background:'+barva(r.prov)+'"></span> '+esc(r.prov)).join(' / ')+')</span></h3><div class="tab-obal"><table class="heat"><tr><th></th>';
   for(let h=hod[0];h<=hod[hod.length-1];h++)t+='<th>'+h+'–'+(h+1)+'</th>';t+='</tr>';
   for(let d=1;d<=7;d++){t+='<tr><td class="den">'+DNY[d-1]+'</td>';
     for(let h=hod[0];h<=hod[hod.length-1];h++){const v=R.map(r=>({r,x:m[r.prov+'|'+d+'|'+h]}));
       const tip='<b>'+DNY[d-1]+' '+h+':00–'+(h+1)+':00</b><br>'+v.map(({r,x})=>esc(r.prov)+': '+(x?'<b>'+nf(x.s)+' Kč/h</b>, vytíženost '+nf(x.u*100)+' %, obsazeno '+nf(x.m,1)+' h měsíčně':'nic obsazeno')).join('<br>');
       t+='<td><div class="bunka" data-tip="'+esc(tip)+'">'+v.map(({r,x})=>'<span class="n" style="'+barvaPct(x?x.u*100:0)+';border-top-color:'+barva(r.prov)+'">'+(x?nf(x.s):'–')+'</span>').join('<span class="lom">/</span>')+'</div></td>'}
     t+='</tr>'}
-  $('pomer-tab').innerHTML=t+'</table><p class="mala">Barva políčka = vytíženost (stejná stupnice jako tabulka vytíženosti výše). Hodiny bez jediné rezervace mají sazbu 0 Kč.</p>';
+  $('pomer-tab').innerHTML=t+'</table></div><p class="mala">Barva políčka = vytíženost (stejná stupnice jako tabulka vytíženosti výše). Hodiny bez jediné rezervace nemají sazbu (–).</p>';
+  kresliPomerPrehled(R,hod);
+}
+// přehledná tabulka: řádky = hodiny, sloupce = dny, jedno číslo v políčku; provozovna zvlášť nebo souhrnně (vážený průměr)
+function kresliPomerPrehled(R,hod){
+  if(POMER_POHLED&&POMER_POHLED!=='*'&&!R.some(r=>r.prov===POMER_POHLED))POMER_POHLED='';
+  if(!POMER_POHLED)POMER_POHLED=R.length>1?'*':R[0].prov;
+  const vyber=POMER_POHLED==='*'?R:R.filter(r=>r.prov===POMER_POHLED);
+  const bun={};vyber.forEach(r=>r.bunky.forEach(x=>{const c=bun[x.den+'|'+x.hod]??={m:0,ms:0,u:0,n:0};c.m+=x.m;c.ms+=x.m*x.s;c.u+=x.u;c.n++}));
+  const saz=c=>c&&c.m?c.ms/c.m:null;
+  const vse=Object.values(bun).map(saz).filter(v=>v!=null),smax=Math.max(...vse),smin=Math.min(...vse);
+  const pct=v=>smax>smin?(v-smin)/(smax-smin)*99:50; // barva od nejlevnější po nejdražší hodinu
+  const agg=f=>{let m=0,ms=0;Object.entries(bun).forEach(([k,c])=>{if(f(k)){m+=c.m;ms+=c.ms}});return m?ms/m:null};
+  const fmt=v=>v==null?'–':nf(v,POMER_POHLED==='*'?0:0);
+  const nazev=POMER_POHLED==='*'?'obě provozovny dohromady':POMER_POHLED;
+  let t='<h3>Cena křesla po dnech a hodinách <span class="mala">('+esc(nazev)+', Kč za hodinu)</span></h3>'
+    +'<div class="ed"><label'+T('Jednu provozovnu, nebo obě dohromady: u souhrnu je v políčku průměr sazeb obou provozoven vážený obsazenými hodinami.')+'>Zobrazit<select id="pomer-pohled">'
+    +(R.length>1?'<option value="*"'+(POMER_POHLED==='*'?' selected':'')+'>obě provozovny dohromady</option>':'')
+    +R.map(r=>'<option'+(POMER_POHLED===r.prov?' selected':'')+'>'+esc(r.prov)+'</option>').join('')+'</select></label></div>'
+    +'<div class="tab-obal"><table class="prehled-saz"><tr><th>Hodina</th>'+DNY.map(d=>'<th>'+d+'</th>').join('')+'<th>Průměr hodiny</th></tr>';
+  for(let h=hod[0];h<=hod[hod.length-1];h++){
+    t+='<tr><td>'+h+':00–'+(h+1)+':00</td>';
+    for(let d=1;d<=7;d++){const c=bun[d+'|'+h],v=saz(c);
+      t+='<td'+(v!=null?' style="'+barvaPct(pct(v))+'"'+T('<b>'+DNY[d-1]+' '+h+':00–'+(h+1)+':00</b><br>'+nf(v,1)+' Kč/h'+(POMER_POHLED==='*'?' (vážený průměr obou provozoven)':'')+'<br>obsazeno '+nf(c.m,1)+' h měsíčně'):'')+'>'+fmt(v)+'</td>'}
+    const ph=agg(k=>+k.split('|')[1]===h);t+='<td class="souc">'+fmt(ph)+'</td></tr>'}
+  t+='<tr class="souc-r"><td>Průměr dne</td>'+DNY.map((x,i)=>'<td class="souc">'+fmt(agg(k=>+k.split('|')[0]===i+1))+'</td>').join('')+'<td class="souc"><b>'+fmt(agg(()=>true))+'</b></td></tr>';
+  $('pomer-prehled').innerHTML=t+'</table></div><p class="mala">Průměry jsou vážené obsazenými hodinami: víc obsazená hodina má větší váhu. Barva = sazba od nejlevnější po nejdražší hodinu v tabulce (stejná stupnice jako vytíženost: dražší = dál na stupnici). Prázdné políčko (–) = hodina bez rezervací.</p>';
+  tipyTabulky($('pomer-prehled'),['Hodina dne.','Sazba v tento den a hodinu.','Sazba v tento den a hodinu.','Sazba v tento den a hodinu.','Sazba v tento den a hodinu.','Sazba v tento den a hodinu.','Sazba v tento den a hodinu.','Sazba v tento den a hodinu.','Průměrná sazba této hodiny přes celý týden (vážená obsazením).']);
 }
 async function ulozPomer(){
-  const R=provozovny().filter(p=>p.kresel).map(p=>pomerova(p.provozovna,POMER_ZAOKR)).filter(Boolean);if(!R.length)return;
+  const R=pomerVysledky();if(!R.length)return;
   const pasma=[];
   R.forEach(r=>{for(let d=1;d<=7;d++){const b=r.bunky.filter(x=>x.den===d).sort((x,y)=>x.hod-y.hod);let z=null;
     b.forEach(x=>{if(z&&z.do===x.hod&&z.sazba===x.s)z.do++;else{z={dny:String(d),od:x.hod,do:x.hod+1,prov:r.prov,sazba:x.s};pasma.push(z)}})}});
   const o=OBD[$('obdobi').value];
+  const roz=(POMER_MIN!==''||POMER_MAX!=='')?', '+(POMER_MIN!==''?POMER_MIN:'0')+'–'+(POMER_MAX!==''?POMER_MAX:'∞')+' Kč/h':'';
   try{$('pomer-stav').textContent='Ukládám…';
-    await rpc('prehled_ulozit_scenar',{p_id:null,p_nazev:'Poměrově podle vytíženosti ('+o.t.replace(/ \(.*\)/,'')+', po '+POMER_ZAOKR+' Kč)',p_parametry:{typ:'hodiny',vychozi:0,koef:1,pausal:0,zmena:0,pasma}});
+    await rpc('prehled_ulozit_scenar',{p_id:null,p_nazev:('Poměrově podle vytíženosti ('+o.t.replace(/ \(.*\)/,'')+', po '+POMER_ZAOKR+' Kč'+roz+')').slice(0,80),p_parametry:{typ:'hodiny',vychozi:0,koef:1,pausal:0,zmena:0,pasma}});
     await nactiScenare();kresliKalk();$('pomer-stav').textContent='Uloženo do kalkulace nájmu ('+pasma.length+' řádků sazeb).';
   }catch(err){$('pomer-stav').innerHTML='<span class="chyba">Neuloženo: '+esc(err.message)+'</span>'}
 }
 function nastavPomer(){
-  $('pomer').addEventListener('change',e=>{if(e.target.id==='pomer-zaokr'){POMER_ZAOKR=+e.target.value;kresliPomer()}});
+  $('pomer').addEventListener('change',e=>{
+    if(e.target.id==='pomer-zaokr'){POMER_ZAOKR=+e.target.value;kresliPomerVysledky()}
+    else if(e.target.id==='pomer-pohled'){POMER_POHLED=e.target.value;kresliPomerVysledky()}});
+  $('pomer').addEventListener('input',e=>{
+    if(e.target.id==='pomer-min'||e.target.id==='pomer-max'){
+      const v=e.target.value.trim();if(e.target.id==='pomer-min')POMER_MIN=v;else POMER_MAX=v;
+      if(POMER_MIN!==''&&POMER_MAX!==''&&+POMER_MIN>+POMER_MAX){$('pomer-stav').innerHTML='<span class="chyba">Nejnižší sazba je vyšší než nejvyšší.</span>';return}
+      $('pomer-stav').textContent='';kresliPomerVysledky()}});
   $('pomer').addEventListener('click',e=>{if(e.target.id==='pomer-ulozit')ulozPomer()});
 }
 

@@ -173,6 +173,12 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   výhradní křesla pevně. Po zaokrouhlení (1 / 5 / 10 Kč) se koeficient doladí. Za 11/2025–10/2026 (po 5 Kč): OP cíl
   58 250 Kč → 58 276 Kč, průměr 80 Kč/h, nejvíc 115 Kč/h; ZV cíl 38 083 Kč → 38 067 Kč, průměr 63 Kč/h, nejvíc 85 Kč/h.
   Tlačítko uloží sazby jako hodinovou variantu kalkulace (řádky po dnech, sousední hodiny se stejnou sazbou sloučené).
+- 27. 11. 2026 (Keksa): poměrová sazba má rozpětí „Nejnižší / Nejvyšší sazba Kč/h“ (sazba = koeficient × vytíženost
+  oříznutá na rozpětí, koeficient hledaný bisekcí, aby příjem zůstal jako dnes; když rozpětí dnešní příjem nedovolí,
+  stránka to napíše). Nová tabulka „Cena křesla po dnech a hodinách“: řádky hodiny, sloupce dny, průměr hodiny a dne
+  (vážený obsazením), výběr provozovny nebo obou dohromady.
+- 27. 11. 2026 (Keksa): EET 2.0 v aplikaci chce Keksa stihnout do 1. 1. 2027 (SOAP 1.1, podpis WS-Security
+  RSA-SHA256 / exc-c14n certifikátem holiče, server podporuje CORS – viz popis rozhraní v1.2 na eet.gov.cz).
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
 - Další kroky: Tom jako `majitel`, Kuba jako `odpovedny` s omezeným pohledem (zatím nerozhodnuto, co uvidí);
   vlastní odesílání e-mailů (SMTP), protože vestavěné posílá jen členům týmu Supabase a málo zpráv za hodinu.
