@@ -8,13 +8,13 @@
 <style>
 :root{
   --b:#1F4E78;--bg:#f4f7fa;--karta:#fff;--li:#d5dfe8;--text:#1a1a1a;--se:#5a6b7a;--mu:#8592a0;
-  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--mrizka:#e6ebf0;--chyba:#d03b3b;
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--mrizka:#e6ebf0;--chyba:#d03b3b;--plus:#1a7f37;--minus:#c62828;
   --h0:#f0efec;--h1:#cde2fb;--h2:#9ec5f4;--h3:#6da7ec;--h4:#3987e5;--h5:#256abf;--h6:#184f95;--h7:#0d366b;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#121212;--karta:#1a1a19;--li:#33332f;--text:#f0efec;--se:#c3c2b7;--mu:#8f8e86;
-    --s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--mrizka:#2a2a27;
+    --s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--mrizka:#2a2a27;--plus:#4cc46a;--minus:#ff7b72;
     --h0:#262624;--h1:#0d366b;--h2:#104281;--h3:#184f95;--h4:#256abf;--h5:#3987e5;--h6:#6da7ec;--h7:#b7d3f6;
   }
 }
@@ -82,6 +82,8 @@ h3{font-size:14.5px;margin:18px 0 4px}
 .hl-tl.sek{background:transparent;color:var(--text);border:1px solid var(--li)}
 .odebrat{background:none;border:0;color:var(--se);cursor:pointer;font-size:14px}
 tr.akt-r td{background:var(--mrizka);font-weight:bold}
+.rozd{display:block;font-size:11.5px;font-weight:normal}
+.rozd.plus{color:var(--plus)}.rozd.minus{color:var(--minus)}.rozd.nula{color:var(--mu)}
 td.akt-c{font-weight:bold;outline:2px solid var(--s1);outline-offset:-2px}
 [data-tip]{cursor:help}
 th[data-sort]{cursor:pointer;user-select:none}
@@ -649,10 +651,15 @@ function kresliRozpad(pp){
   const nas=[0.8,0.9,1,1.1,1.2],zm=[-20,-10,0,10,20];
   t+='<h3>Co když <span class="mala">(celkem Kč za měsíc; sloupce = všechny sazby × násobek, řádky = obsazenost navíc k nastavené změně)</span></h3><div class="tab-obal"><table>'
     +'<tr><th>Obsazenost</th>'+nas.map(n=>'<th>sazby × '+nf(n,1)+'</th>').join('')+'</tr>';
+  // rozdíl proti dnešnímu nájmu (pásma a dohody); dnešek je rozpětí, barva a číslo podle jeho středu
+  const dn=pp.reduce((a,p)=>{const r=spocitej(DNES.parametry,p.provozovna);return [a[0]+r.min,a[1]+r.max]},[0,0]),stred=(dn[0]+dn[1])/2;
   zm.forEach(z=>{t+='<tr><td>'+(z>0?'+':z<0?'−':'')+Math.abs(z)+' %</td>'+nas.map(n=>{
       const par2={...par,zmena:(+par.zmena||0)+z},v=pp.reduce((a,p)=>a+spocitej(par2,p.provozovna,n).min,0);
-      return '<td'+(n===1&&z===0?' class="akt-c"':'')+'>'+kc(v)+'</td>'}).join('')+'</tr>'});
-  e.innerHTML=t+'</table></div><p class="mala">Paušál na holiče se násobkem sazeb nemění.</p>';
+      const d=Math.round((v-stred)/100)*100,tr=d>0?'plus':d<0?'minus':'nula';
+      const tipT=NAP.ckBunka+'<br>Proti dnešku ('+rozsahKc(dn[0],dn[1])+'): <b>'+rozdil(v,dn[0],dn[1])+'</b> za měsíc, '+(d>=0?'+':'−')+kc(Math.abs(d)*12)+' za rok. Zeleně = víc pro Toma, červeně = méně.';
+      return '<td'+(n===1&&z===0?' class="akt-c"':'')+T(tipT)+'>'+kc(v)+'<span class="rozd '+tr+'">'+(d>0?'▲ +':d<0?'▼ −':'± ')+kc(Math.abs(d))+'</span></td>'}).join('')+'</tr>'});
+  e.innerHTML=t+'</table></div><p class="mala">Pod každou částkou je rozdíl proti dnešnímu nájmu ('+rozsahKc(dn[0],dn[1])+', počítáno od středu rozpětí):'
+    +' <span class="rozd plus" style="display:inline">▲ zeleně víc</span>, <span class="rozd minus" style="display:inline">▼ červeně méně</span>. Paušál na holiče se násobkem sazeb nemění.</p>';
   const tb=e.querySelectorAll('table');tipyTabulky(tb[0],['rRadek','rSazba','rObs','rPlac','rKc']);tipyTabulky(tb[1],['ckObs','ckSaz'],['ckObs','ckBunka']);
 }
 
