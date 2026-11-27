@@ -156,6 +156,10 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 <label for="hodin3" style="display:block;font-weight:bold;font-size:13.5px;margin:12px 0 4px">Kolik hodin měsíčně teď zhruba stříháš?</label>
 <input type="number" id="hodin3" min="0" max="300" step="1" inputmode="numeric" placeholder="např. 80">
 <p class="mala" style="margin-top:6px">Stačí od oka. Když nevíš, nech prázdné.</p>
+<label for="najemPrumer" style="display:block;font-weight:bold;font-size:13.5px;margin:12px 0 4px">Kolik jsi průměrně platil(a) za nájem za měsíc? <span class="mala" style="font-weight:normal">(Kč, nepovinné)</span></label>
+<input type="number" id="najemPrumer" min="0" max="50000" step="100" inputmode="numeric" placeholder="např. 6000">
+<p style="font-weight:bold;font-size:13.5px;margin:12px 0 4px">A kolik v posledních třech měsících? <span class="mala" style="font-weight:normal">(Kč, nepovinné)</span></p>
+<div id="najemMesice" style="display:flex;gap:10px;flex-wrap:wrap"></div>
 <div class="chyba" id="e5"></div>
 </div>
 
@@ -263,6 +267,10 @@ $('stejne').addEventListener('click',()=>{DNY.slice(1).forEach(([d])=>{$('min'+d
 // 5. odhad volných křesel
 for(let x=0;x<=100;x+=10){const o=document.createElement('option');o.value=x;o.textContent=x===0?'skoro žádná (0 %)':x+' %';$('volno').appendChild(o)}
 {const o=document.createElement('option');o.value='nevim';o.textContent='nevím';$('volno').appendChild(o)}
+// 8. nájem za poslední 3 celé měsíce (od nejstaršího)
+const MESICE_NAZVY=['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
+const NAJEM_MES=[3,2,1].map(k=>{const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-k);return {klic:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'),nazev:MESICE_NAZVY[d.getMonth()]}});
+$('najemMesice').innerHTML=NAJEM_MES.map(m=>'<label style="flex:1 1 90px;font-size:13.5px">'+m.nazev+'<input type="number" id="najem'+m.klic+'" min="0" max="50000" step="100" inputmode="numeric" placeholder="Kč"></label>').join('');
 
 // 6. obsazené hodiny po týdnech (Po–Pá, 7–22 po hodinách), nejvýš 13 týdnů zpět
 const HOD=[];for(let h=7;h<22;h++)HOD.push(h);
@@ -356,13 +364,18 @@ $('f').addEventListener('submit',async e=>{
  if(!vol){$('e5').textContent='Vyber, kolik křesel je volných (nebo „nevím“).';ok=false}
  const h3s=$('hodin3').value.trim(),h3=h3s===''?null:parseInt(h3s,10);
  if(h3!==null&&(isNaN(h3)||h3<0||h3>300)){$('e5').textContent='Hodiny měsíčně: číslo 0–300, nebo nech prázdné.';ok=false}
+ const cislo=id=>{const s=$(id).value.trim();return s===''?null:Number(s)};
+ const najem={prumer:cislo('najemPrumer'),mesice:{}};
+ NAJEM_MES.forEach(m=>{const v=cislo('najem'+m.klic);if(v!==null)najem.mesice[m.klic]=v});
+ if([najem.prumer,...Object.values(najem.mesice)].some(v=>v!==null&&(isNaN(v)||v<0||v>50000))){$('e5').textContent='Nájem: číslo v korunách 0–50 000, nebo nech prázdné.';ok=false}
+ const najemVyplnen=najem.prumer!==null||Object.keys(najem.mesice).length>0;
  const sst=(document.querySelector('input[name=slotyStav]:checked')||{}).value||null;
  if(sst==='ano'&&!Object.keys(sloty).length){$('e6').textContent='Označ hodiny aspoň v jednom týdnu, nebo dej „přeskočím“.';ok=false}
  if(!ok){document.querySelector('.chyba:not(:empty)').scrollIntoView({block:'center'});return}
  const funkce=[...document.querySelectorAll('#dalsi input:checked')].map(x=>x.value);
  const data={p_jmeno:jmeno,p_provozovna:prov,p_hodin:hodin,p_blok:blok,p_prani_blok:blok?prani[blok]:null,p_delka:delka,p_poznamka:$('poznamka').value.trim()||null,
   p_smen:smen,p_odhad_volno:vol==='nevim'?null:+vol,p_hodin_prumer:h3,p_sloty_stav:sst,p_sloty:sst==='ano'?sloty:null,p_sloty_rez:sst==='ano'?rez:null,
-  p_dalsi:{funkce:funkce,napad:$('napad').value.trim()||null},p_nemuzu:nemuzu};
+  p_dalsi:{funkce:funkce,napad:$('napad').value.trim()||null},p_nemuzu:nemuzu,p_najem:najemVyplnen?najem:null};
  if(TEST){$('f').style.display='none';$('diky').style.display='block';$('testVystup').style.display='block';$('testVystup').textContent='Uložilo by se:\n'+JSON.stringify(data,null,1);return}
  $('odeslat').disabled=true;
  try{

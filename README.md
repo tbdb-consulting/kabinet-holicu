@@ -106,6 +106,10 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   mobil: klepnutí, zmizí po 4,5 s), výrazný přepínač 4h/3h pod menu a barva podle varianty (modrá 4 h, zelená 3 h),
   na mobilu rozvrh po dnech (křesla × bloky) a férovost na kartách.
 - **Otevřené:** po přechodu na Pro probudit vixen-dev.
+- **27. 11. 2026 (Keksa):** v sekci 8 nepovinně průměrný měsíční nájem a nájem za poslední 3 celé měsíce zvlášť
+  (měsíce se počítají podle dne vyplnění). Sloupec `najem` jsonb `{"prumer":…, "mesice":{"RRRR-MM":…}}`, 0–50 000 Kč.
+  Migrace `20261127140000_dotaznik_najem.sql` nasazená přes SQL Editor; ověřeno curl (s nájmem, bez něj i stará podoba
+  se uloží, chybný měsíc a 90 000 Kč vrátí chybu), zkušební řádky smazané (tabulka prázdná).
 
 ## Přehledy (27. 11. 2026)
 
