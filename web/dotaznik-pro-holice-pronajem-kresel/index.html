@@ -162,6 +162,10 @@ td.blok{text-align:left;font-weight:bold;font-size:12.5px;white-space:nowrap;pad
 <label><input type="radio" name="vyhradni" value="castecne">Ano, ale občas na něm stříhá i někdo jiný</label>
 <label><input type="radio" name="vyhradni" value="ne">Ne, křeslo sdílím</label>
 </div>
+<div id="vyhrCastkaObal" style="display:none;margin-top:8px">
+<label for="vyhrCastka" style="display:block;font-size:13.5px;margin-bottom:4px">Kolik za něj platíš měsíčně? <span class="mala">(Kč, nepovinné)</span></label>
+<input type="number" id="vyhrCastka" min="0" max="50000" step="100" inputmode="numeric" placeholder="např. 10000">
+</div>
 <label for="najemPrumer" style="display:block;font-weight:bold;font-size:13.5px;margin:12px 0 4px">Kolik jsi průměrně platil(a) za nájem za měsíc? <span class="mala" style="font-weight:normal">(Kč, nepovinné)</span></label>
 <input type="number" id="najemPrumer" min="0" max="50000" step="100" inputmode="numeric" placeholder="např. 6000">
 <p style="font-weight:bold;font-size:13.5px;margin:12px 0 4px">A kolik v posledních třech měsících? <span class="mala" style="font-weight:normal">(Kč, nepovinné)</span></p>
@@ -276,6 +280,8 @@ for(let x=0;x<=100;x+=10){const o=document.createElement('option');o.value=x;o.t
 // 8. nájem za poslední 3 celé měsíce (od nejstaršího)
 const MESICE_NAZVY=['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
 const NAJEM_MES=[3,2,1].map(k=>{const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-k);return {klic:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'),nazev:MESICE_NAZVY[d.getMonth()]}});
+document.querySelectorAll('input[name=vyhradni]').forEach(r=>r.addEventListener('change',()=>{const ano=r.checked&&r.value!=='ne';
+ $('vyhrCastkaObal').style.display=ano?'block':'none';if(!ano)$('vyhrCastka').value=''}));
 $('najemMesice').innerHTML=NAJEM_MES.map(m=>'<label style="flex:1 1 90px;font-size:13.5px">'+m.nazev+'<input type="number" id="najem'+m.klic+'" min="0" max="50000" step="100" inputmode="numeric" placeholder="Kč"></label>').join('');
 
 // 6. obsazené hodiny po týdnech (Po–Pá, 7–22 po hodinách), nejvýš 13 týdnů zpět
@@ -375,6 +381,8 @@ $('f').addEventListener('submit',async e=>{
  NAJEM_MES.forEach(m=>{const v=cislo('najem'+m.klic);if(v!==null)najem.mesice[m.klic]=v});
  if([najem.prumer,...Object.values(najem.mesice)].some(v=>v!==null&&(isNaN(v)||v<0||v>50000))){$('e5').textContent='Nájem: číslo v korunách 0–50 000, nebo nech prázdné.';ok=false}
  const vyhr=document.querySelector('input[name=vyhradni]:checked');if(vyhr)najem.vyhradni=vyhr.value;
+ const vyhrKc=vyhr&&vyhr.value!=='ne'?cislo('vyhrCastka'):null;
+ if(vyhrKc!==null){if(isNaN(vyhrKc)||vyhrKc<0||vyhrKc>50000){$('e5').textContent='Výhradní křeslo: číslo v korunách 0–50 000, nebo nech prázdné.';ok=false}else najem.vyhradni_castka=vyhrKc}
  const najemVyplnen=najem.prumer!==null||Object.keys(najem.mesice).length>0||!!vyhr;
  const sst=(document.querySelector('input[name=slotyStav]:checked')||{}).value||null;
  if(sst==='ano'&&!Object.keys(sloty).length){$('e6').textContent='Označ hodiny aspoň v jednom týdnu, nebo dej „přeskočím“.';ok=false}

@@ -146,6 +146,8 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   i někdo jiný / ne, sdílím; nepovinné). Ukládá se do sloupce `najem` jako klíč `vyhradni` (`ano` / `castecne` / `ne`).
   Migrace `20261127210000_dotaznik_vyhradni_kreslo.sql` mění jen kontrolu ve funkci `odeslat_dotaznik` (parametry stejné),
   nasazená a ověřená (chybná hodnota odmítnuta, správná uložena v transakci s rollbackem, nic nezůstalo).
+  Při odpovědi „Ano…“ se ukáže pole „Kolik za něj platíš měsíčně?“ (Kč, nepovinné) → `najem.vyhradni_castka`, 0–50 000;
+  migrace `20261127230000_dotaznik_vyhradni_castka.sql` (jen kontrola ve funkci), nasazená a ověřená stejně.
 
 ## Přehledy (27. 11. 2026)
 
