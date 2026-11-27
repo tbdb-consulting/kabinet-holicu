@@ -37,6 +37,10 @@ Web: https://tbdb-consulting.github.io/kabinet-holicu/ (kořen = prototyp aplika
 - **Historická data a přístup (Keksa a Tom 26. 11. 2026):** pseudonymizovaná historie z Reservanta do schématu
   `analytika` (bez jmen a kontaktů, nepřístupné z veřejného webu), nahrává Claude importem v administraci Supabase.
   Přehledy vidí jen Tom a TBDB; odpovědný pracovník (holič Kuba) jen vybraná data. Patří do fáze 1 za pevnou cenu.
+- **EET 2.0 je součást fáze 1 (Keksa 28. 11. 2026).** Aplikace má umět evidovat tržby holičů podle zákona č. 180/2026 Sb.
+  (povinnost od 1. 1. 2027): datová zpráva SOAP 1.1, podpis WS-Security / XML Signature (exc-c14n, RSA-SHA256, SHA-256)
+  certifikátem holiče z DIS+, odeslání z prohlížeče (server podporuje CORS), dodatečné odeslání do 48 h. Technický základ:
+  popis rozhraní v1.2 na eet.gov.cz, rozbor `Claude outputs\261126_KABINET_EET2.html`. Dřívější doporučení „EET až po fázi 1“ neplatí.
 - **Přednost holičů při rozdělování směn (Keksa 27. 11. 2026, výběr z `Otázky\261127_prednost_holicu_pri_vyberu_smen.html`):**
   Tom jako majitel může vybrané holiče upřednostnit, nemění se tím nájem. (1) Pevné bloky – Tom přidělí holiči konkrétní
   bloky na období, dostane je před rozdělováním podle přání. (2) Úroveň přednosti 1–3 – při sporu o blok vyhraje vyšší
