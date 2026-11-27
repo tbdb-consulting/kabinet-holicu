@@ -5,3 +5,5 @@ a12160c87bf7b16e1d203e80bdb03c8f3b4c6d8b:web/index.html:generic-api-key:103
 4fae2508d1add3986e563f453fa1faaf118a8e9c:web/prehledy/index.html:generic-api-key:139
 # Stejný publishable klíč ve stránce EET 2.0 v přehledech, Keksa 27. 11. 2026.
 c1e190e1ade6ffa558a42933f92441c38f260e4e:web/prehledy/eet/index.html:generic-api-key:104
+# Stejný publishable klíč ve stránce Simulace nájmu v přehledech, Keksa 27. 11. 2026.
+a11962479e1d996b36d3d63118df6e09eb47e22f:web/prehledy/simulace/index.html:generic-api-key:112
