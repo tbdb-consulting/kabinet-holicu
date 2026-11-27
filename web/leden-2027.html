@@ -117,16 +117,31 @@ ul{margin:4px 0 8px;padding-left:20px} li{margin:3px 0}
 /* varianty a mobil */
 :root{--c4:#1F4E78;--c3:#00796b;--vc:#1F4E78}
 body.v3{--vc:#00796b}
+body.vm{--vc:#6a1b9a}
 #horni{position:sticky;top:0;z-index:6;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08)}
 nav{position:static;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 nav::-webkit-scrollbar{display:none}
 nav button{white-space:nowrap;flex:none}
-#varLista{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px 10px 8px;border-bottom:1px solid var(--li)}
+#varLista{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:6px 10px 8px;border-bottom:1px solid var(--li)}
 #varLista button{font:12px Verdana,sans-serif;border:2px solid;border-radius:8px;padding:6px 8px;background:#fff;cursor:pointer;line-height:1.3;text-align:center}
 #varLista button b{display:block;font-size:13.5px}
 #varLista button small{font-size:11px;opacity:.85;white-space:nowrap}
 #varLista button[data-v="4"]{border-color:var(--c4);color:var(--c4)}
 #varLista button[data-v="3"]{border-color:var(--c3);color:var(--c3)}
+#varLista button[data-v="m"]{border-color:#6a1b9a;color:#6a1b9a}
+#varLista button.akt[data-v="m"]{background:#6a1b9a;color:#fff}
+#varLista button small{white-space:normal}
+.srov th.am{background:#6a1b9a}
+body.vm .srov td.akt{background:#f3e5f5!important}
+.krT{display:inline-block;font-size:10px;font-weight:bold;color:#fff;background:var(--c4);border-radius:7px;padding:0 5px;margin-left:3px}
+.krT.t3{background:var(--c3)}
+.hmT{color:#6a1b9a!important;font-weight:bold!important}
+.rgrid.den{table-layout:fixed}
+.rgrid.den col.c0{width:44px}
+.rgrid.den th.hod{text-align:left;font-weight:normal;color:var(--se)}
+#pKresla .mala{display:block}
+@media(max-width:700px){.srov{font-size:11px}.srov td,.srov th{padding:3px 4px}}
+@media(max-width:700px){#varLista button[data-v="4"] small,#varLista button[data-v="3"] small{display:none}#varLista button{padding:5px 4px}}
 #varLista button.akt[data-v="4"]{background:var(--c4);color:#fff}
 #varLista button.akt[data-v="3"]{background:var(--c3);color:#fff}
 .karta{border-top:4px solid var(--vc)}
@@ -202,8 +217,9 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <button data-t="prednost" data-tip="Přednost vybraných holičů (pevné bloky a úroveň 1–3) a porovnání rozpisu s ní a bez ní. Jen pro Toma a provozního.">6. Přednost 🔒</button>
 </nav>
 <div id="varLista">
-<button data-v="4" onclick="zvolVar(4)" data-tip="Den rozdělený na 3 bloky po 4 hodinách, jak navrhuje mail. Přání holičů se berou ze sekce 3a dotazníku."><b>4hodinové bloky</b><small>8–12 · 12–16 · 16–20</small></button>
-<button data-v="3" onclick="zvolVar(3)" data-tip="Den rozdělený na 4 bloky po 3 hodinách; hranice ve 14:00 leží přesně mezi bloky. Přání holičů se berou ze sekce 3b dotazníku."><b>3hodinové bloky</b><small>8–11·11–14·14–17·17–20</small></button>
+<button data-v="4" onclick="zvolVar(4)" data-tip="Všechna křesla mají den rozdělený na 3 bloky po 4 hodinách, jak navrhuje mail. Přání holičů se berou ze sekce 3a dotazníku."><b>Vše 4h</b><small>8–12 · 12–16 · 16–20</small></button>
+<button data-v="m" onclick="zvolVar('m')" data-tip="Část křesel má 4hodinové a část 3hodinové bloky. Kolik křesel má které, nastaví majitel nebo pověřený pracovník v Pravidlech."><b>4h + 3h</b><small id="mKonf">nastavit v Pravidlech</small></button>
+<button data-v="3" onclick="zvolVar(3)" data-tip="Všechna křesla mají den rozdělený na 4 bloky po 3 hodinách; hranice ve 14:00 leží přesně mezi bloky. Přání holičů se berou ze sekce 3b dotazníku."><b>Vše 3h</b><small>8–11·11–14·14–17·17–20</small></button>
 </div>
 </div>
 <main>
@@ -214,7 +230,7 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <p><b>Zkušební data:</b> jako by dotazník vyplnilo všech 21 holičů z Old Place a Zverimexu. Dohromady chtějí 80 % kapacity křesel (Old Place 1 152 z 1 440 h, Zverimex 768 z 960 h), nejvíc 25 h týdně, nejméně 6 h týdně. Přání jsou vymyšlená, <b>nejde o skutečné odpovědi holičů</b>.</p>
 <p>Stránka přehraje rozdělení ledna 2027 od začátku do konce. Všechno počítá prohlížeč, nic se nikam neukládá ani neodesílá.</p>
 <ul>
-<li><b>Délka bloků:</b> nahoře pod menu přepínáte mezi 4hodinovými a 3hodinovými bloky; barva stránky ukazuje, která varianta je zapnutá (modrá 4 h, zelená 3 h).</li>
+<li><b>Délka bloků:</b> majitel nebo pověřený pracovník určí, kolik křesel v provozovně má 4hodinové a kolik 3hodinové bloky (nahoře pod menu nebo v Pravidlech). Barva stránky: modrá = všechna 4h, zelená = všechna 3h, fialová = obojí.</li>
 <li><b>Nápovědy:</b> najeďte myší na číslo, buňku nebo popisek (na mobilu klepněte) a objeví se vysvětlivka.</li>
 <li><b>Pravidla</b> nastavuje majitel nebo pověřený pracovník provozovny: sazbu za hodinu, poměr ranních a odpoledních hodin a pravidla dražby.</li>
 <li><b>Přání:</b> každý holič do 15. zadá, kolik hodin chce a které dny a bloky „chce / může / nemůže“.</li>
@@ -224,7 +240,7 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <li><b>Ruční úprava:</b> před schválením jde v rozvrhu klepnutím změnit, kdo v bloku stříhá.</li>
 <li><b>Férovost a nájem:</b> u každého holiče je vidět, kolik dostal, kolik z toho chtěl, jaký má poměr ráno/odpoledne a kolik zaplatí.</li>
 </ul>
-<p class="mala">Rozdělení jde přepnout mezi 4h bloky (8–12, 12–16, 16–20) a 3h bloky (8–11, 11–14, 14–17, 17–20), každá varianta bere přání holičů ze své mřížky v dotazníku (3a, nebo 3b). Srovnání obou je v části Férovost a nájem. Rezervace se skládají ze souvislých bloků u jednoho křesla a jejich délka respektuje nejkratší a nejdelší rezervaci, kterou holič pro daný den zadal. U 3h bloků se chtěné hodiny dorovnají na nejbližší násobek 3. Pro jednoduchost jen pracovní dny . Šestihodinové bloky, víkendy, časy 7–8 a 20–22, burzu směn a přihlašování přidá skutečná aplikace. Počty křesel: Old Place 6, Zverimex 4 (<i>počet ve Zverimexu je zatím nepotvrzený</i>).</p>
+<p class="mala">Křeslo má buď 4h bloky (8–12, 12–16, 16–20), nebo 3h bloky (8–11, 11–14, 14–17, 17–20). U 4h křesel se berou přání holiče z mřížky 3a dotazníku, u 3h křesel z mřížky 3b. Holič má v jednom dni rezervaci jen v křeslech jednoho typu. Srovnání všech 4h, všech 3h a nastaveného rozdělení je v části Férovost a nájem. Rezervace se skládají ze souvislých bloků u jednoho křesla a jejich délka respektuje nejkratší a nejdelší rezervaci, kterou holič pro daný den zadal. U 3h bloků se chtěné hodiny dorovnají na nejbližší násobek 3. Pro jednoduchost jen pracovní dny . Šestihodinové bloky, víkendy, časy 7–8 a 20–22, burzu směn a přihlašování přidá skutečná aplikace. Počty křesel: Old Place 6, Zverimex 4 (<i>počet ve Zverimexu je zatím nepotvrzený</i>).</p>
 <button class="btn" onclick="ukaz('pravidla')">Začít pravidly →</button>
 <button class="btn sv" onclick="novaData()" data-tip="Znovu vylosuje, kolik by kdo v dražbě nejvýš dal. Přání holičů zůstávají stejná.">Jiná simulace dražby</button>
 </div>
@@ -234,9 +250,11 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <div class="karta">
 <h2>1. Pravidla (nastavuje majitel nebo pověřený pracovník provozovny)<span class="vb" data-tip="Právě zobrazená varianta délky bloků. Přepíná se nahoře pod menu."></span></h2>
 <p class="mala">Po změně klikněte na „Přepočítat měsíc“. Výchozí hodnoty jsou z návrhu v mailu, dražbu navrhuje TBDB.</p>
+<h3>Kolik křesel má 4h a kolik 3h bloky</h3>
+<p class="mala">Platí hned, bez přepočítání. Ruční úpravy rozpisu se pamatují zvlášť pro každé rozdělení.</p>
+<div class="parametry" id="pKresla"></div>
 <h3>Nájem a rozvrh</h3>
 <div class="parametry">
-<label data-tip="Na jak dlouhé bloky se dělí den. Totéž přepínají tlačítka nahoře.">Délka bloků<select id="pVar" onchange="nastavVar(+this.value);prepocitat()"><option value="4">4 hodiny (8–12, 12–16, 16–20)</option><option value="3">3 hodiny (8–11, 11–14, 14–17, 17–20)</option></select></label>
 <label data-tip="Kolik holič platí za hodinu rezervovaného křesla, když ho nezíská v dražbě. Mail navrhuje 50 Kč.">Základní sazba za hodinu křesla (Kč)<input id="pSazba" type="number" value="50" min="0" step="5"></label>
 <label data-tip="Aspoň tolik procent hodin holiče musí být před 14:00, aby se o méně žádaná rána dělili všichni. Blok 12–16 se počítá napůl.">Minimum hodin před 14:00 (%)<input id="pRano" type="number" value="25" min="0" max="50"></label>
 <label data-tip="Aspoň tolik procent hodin holiče musí být po 14:00, aby nikdo neměl jen žádaná odpoledne a večery.">Minimum hodin po 14:00 (%)<input id="pOdpo" type="number" value="25" min="0" max="50"></label>
@@ -389,8 +407,17 @@ const DNY=['Po','Út','St','Čt','Pá'];
 const BLOKY4=[{k:'R',t:'8–12',h0:8,h1:12,pred:4,po:0},{k:'S',t:'12–16',h0:12,h1:16,pred:2,po:2},{k:'O',t:'16–20',h0:16,h1:20,pred:0,po:4}];
 const BLOKY3=[{k:'A',t:'8–11',h0:8,h1:11,pred:3,po:0},{k:'B',t:'11–14',h0:11,h1:14,pred:3,po:0},{k:'C',t:'14–17',h0:14,h1:17,pred:0,po:3},{k:'D',t:'17–20',h0:17,h1:20,pred:0,po:3}];
 const KAZDY=['každé pondělí','každé úterý','každou středu','každý čtvrtek','každý pátek'];
-let VAR=4, BLOKY=BLOKY4, L=4;
-function nastavVar(v){VAR=v;BLOKY=v===3?BLOKY3:BLOKY4;L=v}
+const TYP={4:{B:BLOKY4,L:4},3:{B:BLOKY3,L:3}};
+// Kolik křesel v provozovně má 3hodinové bloky, ostatní mají 4hodinové. Nastavuje majitel nebo pověřený pracovník
+// provozovny (Keksa 27. 11. 2026). Křesla se číslují: nejdřív 4h, pak 3h.
+let K3={OP:0,ZV:0};
+function typK(p,k){return k>=p.kresla-K3[p.id]?3:4}
+function kreslaT(p,T){return [...Array(p.kresla).keys()].filter(k=>typK(p,k)===T)}
+function typyP(p){return [4,3].filter(T=>kreslaT(p,T).length)}
+function provH(h){return PROV.find(p=>p.id===h.prov)}
+function konfKlic(){return PROV.map(p=>K3[p.id]).join('-')}
+function konfDruh(){return PROV.every(p=>!K3[p.id])?4:PROV.every(p=>K3[p.id]===p.kresla)?3:'mix'}
+function konfTxt(){return PROV.map(p=>p.nazev+' '+(p.kresla-K3[p.id])+'× 4h + '+K3[p.id]+'× 3h').join(' · ')}
 const PROV=[{id:'OP',nazev:'Old Place',kresla:6},{id:'ZV',nazev:'Zverimex',kresla:4}];
 const JMENA={OP:['Adam','Bára','Cyril','Dominik','Eliška','Fanda','Gabriela','Hugo','Igor','Jitka','Karel','Lenka','Mirek'],ZV:['Nela','Oskar','Radka','Silvie','Tobiáš','Uršula','Viktor','Zdeněk']};
 const BARVY=['#1565c0','#2e7d32','#6a1b9a','#c62828','#ef6c00','#00838f','#4e342e','#ad1457','#283593','#558b2f','#00695c','#5d4037','#7b1fa2','#d84315','#0277bd','#827717','#37474f','#c2185b','#1b5e20','#bf360c','#4527a0'];
@@ -409,7 +436,7 @@ $('mesicNazev').textContent='leden '+ROK;
 const ODPOVEDI=[{"j":"Aňa","p":"OP","h":100,"x":[[1,1,2],[0,0,1],[1,2,2],[1,1,2],[2,2,2]],"y":[[0,1,1,1],[0,0,1,1],[1,2,2,2],[1,1,1,2],[2,2,2,2]],"d":[[3,12],[3,8],[3,8],[4,8],[3,8]]},{"j":"Báďa","p":"OP","h":84,"x":[[0,1,2],[0,1,2],[1,1,2],[1,2,2],[1,2,2]],"y":[[0,1,1,2],[0,1,1,2],[0,1,1,2],[1,1,2,2],[1,2,2,2]],"d":[[4,6],[3,12],[4,8],[4,6],[4,8]]},{"j":"Edita","p":"OP","h":100,"x":[[1,2,2],[0,1,2],[0,1,2],[1,2,2],[1,2,2]],"y":[[1,1,2,2],[0,0,1,2],[0,1,1,2],[1,1,2,2],[1,2,2,2]],"d":[[4,6],[4,12],[4,12],[4,8],[3,8]]},{"j":"Ivet","p":"OP","h":96,"x":[[0,1,2],[1,2,2],[1,1,2],[2,2,2],[0,1,1]],"y":[[0,1,1,1],[1,2,2,2],[1,1,2,2],[2,2,2,2],[0,0,1,1]],"d":[[4,12],[3,6],[4,8],[4,6],[4,6]]},{"j":"Jakub","p":"OP","h":100,"x":[[0,0,1],[2,2,2],[1,1,1],[1,2,2],[1,2,2]],"y":[[0,0,0,1],[1,2,2,2],[1,1,1,2],[1,2,2,2],[1,2,2,2]],"d":[[4,12],[4,8],[3,12],[4,12],[3,12]]},{"j":"Jan","p":"OP","h":96,"x":[[0,1,2],[1,2,2],[0,1,2],[1,2,2],[1,2,2]],"y":[[0,1,2,2],[0,1,2,2],[0,1,1,2],[1,2,2,2],[1,1,2,2]],"d":[[4,6],[4,12],[4,8],[4,6],[3,6]]},{"j":"Matěj","p":"OP","h":92,"x":[[2,1,0],[2,1,0],[2,1,1],[2,2,1],[2,2,1]],"y":[[2,1,0,0],[2,2,1,0],[2,1,1,1],[2,2,2,1],[2,2,1,1]],"d":[[4,8],[4,12],[4,8],[4,8],[4,8]]},{"j":"Merlin","p":"OP","h":96,"x":[[0,1,2],[0,1,2],[1,2,2],[1,1,2],[1,2,2]],"y":[[0,1,2,2],[0,1,1,1],[1,2,2,2],[0,1,2,2],[1,2,2,2]],"d":[[3,6],[4,8],[4,8],[4,8],[4,6]]},{"j":"Michal","p":"OP","h":80,"x":[[1,1,2],[0,1,2],[0,1,2],[1,2,2],[1,1,2]],"y":[[0,1,2,2],[0,1,1,2],[0,1,1,1],[1,1,2,2],[1,1,2,2]],"d":[[4,8],[4,8],[4,6],[3,12],[3,8]]},{"j":"Pavel","p":"OP","h":24,"x":[[0,1,2],[0,0,0],[0,1,2],[0,0,0],[0,0,0]],"y":[[0,0,1,1],[0,0,0,0],[0,1,2,2],[0,0,0,0],[0,0,0,0]],"d":[[3,4],null,[3,6],null,null]},{"j":"Petr","p":"OP","h":96,"x":[[2,1,1],[2,2,0],[2,1,0],[2,2,1],[2,1,1]],"y":[[2,2,1,1],[2,2,1,0],[2,1,1,0],[2,2,1,1],[2,2,1,0]],"d":[[4,8],[3,8],[3,8],[3,8],[3,6]]},{"j":"Tadeáš","p":"OP","h":92,"x":[[0,1,1],[0,1,1],[1,1,1],[2,2,2],[2,2,2]],"y":[[0,0,1,1],[0,1,1,1],[1,1,1,1],[2,2,2,2],[2,2,2,2]],"d":[[4,8],[4,8],[3,12],[4,12],[4,6]]},{"j":"Tom","p":"OP","h":96,"x":[[0,1,2],[1,2,2],[0,1,2],[1,2,2],[1,2,2]],"y":[[0,0,1,1],[1,2,2,2],[0,1,2,2],[1,1,2,2],[1,1,2,2]],"d":[[3,8],[4,8],[3,6],[4,6],[4,8]]},{"j":"Banána","p":"ZV","h":100,"x":[[0,1,1],[1,2,2],[0,1,2],[1,2,2],[1,2,2]],"y":[[0,0,1,1],[1,1,2,2],[0,1,2,2],[1,2,2,2],[1,1,2,2]],"d":[[3,8],[4,8],[4,8],[4,8],[3,12]]},{"j":"Can","p":"ZV","h":100,"x":[[2,1,0],[2,2,1],[2,1,0],[2,2,1],[2,1,1]],"y":[[2,1,1,0],[2,2,1,0],[2,2,1,0],[2,2,2,1],[2,2,1,1]],"d":[[4,6],[4,8],[4,8],[4,12],[3,8]]},{"j":"Halis","p":"ZV","h":96,"x":[[0,0,0],[0,0,1],[1,2,2],[1,2,2],[1,2,2]],"y":[[0,0,0,0],[0,0,1,1],[1,2,2,2],[1,2,2,2],[1,2,2,2]],"d":[null,[4,8],[4,12],[4,12],[3,8]]},{"j":"Josef","p":"ZV","h":96,"x":[[0,1,1],[0,1,1],[1,2,2],[2,2,2],[2,2,2]],"y":[[0,1,1,1],[0,0,1,1],[1,1,2,2],[1,2,2,2],[2,2,2,2]],"d":[[4,6],[3,12],[4,6],[4,6],[4,12]]},{"j":"Klára","p":"ZV","h":100,"x":[[2,1,1],[2,1,0],[2,1,0],[2,2,1],[2,2,1]],"y":[[2,2,1,0],[2,1,1,0],[2,1,1,0],[2,2,1,1],[2,2,1,1]],"d":[[4,12],[3,6],[3,6],[3,8],[4,8]]},{"j":"Ondřej","p":"ZV","h":92,"x":[[0,1,1],[0,1,1],[2,2,2],[0,0,0],[2,2,2]],"y":[[0,1,1,1],[0,1,2,2],[2,2,2,2],[0,0,0,0],[2,2,2,2]],"d":[[3,6],[3,8],[4,6],null,[3,8]]},{"j":"Sebastian","p":"ZV","h":92,"x":[[0,0,1],[1,1,2],[1,1,2],[2,2,2],[1,2,2]],"y":[[0,0,1,1],[0,1,2,2],[1,1,1,1],[2,2,2,2],[1,2,2,2]],"d":[[3,6],[4,6],[4,8],[4,8],[4,8]]},{"j":"Vera","p":"ZV","h":92,"x":[[1,2,2],[0,1,2],[0,0,0],[0,1,2],[2,2,2]],"y":[[1,2,2,2],[0,1,1,2],[0,0,0,0],[0,1,2,2],[2,2,2,2]],"d":[[3,12],[4,8],null,[4,8],[4,6]]}];
 function vymysli(){
  const r=rng(seed);
- return ODPOVEDI.map((o,i)=>({jmeno:o.j,prov:o.p,pref:VAR===3?o.y:o.x,delka:o.d,cil:o.h,id:i,barva:BARVY[i%BARVY.length],wtp:Math.round((50+r()*45)/5)*5}));
+ return ODPOVEDI.map((o,i)=>({jmeno:o.j,prov:o.p,pref:{4:o.x,3:o.y},delka:o.d,cil:o.h,id:i,barva:BARVY[i%BARVY.length],wtp:Math.round((50+r()*45)/5)*5}));
 }
 
 // ---------- přednost holičů (Keksa 27. 11. 2026) ----------
@@ -422,69 +449,75 @@ const UKAZKA_PREDNOSTI=[
  {j:'Jakub',typ:'uroven',hodnota:2,od:'2027-01-11',do:'2027-01-31',pozn:'UKÁZKA, vymyšleno – zaučuje nového holiče'},
  {j:'Michal',typ:'pevny',hodnota:{wd:4,h0:16,h1:20},od:'2027-01-01',do:'2027-01-31',pozn:'UKÁZKA, vymyšleno – pátek večer pro stálé zákazníky'},
  {j:'Klára',typ:'pevny',hodnota:{wd:3,h0:16,h1:20},od:'2027-01-01',do:'2027-01-15',pozn:'UKÁZKA, vymyšleno – na dva týdny'}];
-// část 6 (přednost) jen po přihlášení s rolí admin nebo majitel (Supabase, stejně jako přehledy; Keksa 27. 11. 2026)
-let PRISTUP=false;
 let PREDNOST=UKAZKA_PREDNOSTI.map((p,i)=>({...p,id:i+1,autor:'Tom (majitel)'})), PREDN_ZAP=true, UPRAVY=[], ZAZNAM=[];
 try{const s=JSON.parse(localStorage.getItem('kh-prednost')||'null');if(s&&Array.isArray(s.p)){PREDNOST=s.p;PREDN_ZAP=s.zap!==false}}catch(e){}
 function ulozPrednost(){try{localStorage.setItem('kh-prednost',JSON.stringify({p:PREDNOST,zap:PREDN_ZAP}))}catch(e){}}
 function zapis(co){ZAZNAM.unshift({kdy:new Date(),kdo:'Tom (majitel)',co})}
-// bloky právě zobrazené varianty, které pevný blok pokrývá (víc než z poloviny)
-function blokyPevne(v){return BLOKY.map((bl,b)=>(Math.min(bl.h1,v.h1)-Math.max(bl.h0,v.h0))>(bl.h1-bl.h0)/2?b:-1).filter(b=>b>=0)}
+// bloky typu T, které pevný blok pokrývá (víc než z poloviny)
+function blokyPevne(v,T){return TYP[T].B.map((bl,b)=>(Math.min(bl.h1,v.h1)-Math.max(bl.h0,v.h0))>(bl.h1-bl.h0)/2?b:-1).filter(b=>b>=0)}
 function platiDen(p,di){const d=DATA_DNY[di].iso;return d>=p.od&&d<=p.do}
 // deterministická „náhoda“ pro shodu: stejný holič, den a blok dopadne stejně s předností i bez ní
 function nah(...a){let x=(seed*2654435761)>>>0;for(const v of a){x=Math.imul(x^(v+0x9e3779b9),0x85ebca6b)>>>0;x^=x>>>13}return x/4294967296}
 
 // ---------- výpočet měsíce ----------
-// Rezervace = souvislý úsek bloků v jednom dni u jednoho křesla. Délka v hodinách musí být mezi
-// nejkratší a nejdelší rezervací, kterou holič pro ten den v týdnu zadal (sekce 4 dotazníku).
-function minB(h,wd){const d=h.delka[wd];return d?Math.max(1,Math.ceil(d[0]/L)):0}
-function maxB(h,wd){const d=h.delka[wd];return d?Math.floor(d[1]/L):0}
+// Křeslo má buď 4h, nebo 3h bloky (počet 3h křesel v provozovně nastavuje majitel nebo pověřený pracovník).
+// Holič má v jednom dni rezervaci jen v křeslech jednoho typu; u 4h křesel platí jeho přání z mřížky 3a, u 3h z 3b.
+// Rezervace = souvislý úsek bloků v jednom dni. Délka v hodinách musí být mezi nejkratší a nejdelší rezervací,
+// kterou holič pro ten den v týdnu zadal (sekce 4 dotazníku).
+function minB(h,wd,T){const d=h.delka[wd];return d?Math.max(1,Math.ceil(d[0]/TYP[T].L)):0}
+function maxB(h,wd,T){const d=h.delka[wd];return d?Math.floor(d[1]/TYP[T].L):0}
 function bloky(h,di){const ix=[];h.busy[di].forEach((x,i)=>{if(x)ix.push(i)});return ix}
 // opt.prednost: použít přednost; opt.upravy: použít ruční úpravy rozpisu
 function spocitej(opt){
- opt=opt||{prednost:PREDN_ZAP&&PRISTUP,upravy:true};
+ opt=opt||{prednost:PREDN_ZAP,upravy:true};
  const H=vymysli();
  const P={sazba:num('pSazba'),rano:num('pRano'),odpo:num('pOdpo'),prah:num('pPrah'),podil:num('pPodil'),start:num('pStart'),krok:Math.max(1,num('pKrok')),max:num('pMax')};
- const NB=BLOKY.length;
  const PR=opt.prednost?PREDNOST:[];
- // obsazení: occ[prov][den][blok][kreslo]
- const occ={};PROV.forEach(p=>{occ[p.id]=DATA_DNY.map(()=>BLOKY.map(()=>Array(p.kresla).fill(null)))});
- H.forEach(h=>{h.busy=DATA_DNY.map(()=>BLOKY.map(()=>false));h.kres=DATA_DNY.map(()=>-1);h.hod=0;h.pred=0;h.po=0;h.chtene=0;h.najem=0;h.drazHod=0;h.drazNavic=0;h.vyhry=0;h.drazBloky={};h.uroven=DATA_DNY.map(()=>0);h.prednost=[]});
+ // obsazení: occ[prov][den][křeslo][blok typu křesla]
+ const occ={};PROV.forEach(p=>{occ[p.id]=DATA_DNY.map(()=>[...Array(p.kresla).keys()].map(k=>TYP[typK(p,k)].B.map(()=>null)))});
+ H.forEach(h=>{h.t=DATA_DNY.map(()=>0);h.busy=DATA_DNY.map(()=>[]);h.kres=DATA_DNY.map(()=>-1);h.hod=0;h.pred=0;h.po=0;h.chtene=0;h.najem=0;h.drazHod=0;h.drazNavic=0;h.vyhry=0;h.drazBloky={};h.uroven=DATA_DNY.map(()=>0);h.prednost=[];
+  h.typy=typyP(provH(h));h.Lmin=Math.min(...h.typy.map(T=>TYP[T].L))});
  const hJ=j=>H.find(h=>h.jmeno===j);
- function prirad(h,di,b,k,cena,draz,pev){occ[h.prov][di][b][k]={h:h.id,cena,draz,pev:!!pev};h.busy[di][b]=true;h.kres[di]=k;h.hod+=L;h.pred+=BLOKY[b].pred;h.po+=BLOKY[b].po;if(h.pref[DATA_DNY[di].wd][b]===2)h.chtene+=L;h.najem+=L*cena;if(draz){h.drazHod+=L;h.drazNavic+=L*(cena-P.sazba)}}
- const volneKreslo=(h,di,bs,pref)=>{const o=occ[h.prov][di];const ok=k=>bs.every(b=>o[b][k]===null);if(pref>=0&&ok(pref))return pref;for(let k=0;k<o[0].length;k++)if(ok(k))return k;return -1};
+ function prirad(h,di,T,b,k,cena,draz,pev){const bl=TYP[T].B[b],L=TYP[T].L;occ[h.prov][di][k][b]={h:h.id,cena,draz,pev:!!pev};
+  if(!h.t[di]){h.t[di]=T;h.busy[di]=TYP[T].B.map(()=>false)}h.busy[di][b]=true;h.kres[di]=k;h.hod+=L;h.pred+=bl.pred;h.po+=bl.po;if(h.pref[T][DATA_DNY[di].wd][b]===2)h.chtene+=L;h.najem+=L*cena;if(draz){h.drazHod+=L;h.drazNavic+=L*(cena-P.sazba)}}
+ const volneKreslo=(h,di,T,bs,pref)=>{const p=provH(h),o=occ[h.prov][di];const ok=k=>typK(p,k)===T&&bs.every(b=>o[k][b]===null);if(pref>=0&&ok(pref))return pref;for(let k=0;k<p.kresla;k++)if(ok(k))return k;return -1};
  // 0) přednost: úrovně po dnech platnosti, pevné bloky přidělit jako první
  const konflikty=[];
  PR.forEach(p=>{const h=hJ(p.j);if(!h)return;h.prednost.push(p);
   if(p.typ==='uroven'){DATA_DNY.forEach((d,di)=>{if(platiDen(p,di))h.uroven[di]=Math.max(h.uroven[di],p.hodnota)});return}
-  const bs=blokyPevne(p.hodnota);
+  // typ křesla: přesně pokrývající čas napřed, jinak 4h, pak 3h
+  const presne=T=>{const bs=blokyPevne(p.hodnota,T);return bs.length&&TYP[T].B[bs[0]].h0===p.hodnota.h0&&TYP[T].B[bs[bs.length-1]].h1===p.hodnota.h1};
+  const poradi=h.typy.slice().sort((a,b)=>presne(b)-presne(a));
   DATA_DNY.forEach((d,di)=>{if(d.wd!==p.hodnota.wd||!platiDen(p,di))return;
-   const nove=bs.filter(b=>!h.busy[di][b]);if(!nove.length)return;
-   const k=volneKreslo(h,di,nove,h.kres[di]);
-   if(k<0){konflikty.push({p,di});return}
-   nove.forEach(b=>prirad(h,di,b,k,P.sazba,false,true))})});
- // poptávka (přání holičů, bez ohledu na přednost)
- const popt={};PROV.forEach(p=>{popt[p.id]=[0,1,2,3,4].map(wd=>BLOKY.map((_,b)=>H.filter(h=>h.prov===p.id&&h.pref[wd][b]===2).length))});
- // loty dražby: jen křesla volná po pevných blocích, zájem jen holičů, kteří blok nemají pevně
+   for(const T of (h.t[di]?[h.t[di]]:poradi)){
+    const bs=blokyPevne(p.hodnota,T),nove=bs.filter(b=>!h.busy[di][b]);if(!nove.length)return;
+    const k=volneKreslo(h,di,T,nove,h.kres[di]);if(k<0)continue;
+    nove.forEach(b=>prirad(h,di,T,b,k,P.sazba,false,true));return}
+   konflikty.push({p,di})})});
+ // poptávka (přání holičů, bez ohledu na přednost): popt[prov][typ][den][blok]
+ const popt={};PROV.forEach(p=>{popt[p.id]={};typyP(p).forEach(T=>{popt[p.id][T]=[0,1,2,3,4].map(wd=>TYP[T].B.map((_,b)=>H.filter(h=>h.prov===p.id&&h.pref[T][wd][b]===2).length))})});
+ // loty dražby: jen křesla volná po pevných blocích, zájem jen holičů, kteří blok nemají pevně.
+ // U smíšených křesel se na typ počítá podíl zájmu podle podílu křesel toho typu.
  const dnyWd=wd=>DATA_DNY.map((d,i)=>d.wd===wd?i:-1).filter(i=>i>=0);
  const loty=[];
- PROV.forEach(p=>{for(let wd=0;wd<5;wd++)for(let b=0;b<NB;b++){
-  const di=dnyWd(wd);
-  const volna=[...Array(p.kresla).keys()].filter(k=>di.every(d=>occ[p.id][d][b][k]===null));
-  const n=H.filter(h=>h.prov===p.id&&h.pref[wd][b]===2&&!di.every(d=>h.busy[d][b])).length;
-  if(volna.length&&n>volna.length*P.prah){const pocet=Math.min(volna.length,Math.ceil(volna.length*P.podil/100));for(let i=0;i<pocet;i++)loty.push({prov:p.id,wd,b,k:volna[i],pomer:n/volna.length,zajem:n})}}});
+ PROV.forEach(p=>typyP(p).forEach(T=>{const kT=kreslaT(p,T),podil=kT.length/p.kresla;
+  for(let wd=0;wd<5;wd++)for(let b=0;b<TYP[T].B.length;b++){
+   const di=dnyWd(wd);
+   const volna=kT.filter(k=>di.every(d=>occ[p.id][d][k][b]===null));
+   const n=H.filter(h=>h.prov===p.id&&h.pref[T][wd][b]===2&&!di.every(d=>h.t[d]===T&&h.busy[d][b])).length;
+   if(volna.length&&n*podil>volna.length*P.prah){const pocet=Math.min(volna.length,Math.ceil(volna.length*P.podil/100));for(let i=0;i<pocet;i++)loty.push({prov:p.id,T,wd,b,k:volna[i],pomer:n*podil/volna.length,zajem:n})}}}));
  loty.sort((a,b)=>b.pomer-a.pomer||a.wd-b.wd);
- const lzePridat=(h,di,b)=>{const ix=bloky(h,di);if(ix.length>=maxB(h,DATA_DNY[di].wd))return false;return !ix.length||b===ix[0]-1||b===ix[ix.length-1]+1};
+ const lzePridat=(h,di,T,b)=>{if(h.t[di]&&h.t[di]!==T)return false;const ix=h.t[di]?bloky(h,di):[];if(ix.length>=maxB(h,DATA_DNY[di].wd,T))return false;return !ix.length||b===ix[0]-1||b===ix[ix.length-1]+1};
  loty.forEach((l,li)=>{
-  const di=dnyWd(l.wd), hod=di.length*L;l.hod=hod;l.kroky=[];l.vitez=null;
+  const di=dnyWd(l.wd), hod=di.length*TYP[l.T].L;l.hod=hod;l.kroky=[];l.vitez=null;
   for(let cena=P.start;cena>=P.sazba;cena-=P.krok){
    l.kroky.push(cena);
-   const kand=H.filter(h=>h.prov===l.prov&&h.pref[l.wd][l.b]===2&&h.wtp>=cena&&h.vyhry<P.max&&!h.drazBloky[l.wd+'-'+l.b]&&h.cil-h.hod>=hod&&di.every(d=>!h.busy[d][l.b])&&lzePridat(h,di[0],l.b));
+   const kand=H.filter(h=>h.prov===l.prov&&h.pref[l.T][l.wd][l.b]===2&&h.wtp>=cena&&h.vyhry<P.max&&!h.drazBloky[l.T+'-'+l.wd+'-'+l.b]&&h.cil-h.hod>=hod&&di.every(d=>!h.t[d]||(h.t[d]===l.T&&!h.busy[d][l.b]))&&lzePridat(h,di[0],l.T,l.b));
    if(kand.length){
     // při stejné ceně vyhraje vyšší úroveň přednosti, ve stejné úrovni los
     const ur=h=>Math.max(...di.map(d=>h.uroven[d])), top=Math.max(...kand.map(ur)), nej=kand.filter(h=>ur(h)===top);
     const v=nej.slice().sort((a,b)=>nah(li,a.id)-nah(li,b.id))[0];
-    l.vitez=v.id;l.cena=cena;l.souperi=kand.length-1;l.prednostVyhrala=top>0&&nej.length<kand.length;v.vyhry++;v.drazBloky[l.wd+'-'+l.b]=1;di.forEach(d=>prirad(v,d,l.b,l.k,cena,true));break}
+    l.vitez=v.id;l.cena=cena;l.souperi=kand.length-1;l.prednostVyhrala=top>0&&nej.length<kand.length;v.vyhry++;v.drazBloky[l.T+'-'+l.wd+'-'+l.b]=1;di.forEach(d=>prirad(v,d,l.T,l.b,l.k,cena,true));break}
   }
   if(l.vitez===null)l.cena=null;
  });
@@ -493,37 +526,39 @@ function spocitej(opt){
  function kolo(kdo,denOk,cilH){
   const hotovo=new Set();
   for(let it=0;it<20000;it++){
-   const kand=kdo.filter(h=>!hotovo.has(h.id)&&cilH(h)-h.hod>L/2);
+   const kand=kdo.filter(h=>!hotovo.has(h.id)&&cilH(h)-h.hod>h.Lmin/2);
    if(!kand.length)break;
    kand.sort((a,b)=>(a.hod/a.cil)-(b.hod/b.cil)||a.id-b.id);
    const h=kand[0];let best=null,bs=-1e9;
    const predPct=h.hod?h.pred/h.hod*100:0, poPct=h.hod?h.po/h.hod*100:0, zbyva=cilH(h)-h.hod;
-   const bonus=b=>(BLOKY[b].po===0&&predPct<P.rano+5?150:0)+(BLOKY[b].pred===0&&poPct<P.odpo+5?150:0);
+   const bonus=(T,b)=>(TYP[T].B[b].po===0&&predPct<P.rano+5?150:0)+(TYP[T].B[b].pred===0&&poPct<P.odpo+5?150:0);
+   const smis=h.typy.length>1;
    for(let di=0;di<DATA_DNY.length;di++){
     if(!denOk(h,di))continue;
-    const wd=DATA_DNY[di].wd, mx=maxB(h,wd), mn=minB(h,wd);if(!mx||mn>mx)continue;
-    const ix=bloky(h,di);
-    if(ix.length){ // prodloužit dnešní rezervaci
-     if(ix.length>=mx)continue;
+    const wd=DATA_DNY[di].wd;
+    if(h.t[di]){ // prodloužit dnešní rezervaci (stejný typ křesla)
+     const T=h.t[di],NB=TYP[T].B.length,mx=maxB(h,wd,T),mn=minB(h,wd,T);if(!mx||mn>mx||zbyva<=TYP[T].L/2)continue;
+     const ix=bloky(h,di);if(ix.length>=mx)continue;
      [ix[0]-1,ix[ix.length-1]+1].forEach(b=>{
-      if(b<0||b>=NB)return;const pf=h.pref[wd][b];if(pf===0)return;
-      const k=volneKreslo(h,di,[b],h.kres[di]);if(k<0)return;
-      let s=pf*100+bonus(b)+(ix.length<mn?300:-20)+(k===h.kres[di]?0:-40)+nah(h.id,di,b)*5;
-      if(s>bs){bs=s;best={di,bs:[b],k}}
+      if(b<0||b>=NB)return;const pf=h.pref[T][wd][b];if(pf===0)return;
+      const k=volneKreslo(h,di,T,[b],h.kres[di]);if(k<0)return;
+      let s=pf*100+bonus(T,b)+(ix.length<mn?300:-20)+(k===h.kres[di]?0:-40)+nah(h.id,di,b)*5;
+      if(s>bs){bs=s;best={di,T,bs:[b],k}}
      });
-    }else{ // nová rezervace v nejkratší délce
+    }else for(const T of h.typy){ // nová rezervace v nejkratší délce
+     const L=TYP[T].L,NB=TYP[T].B.length,mx=maxB(h,wd,T),mn=minB(h,wd,T);if(!mx||mn>mx)continue;
      if(zbyva<mn*L-L/2)continue;
      for(let s0=0;s0+mn<=NB;s0++){
       const run=Array.from({length:mn},(_,i)=>s0+i);
-      if(run.some(b=>h.pref[wd][b]===0))continue;
-      const k=volneKreslo(h,di,run,-1);if(k<0)continue;
-      let s=run.reduce((a,b)=>a+h.pref[wd][b]*100+bonus(b),0)/mn+15+nah(h.id,di,s0)*5;
-      if(s>bs){bs=s;best={di,bs:run,k}}
+      if(run.some(b=>h.pref[T][wd][b]===0))continue;
+      const k=volneKreslo(h,di,T,run,-1);if(k<0)continue;
+      let s=run.reduce((a,b)=>a+h.pref[T][wd][b]*100+bonus(T,b),0)/mn+15+(smis?nah(h.id,di,s0,T):nah(h.id,di,s0))*5;
+      if(s>bs){bs=s;best={di,T,bs:run,k}}
      }
     }
    }
    if(!best){hotovo.add(h.id);continue}
-   best.bs.forEach(b=>prirad(h,best.di,b,best.k,P.sazba,false));
+   best.bs.forEach(b=>prirad(h,best.di,best.T,b,best.k,P.sazba,false));
   }
  }
  for(let u=3;u>=1;u--){
@@ -532,30 +567,32 @@ function spocitej(opt){
  }
  kolo(H,()=>true,h=>h.cil);
  // ruční úpravy rozpisu (před schválením) – přepíšou výsledek algoritmu
- const upravy=opt.upravy?UPRAVY.filter(u=>u.var===VAR):[];
- upravy.forEach(u=>{const o=occ[u.prov][u.di][u.b];
-  if(u.h!==null)o.forEach((x,k)=>{if(x&&x.h===u.h&&k!==u.k)o[k]=null}); // holič nemůže sedět ve dvou křeslech
-  o[u.k]=u.h===null?null:{h:u.h,cena:P.sazba,draz:false,pev:false,ruc:true}});
+ const upravy=opt.upravy?UPRAVY.filter(u=>u.konf===konfKlic()):[];
+ upravy.forEach(u=>{const p=PROV.find(x=>x.id===u.prov),den=occ[u.prov][u.di],bl=TYP[typK(p,u.k)].B[u.b];
+  if(u.h!==null)den.forEach((kr,k)=>{if(k===u.k)return;const B=TYP[typK(p,k)].B;kr.forEach((x,b)=>{if(x&&x.h===u.h&&B[b].h0<bl.h1&&B[b].h1>bl.h0)kr[b]=null})}); // holič nemůže sedět ve dvou křeslech
+  den[u.k][u.b]=u.h===null?null:{h:u.h,cena:P.sazba,draz:false,pev:false,ruc:true}});
  prepocti(H,occ,P);
  return {H,P,occ,popt,loty,konflikty,upravy:upravy.length,prednost:PR.length>0};
 }
+// úseky holiče v jednom dni: [{k,T,b,o}] seřazené podle času
+function useky(h,di,occ){const p=provH(h),r=[];(occ||D.occ)[h.prov][di].forEach((kr,k)=>kr.forEach((o,b)=>{if(o&&o.h===h.id)r.push({k,T:typK(p,k),b,o,bl:TYP[typK(p,k)].B[b]})}));return r.sort((a,b)=>a.bl.h0-b.bl.h0)}
 // hodiny, nájem a ostatní čísla holiče znovu z obsazení křesel (po ručních úpravách)
 function prepocti(H,occ,P){
- H.forEach(h=>{h.busy=DATA_DNY.map(()=>BLOKY.map(()=>false));h.kres=DATA_DNY.map(()=>-1);h.hod=0;h.pred=0;h.po=0;h.chtene=0;h.najem=0;h.drazHod=0;h.drazNavic=0;h.pevHod=0;h.bloku=0});
- PROV.forEach(p=>occ[p.id].forEach((den,di)=>den.forEach((kr,b)=>kr.forEach((o,k)=>{if(!o)return;const h=H[o.h];
-  h.busy[di][b]=true;h.kres[di]=k;h.hod+=L;h.bloku++;h.pred+=BLOKY[b].pred;h.po+=BLOKY[b].po;if(h.pref[DATA_DNY[di].wd][b]===2)h.chtene+=L;h.najem+=L*o.cena;
-  if(o.draz){h.drazHod+=L;h.drazNavic+=L*(o.cena-P.sazba)}if(o.pev)h.pevHod+=L}))));
- // kontrola délky rezervací
- H.forEach(h=>{h.rez=[];h.podMin=0;h.nadMax=0;DATA_DNY.forEach((d,di)=>{const ix=bloky(h,di);if(!ix.length)return;
-  const n=ix.length, del=n*L, dl=h.delka[d.wd];h.rez.push(del);
+ H.forEach(h=>{h.t=DATA_DNY.map(()=>0);h.busy=DATA_DNY.map(()=>[]);h.kres=DATA_DNY.map(()=>-1);h.denH=DATA_DNY.map(()=>0);h.hod=0;h.pred=0;h.po=0;h.chtene=0;h.najem=0;h.drazHod=0;h.drazNavic=0;h.pevHod=0;h.bloku=0;h.h3=0});
+ PROV.forEach(p=>occ[p.id].forEach((den,di)=>den.forEach((kr,k)=>{const T=typK(p,k),L=TYP[T].L;kr.forEach((o,b)=>{if(!o)return;const h=H[o.h],bl=TYP[T].B[b];
+  if(!h.t[di]){h.t[di]=T;h.busy[di]=TYP[T].B.map(()=>false)}if(h.t[di]===T)h.busy[di][b]=true;
+  h.kres[di]=k;h.denH[di]+=L;h.hod+=L;h.bloku++;if(T===3)h.h3+=L;h.pred+=bl.pred;h.po+=bl.po;if(h.pref[T][DATA_DNY[di].wd][b]===2)h.chtene+=L;h.najem+=L*o.cena;
+  if(o.draz){h.drazHod+=L;h.drazNavic+=L*(o.cena-P.sazba)}if(o.pev)h.pevHod+=L})})));
+ // kontrola délky rezervací (hodiny holiče v jednom dni)
+ H.forEach(h=>{h.rez=[];h.podMin=0;h.nadMax=0;DATA_DNY.forEach((d,di)=>{const del=h.denH[di];if(!del)return;
+  const dl=h.delka[d.wd];h.rez.push(del);
   if(!dl||del<dl[0])h.podMin++;
   if(dl&&del>dl[1])h.nadMax++;})});
 }
 
 // ---------- vykreslení ----------
-function mini(pref){let s='<span class="mini">';for(let b=0;b<BLOKY.length;b++)for(let wd=0;wd<5;wd++)s+='<span class="p'+pref[wd][b]+'" data-tip="'+DNY[wd]+' '+BLOKY[b].t+'"></span>';return s+'</span>'}
 function cip(h){return '<span class="cip" style="background:'+h.barva+'">'+h.jmeno+'</span>'}
-function lotTxt(l){return PROV.find(p=>p.id===l.prov).nazev+' · '+['každé pondělí','každé úterý','každou středu','každý čtvrtek','každý pátek'][l.wd]+' '+BLOKY[l.b].t+' · křeslo '+(l.k+1)}
+function lotTxt(l){return PROV.find(p=>p.id===l.prov).nazev+' · '+KAZDY[l.wd]+' '+TYP[l.T].B[l.b].t+' · křeslo '+(l.k+1)+(K3[l.prov]&&K3[l.prov]<PROV.find(p=>p.id===l.prov).kresla?' ('+l.T+'h)':'')}
 function radekLogu(l){
  if(l.vitez===null)return '<div data-tip="Nikdo neklikl ani za základní sazbu, křeslo v tomto bloku se rozdělí běžným způsobem.">'+lotTxt(l)+': <span class="chyba">neprodáno</span> ani za '+D.P.sazba+' Kč/h → běžné rozdělení</div>';
  const h=D.H[l.vitez];return '<div data-tip="Balíček = stejné křeslo ve stejném bloku každý takový den v lednu ('+l.hod+' h). Vítěz platí cenu, při které klikl „Beru“; příplatek = (cena − základní sazba) × hodiny.">'+lotTxt(l)+' ('+l.hod+' h): '+cip(h)+' za <b>'+l.cena+' Kč/h</b>, příplatek '+kc(l.hod*(l.cena-D.P.sazba))+(l.souperi?' · v tu chvíli chtěli i další ('+l.souperi+')':'')+(l.prednostVyhrala?' · rozhodla úroveň přednosti':'')+'</div>';
@@ -583,13 +620,15 @@ function prehratDrazbu(){
  },160);
 }
 function heatBarva(x){return x<0.5?'#f1f8e9':x<1?'#fff8e1':x<1.25?'#ffe0b2':x<1.5?'#ffccbc':'#ef9a9a'}
+function krTxt(n){return n+(n===1?' křeslo':n<5?' křesla':' křesel')}
 function kresliPrani(){
  let s='<div class="heat-wrap">';
- PROV.forEach(p=>{
-  s+='<table class="heat"><tr><th class="prov" data-tip="Řádky jsou bloky, sloupce dny v týdnu.">'+p.nazev+'<br><span class="mala">'+p.kresla+(p.kresla<5?' křesla':' křesel')+'</span></th>'+DNY.map(d=>'<th>'+d+'</th>').join('')+'</tr>';
-  BLOKY.forEach((bl,b)=>{s+='<tr><td class="bl">'+bl.t+'</td>';for(let wd=0;wd<5;wd++){const n=D.popt[p.id][wd][b],x=n/p.kresla;
-   s+='<td class="'+(n>p.kresla*D.P.prah?'hot':'')+'" style="background:'+heatBarva(x)+'" data-tip="'+DNY[wd]+' '+bl.t+': blok chce '+n+' holičů, křesel je '+p.kresla+', tedy '+x.toFixed(2).replace('.',',')+' na křeslo.'+(n>p.kresla*D.P.prah?' Převis zájmu: část křesel jde do dražby.':' Zájem se vejde do křesel.')+'"><b>'+n+'</b>'+x.toFixed(2).replace('.',',')+'</td>'}s+='</tr>'});
-  s+='</table>';
+ PROV.forEach(p=>{const ty=typyP(p);
+  ty.forEach(T=>{
+  s+='<table class="heat"><tr><th class="prov" data-tip="Řádky jsou bloky, sloupce dny v týdnu.">'+p.nazev+'<br><span class="mala">'+(ty.length>1?kreslaT(p,T).length+'× '+T+'h':krTxt(p.kresla))+'</span></th>'+DNY.map(d=>'<th>'+d+'</th>').join('')+'</tr>';
+  TYP[T].B.forEach((bl,b)=>{s+='<tr><td class="bl">'+bl.t+'</td>';for(let wd=0;wd<5;wd++){const n=D.popt[p.id][T][wd][b],x=n/p.kresla;
+   s+='<td class="'+(n>p.kresla*D.P.prah?'hot':'')+'" style="background:'+heatBarva(x)+'" data-tip="'+DNY[wd]+' '+bl.t+(ty.length>1?' ('+T+'h mřížka)':'')+': blok chce '+n+' holičů, křesel v provozovně je '+p.kresla+', tedy '+x.toFixed(2).replace('.',',')+' na křeslo.'+(n>p.kresla*D.P.prah?' Převis zájmu: část křesel jde do dražby.':' Zájem se vejde do křesel.')+'"><b>'+n+'</b>'+x.toFixed(2).replace('.',',')+'</td>'}s+='</tr>'});
+  s+='</table>'});
  });
  $('poptavka').innerHTML=s+'</div>';
  kresliHolice();
@@ -599,11 +638,12 @@ function kresliHolice(){
  let H=D.H.filter(h=>!fp||h.prov===fp);
  H=H.slice().sort(raz==='h'?(a,b)=>b.cil-a.cil:(a,b)=>a.jmeno.localeCompare(b.jmeno,'cs'));
  const TX=['–','může','chce'];
- $('praniTab').innerHTML=H.map(h=>{
-  let t='<table class="hm"><tr><th></th>'+DNY.map(d=>'<th>'+d+'</th>').join('')+'</tr>';
-  BLOKY.forEach((bl,b)=>{t+='<tr><td class="bl">'+bl.t+'</td>'+[0,1,2,3,4].map(wd=>'<td class="c'+h.pref[wd][b]+'" data-tip="'+DNY[wd]+' '+bl.t+': '+['nemůže','může (vzal by, když nebude jiný)','chce (tenhle čas chce nejvíc)'][h.pref[wd][b]]+'">'+TX[h.pref[wd][b]]+'</td>').join('')+'</tr>'});
+ $('praniTab').innerHTML=H.map(h=>{const ty=typyP(provH(h));
+  let t='<table class="hm">';
+  ty.forEach((T,i)=>{t+='<tr><th class="hmT">'+(ty.length>1?T+'h':'')+'</th>'+DNY.map(d=>'<th>'+(i?'':d)+'</th>').join('')+'</tr>';
+   TYP[T].B.forEach((bl,b)=>{t+='<tr><td class="bl">'+bl.t+'</td>'+[0,1,2,3,4].map(wd=>'<td class="c'+h.pref[T][wd][b]+'" data-tip="'+DNY[wd]+' '+bl.t+': '+['nemůže','může (vzal by, když nebude jiný)','chce (tenhle čas chce nejvíc)'][h.pref[T][wd][b]]+'">'+TX[h.pref[T][wd][b]]+'</td>').join('')+'</tr>'})});
   t+='<tr class="dl"><td class="bl" data-tip="Nejkratší–nejdelší rezervace křesla v hodinách, kterou holič v daný den chce.">rezervace</td>'+[0,1,2,3,4].map(wd=>'<td data-tip="'+DNY[wd]+': '+(h.delka[wd]?'nejkratší rezervace '+h.delka[wd][0]+' h, nejdelší '+h.delka[wd][1]+' h':'v tento den stříhat nechce')+'">'+(h.delka[wd]?h.delka[wd][0]+'–'+h.delka[wd][1]:'–')+'</td>').join('')+'</tr></table>';
-  return '<div class="hk" style="--hb:'+h.barva+'"><div class="hk-h"><span class="jm" data-tip="'+h.jmeno+' chce '+h.cil+' h měsíčně a dostal '+h.hod+' h. Stejnou barvu má v rozvrhu.">'+h.jmeno+'</span><span class="ho">'+PROV.find(p=>p.id===h.prov).nazev+'<br><b style="color:#1a1a1a">'+h.cil+' h</b> / měsíc · '+Math.round(h.cil/4)+' h týdně</span></div>'+t+'<div class="wtp" data-tip="Kolik by holič nejvýš zaplatil za hodinu žádaného bloku v dražbě. Vymyšlené, jen pro simulaci.">Dal by až '+h.wtp+' Kč/h za žádaný blok · dostal '+h.hod+' h</div></div>'}).join('');
+  return '<div class="hk" style="--hb:'+h.barva+'"><div class="hk-h"><span class="jm" data-tip="'+h.jmeno+' chce '+h.cil+' h měsíčně a dostal '+h.hod+' h. Stejnou barvu má v rozvrhu.">'+h.jmeno+'</span><span class="ho">'+provH(h).nazev+'<br><b style="color:#1a1a1a">'+h.cil+' h</b> / měsíc · '+Math.round(h.cil/4)+' h týdně</span></div>'+t+'<div class="wtp" data-tip="Kolik by holič nejvýš zaplatil za hodinu žádaného bloku v dražbě. Vymyšlené, jen pro simulaci.">Dal by až '+h.wtp+' Kč/h za žádaný blok · dostal '+h.hod+' h'+(ty.length>1?' (z toho '+h.h3+' h ve 3h křeslech)':'')+'</div></div>'}).join('');
 }
 function tydny(){const w=[];let cur=null,pw=9;DATA_DNY.forEach((d,i)=>{if(d.wd<=pw){cur=[];w.push(cur)}cur.push(i);pw=d.wd});return w}
 let rTyden=0, rDen=0;
@@ -612,38 +652,39 @@ function rVyberDen(i){rDen=i;kresliRozvrh()}
 function rZmenaProv(){const pid=$('rProv').value;$('rHolic').innerHTML='<option value="">–</option>'+D.H.filter(h=>h.prov===pid).map(h=>'<option value="'+h.id+'">'+h.jmeno+'</option>').join('');kresliRozvrh()}
 function rVyberHolice(id){$('rHolic').value=$('rHolic').value===String(id)?'':String(id);kresliRozvrh()}
 function rVyberTyden(i){rTyden=i;rDen=0;kresliRozvrh()}
+function blkHtml(pid,p,di,k,b,zv,U,spoj,mob){
+ const T=typK(p,k),bl=TYP[T].B[b],o=D.occ[pid][di][k][b],du=' data-u="'+pid+','+di+','+k+','+b+'"';
+ if(!o)return '<div class="blk vol'+(U?' edit':'')+'"'+du+' data-tip="Volné křeslo '+(k+1)+', '+DATA_DNY[di].txt+' '+bl.t+'. Kdokoli si ho může dokoupit za základní sazbu."><span>volno</span>'+(mob?'':'<span class="t">'+bl.t+'</span>')+'</div>';
+ const h=D.H[o.h];
+ return '<div class="blk'+(spoj?' spoj':'')+(zv!==''&&+zv!==h.id?' dim':'')+(U?' edit':'')+'"'+du+' style="background:'+h.barva+'1f;border-left-color:'+h.barva+'" data-tip="'+h.jmeno+' · '+DATA_DNY[di].txt+' '+bl.t+' · křeslo '+(k+1)+' · '+o.cena+' Kč/h'+puvod(o)+'"><span style="color:'+h.barva+';font-weight:bold">'+h.jmeno+znacka(o)+'</span>'+(mob?(o.cena>D.P.sazba?'<span class="t">'+o.cena+' Kč/h</span>':''):'<span class="t">'+bl.t+(o.cena>D.P.sazba?' · '+o.cena+' Kč/h':'')+'</span>')+'</div>';
+}
 function kresliRozvrh(){
- const pid=$('rProv').value, p=PROV.find(x=>x.id===pid), zv=$('rHolic').value, W=tydny(), U=$('rUpr').checked;
+ const pid=$('rProv').value, p=PROV.find(x=>x.id===pid), zv=$('rHolic').value, W=tydny(), U=$('rUpr').checked, ty=typyP(p);
  if(rTyden>=W.length)rTyden=0;
- $('rStav').innerHTML='<b>Návrh rozpisu – čeká na schválení.</b> Přednost '+(PREDN_ZAP&&PREDNOST.length?'zapnutá ('+PREDNOST.length+')':'vypnutá')+' · ručních úprav '+D.upravy+(D.upravy?' <button class="xb" style="color:var(--b)" onclick="zrusUpravy(true);prepocitat()" data-tip="Vrátí rozpis tak, jak ho navrhl algoritmus.">vrátit</button>':'')+(D.konflikty.length?' · <span class="chyba">'+D.konflikty.length+'× pevný blok bez volného křesla</span>':'');
+ $('rStav').innerHTML='<b>Návrh rozpisu – čeká na schválení.</b> Křesla: '+(ty.length>1?kreslaT(p,4).length+'× 4h, '+kreslaT(p,3).length+'× 3h':'všechna '+ty[0]+'h')+' · přednost '+(PREDN_ZAP&&PREDNOST.length?'zapnutá ('+PREDNOST.length+')':'vypnutá')+' · ručních úprav '+D.upravy+(D.upravy?' <button class="xb" style="color:var(--b)" onclick="zrusUpravy(true);prepocitat()" data-tip="Vrátí rozpis tak, jak ho navrhl algoritmus.">vrátit</button>':'')+(D.konflikty.length?' · <span class="chyba">'+D.konflikty.length+'× pevný blok bez volného křesla</span>':'');
  $('rTydny').innerHTML=W.map((w,i)=>'<button class="'+(i===rTyden?'akt':'')+'" onclick="rVyberTyden('+i+')" data-tip="Zobrazit tento týden.">'+DATA_DNY[w[0]].txt.split(' ').slice(1).join(' ')+'–'+DATA_DNY[w[w.length-1]].txt.split(' ').slice(1).join(' ')+'</button>').join('');
  const HP=D.H.filter(h=>h.prov===pid);
  $('rLeg').innerHTML=HP.map(h=>'<span class="'+(zv===String(h.id)?'akt':'')+'" style="background:'+h.barva+'22;color:'+h.barva+'" onclick="rVyberHolice('+h.id+')" data-tip="'+h.jmeno+': chtěl '+h.cil+' h, dostal '+h.hod+' h. Klepnutím zvýrazníte jeho bloky a ukážete jeho leden."><b>'+h.jmeno+'</b> '+h.hod+' h</span>').join('');
  const dny=W[rTyden];
+ const krL=k=>(ty.length>1?' <span class="krT t'+typK(p,k)+'">'+typK(p,k)+'h</span>':'');
  if(MOBIL()){
   if(rDen>=dny.length)rDen=0;
   $('rDny').innerHTML=dny.map((di,i)=>'<button class="'+(i===rDen?'akt':'')+'" onclick="rVyberDen('+i+')" data-tip="Zobrazit rozvrh tohoto dne.">'+DATA_DNY[di].txt+'</button>').join('');
   const di=dny[rDen];
-  let s='<table class="rgrid den"><tr><th></th>'+BLOKY.map(bl=>'<th class="blh">'+bl.t+'</th>').join('')+'</tr>';
+  // sloupec = hodina 8–20, blok zabere tolik sloupců, kolik má hodin
+  let s='<table class="rgrid den"><colgroup><col class="c0">'+'<col>'.repeat(12)+'</colgroup><tr><th></th>'+(ty.length>1?[8,10,12,14,16,18].map(x=>'<th colspan="2" class="blh hod">'+x+'</th>').join(''):TYP[ty[0]].B.map(bl=>'<th colspan="'+TYP[ty[0]].L+'" class="blh">'+bl.t+'</th>').join(''))+'</tr>';
   for(let k=0;k<p.kresla;k++){
-   s+='<tr><td class="kr" data-tip="Křeslo '+(k+1)+' v provozovně '+p.nazev+'.">K'+(k+1)+'</td>';
-   BLOKY.forEach((bl,b)=>{const o=D.occ[pid][di][b][k];
-    if(!o){s+='<td><div class="blk vol'+(U?' edit':'')+'" data-u="'+pid+','+di+','+b+','+k+'" data-tip="Volné křeslo '+(k+1)+', '+DATA_DNY[di].txt+' '+bl.t+'. Kdokoli si ho může dokoupit za základní sazbu."><span>volno</span></div></td>';return}
-    const h=D.H[o.h];
-    s+='<td><div class="blk'+(zv!==''&&+zv!==h.id?' dim':'')+(U?' edit':'')+'" data-u="'+pid+','+di+','+b+','+k+'" style="background:'+h.barva+'1f;border-left-color:'+h.barva+'" data-tip="'+h.jmeno+' · '+DATA_DNY[di].txt+' '+bl.t+' · křeslo '+(k+1)+' · '+o.cena+' Kč/h'+puvod(o)+'"><span style="color:'+h.barva+';font-weight:bold">'+h.jmeno+znacka(o)+'</span>'+(o.cena>D.P.sazba?'<span class="t">'+o.cena+' Kč/h</span>':'')+'</div></td>'});
-   s+='</tr>';
+   const T=typK(p,k);
+   s+='<tr><td class="kr" data-tip="Křeslo '+(k+1)+' v provozovně '+p.nazev+', '+T+'hodinové bloky.">K'+(k+1)+krL(k)+'</td>'+TYP[T].B.map((bl,b)=>'<td colspan="'+TYP[T].L+'">'+blkHtml(pid,p,di,k,b,zv,U,false,true)+'</td>').join('')+'</tr>';
   }
   $('rozvrh').innerHTML=s+'</table>';
  }else{
  $('rDny').innerHTML='';
  let s='<table class="rgrid"><tr><th></th>'+dny.map(di=>{const t=DATA_DNY[di].txt.split(' ');return '<th>'+t[0]+'<small>'+t.slice(1).join(' ')+'</small></th>'}).join('')+'</tr>';
  for(let k=0;k<p.kresla;k++){
-  s+='<tr><td class="kr" data-tip="Křeslo '+(k+1)+' v provozovně '+p.nazev+'.">Křeslo '+(k+1)+'</td>';
+  s+='<tr><td class="kr" data-tip="Křeslo '+(k+1)+' v provozovně '+p.nazev+', '+typK(p,k)+'hodinové bloky.">Křeslo '+(k+1)+krL(k)+'</td>';
   dny.forEach(di=>{s+='<td><div class="stack">';
-   BLOKY.forEach((bl,b)=>{const o=D.occ[pid][di][b][k];
-    if(!o){s+='<div class="blk vol'+(U?' edit':'')+'" data-u="'+pid+','+di+','+b+','+k+'" data-tip="Volné křeslo '+(k+1)+', '+DATA_DNY[di].txt+' '+bl.t+'. Kdokoli si ho může dokoupit za základní sazbu.">'+'<span>volno</span><span class="t">'+bl.t+'</span></div>';return}
-    const h=D.H[o.h], pred=b>0&&D.occ[pid][di][b-1][k], spoj=pred&&pred.h===o.h;
-    s+='<div class="blk'+(spoj?' spoj':'')+(zv!==''&&+zv!==h.id?' dim':'')+(U?' edit':'')+'" data-u="'+pid+','+di+','+b+','+k+'" style="background:'+h.barva+'1f;border-left-color:'+h.barva+'" data-tip="'+h.jmeno+' · '+DATA_DNY[di].txt+' '+bl.t+' · křeslo '+(k+1)+' · '+o.cena+' Kč/h'+puvod(o)+'"><span style="color:'+h.barva+';font-weight:bold">'+h.jmeno+znacka(o)+'</span><span class="t">'+bl.t+(o.cena>D.P.sazba?' · '+o.cena+' Kč/h':'')+'</span></div>'});
+   TYP[typK(p,k)].B.forEach((bl,b)=>{const o=D.occ[pid][di][k][b],pred=b>0&&D.occ[pid][di][k][b-1];s+=blkHtml(pid,p,di,k,b,zv,U,o&&pred&&pred.h===o.h,false)});
    s+='</div></td>'});
   s+='</tr>';
  }
@@ -652,11 +693,11 @@ function kresliRozvrh(){
  // měsíc vybraného holiče
  if(zv===''){$('rHolicMesic').innerHTML='';return}
  const h=D.H[+zv];let t='<h3>'+cip(h)+' – celý leden</h3><div class="posuv"><table class="siroka"><tr><th>Den</th><th>Čas</th><th data-tip="Číslo křesla; dvě čísla = rezervace přechází mezi křesly.">Křeslo</th><th>Hodin</th><th data-tip="Nájem za ten den (hodiny × cena za hodinu).">Cena</th><th data-tip="Nejkratší–nejdelší rezervace, kterou holič pro tento den v týdnu chtěl. Červeně = mimo.">Přání</th></tr>';
- DATA_DNY.forEach((d,di)=>{const ix=bloky(h,di);if(!ix.length)return;
-  const k=D.occ[h.prov][di][ix[0]].findIndex(o=>o&&o.h===h.id);const krs=[...new Set(ix.map(b=>D.occ[h.prov][di][b].findIndex(o=>o&&o.h===h.id)+1))].join(', ');
-  const cena=ix.reduce((a,b)=>{const o=D.occ[h.prov][di][b].find(o=>o&&o.h===h.id);return a+o.cena*L},0);
-  const dl=h.delka[d.wd],del=ix.length*L,ok=dl&&del>=dl[0]&&del<=dl[1];
-  t+='<tr><td>'+d.txt+'</td><td>'+BLOKY[ix[0]].t.split('–')[0]+'–'+BLOKY[ix[ix.length-1]].t.split('–')[1]+'</td><td>'+krs+'</td><td>'+del+' h</td><td>'+kc(cena)+'</td><td class="'+(ok?'':'chyba')+'">'+(dl?dl[0]+'–'+dl[1]+' h':'–')+'</td></tr>'});
+ DATA_DNY.forEach((d,di)=>{const u=useky(h,di);if(!u.length)return;
+  const krs=[...new Set(u.map(x=>(x.k+1)+(ty.length>1?' ('+x.T+'h)':'')))].join(', ');
+  const cena=u.reduce((a,x)=>a+x.o.cena*TYP[x.T].L,0), del=u.reduce((a,x)=>a+TYP[x.T].L,0);
+  const dl=h.delka[d.wd],ok=dl&&del>=dl[0]&&del<=dl[1];
+  t+='<tr><td>'+d.txt+'</td><td>'+u[0].bl.h0+'–'+u[u.length-1].bl.h1+'</td><td>'+krs+'</td><td>'+del+' h</td><td>'+kc(cena)+'</td><td class="'+(ok?'':'chyba')+'">'+(dl?dl[0]+'–'+dl[1]+' h':'–')+'</td></tr>'});
  $('rHolicMesic').innerHTML=t+'<tr><td colspan="3"><b>Celkem</b></td><td><b>'+h.hod+' h</b></td><td><b>'+kc(h.najem)+'</b></td><td></td></tr></table></div>';
 }
 function kresliFerovost(){
@@ -672,58 +713,66 @@ function kresliFerovost(){
  '<div class="dlazdice" data-tip="Kolik holiči zaplatili v dražbě navíc nad základní sazbu."><div class="h">'+kc(celkemNavic)+'</div><div class="t">příplatek z dražby</div></div>'+
  '<div class="dlazdice" data-tip="Přidělené hodiny / chtěné hodiny. Ukazuje holiče, který dopadl nejhůř a nejlíp."><div class="h">'+Math.round(Math.min(...splneni))+'–'+Math.round(Math.max(...splneni))+' %</div><div class="t">splnění chtěných hodin (nejhorší–nejlepší holič)</div></div>'+
  '<div class="dlazdice" data-tip="Holiči, kteří nesplní minimum hodin před a po 14:00, protože si sami nic jiného nepřáli."><div class="h">'+porus+'</div><div class="t">holičů mimo pravidlo ráno/odpoledne (kvůli jejich přáním)</div></div>'+
- '<div class="dlazdice" data-tip="Rezervace (souvislé bloky jednoho holiče v jednom dni) kratší nebo delší, než holič pro ten den chtěl."><div class="h">'+mimoRez+' z '+vsechRez+'</div><div class="t">rezervací mimo nejkratší–nejdelší délku podle přání</div></div>';
+ '<div class="dlazdice" data-tip="Dny, kdy má holič rezervováno méně nebo více hodin, než pro ten den chtěl."><div class="h">'+mimoRez+' z '+vsechRez+'</div><div class="t">rezervací mimo nejkratší–nejdelší délku podle přání</div></div>';
  $('souhrn').innerHTML=sum;
- let t='<table class="siroka"><tr><th>Holič</th><th>Provozovna</th><th data-tip="Hodin měsíčně podle dotazníku.">Chtěl</th><th data-tip="Přidělené hodiny v lednu.">Dostal</th><th data-tip="Dostal / chtěl.">Splněno</th><th data-tip="Kolik přidělených hodin padlo do bloků, které holič označil „chce“.">Ve chtěných blocích</th><th data-tip="Podíl hodin před 14:00 a po 14:00. Červeně = pod minimem z pravidel.">Před 14 / po 14</th><th data-tip="Nejkratší–nejdelší rezervace v jednom dni a počet dní s rezervací.">Rezervace za den</th><th data-tip="Hodiny získané v dražbě.">Vydraženo</th><th data-tip="Celkový nájem za leden.">Nájem</th><th data-tip="Kolik z nájmu je příplatek z dražby nad základní sazbu.">z toho příplatek</th></tr>';
+ const smis=PROV.some(p=>typyP(p).length>1);
+ let t='<table class="siroka"><tr><th>Holič</th><th>Provozovna</th><th data-tip="Hodin měsíčně podle dotazníku.">Chtěl</th><th data-tip="Přidělené hodiny v lednu.">Dostal</th>'+(smis?'<th data-tip="Kolik z přidělených hodin je v křeslech se 3hodinovými bloky.">z toho 3h</th>':'')+'<th data-tip="Dostal / chtěl.">Splněno</th><th data-tip="Kolik přidělených hodin padlo do bloků, které holič označil „chce“.">Ve chtěných blocích</th><th data-tip="Podíl hodin před 14:00 a po 14:00. Červeně = pod minimem z pravidel.">Před 14 / po 14</th><th data-tip="Nejkratší–nejdelší rezervace v jednom dni a počet dní s rezervací.">Rezervace za den</th><th data-tip="Hodiny získané v dražbě.">Vydraženo</th><th data-tip="Celkový nájem za leden.">Nájem</th><th data-tip="Kolik z nájmu je příplatek z dražby nad základní sazbu.">z toho příplatek</th></tr>';
  D.H.forEach(h=>{const pr=h.hod?Math.round(h.pred/h.hod*100):0,po=h.hod?Math.round(h.po/h.hod*100):0;const ok=h.hod&&pr>=P.rano&&po>=P.odpo;
-  t+='<tr><td>'+cip(h)+'</td><td>'+PROV.find(p=>p.id===h.prov).nazev+'</td><td>'+h.cil+' h</td><td>'+h.hod+' h</td><td>'+Math.round(h.hod/h.cil*100)+' %</td><td>'+(h.hod?Math.round(h.chtene/h.hod*100):0)+' %</td><td class="'+(ok?'':'chyba')+'">'+pr+' % / '+po+' %</td><td class="'+(h.podMin+h.nadMax?'chyba':'')+'">'+(h.rez.length?Math.min(...h.rez)+'–'+Math.max(...h.rez)+' h, '+h.rez.length+'×':'–')+(h.podMin?' ('+h.podMin+'× kratší)':'')+(h.nadMax?' ('+h.nadMax+'× delší)':'')+'</td><td>'+(h.drazHod?h.drazHod+' h ★':'–')+'</td><td><b>'+kc(h.najem)+'</b></td><td>'+(h.drazNavic?kc(h.drazNavic):'–')+'</td></tr>'});
+  t+='<tr><td>'+cip(h)+'</td><td>'+provH(h).nazev+'</td><td>'+h.cil+' h</td><td>'+h.hod+' h</td>'+(smis?'<td>'+(h.h3?h.h3+' h':'–')+'</td>':'')+'<td>'+Math.round(h.hod/h.cil*100)+' %</td><td>'+(h.hod?Math.round(h.chtene/h.hod*100):0)+' %</td><td class="'+(ok?'':'chyba')+'">'+pr+' % / '+po+' %</td><td class="'+(h.podMin+h.nadMax?'chyba':'')+'">'+(h.rez.length?Math.min(...h.rez)+'–'+Math.max(...h.rez)+' h, '+h.rez.length+'×':'–')+(h.podMin?' ('+h.podMin+'× kratší)':'')+(h.nadMax?' ('+h.nadMax+'× delší)':'')+'</td><td>'+(h.drazHod?h.drazHod+' h ★':'–')+'</td><td><b>'+kc(h.najem)+'</b></td><td>'+(h.drazNavic?kc(h.drazNavic):'–')+'</td></tr>'});
  $('ferTab').innerHTML=t+'</table>';
  $('ferKarty').innerHTML=D.H.map(h=>{const pr=h.hod?Math.round(h.pred/h.hod*100):0,po=h.hod?Math.round(h.po/h.hod*100):0;const ok=h.hod&&pr>=P.rano&&po>=P.odpo;
-  return '<div class="fkk" style="--hb:'+h.barva+'"><div class="hl">'+cip(h)+'<span class="mala">'+PROV.find(p=>p.id===h.prov).nazev+'</span></div><dl>'+
-  '<dt data-tip="Dostal / chtěl hodin za leden.">Hodiny</dt><dd><b>'+h.hod+'</b> z '+h.cil+' h ('+Math.round(h.hod/h.cil*100)+' %)</dd>'+
+  return '<div class="fkk" style="--hb:'+h.barva+'"><div class="hl">'+cip(h)+'<span class="mala">'+provH(h).nazev+'</span></div><dl>'+
+  '<dt data-tip="Dostal / chtěl hodin za leden.">Hodiny</dt><dd><b>'+h.hod+'</b> z '+h.cil+' h ('+Math.round(h.hod/h.cil*100)+' %)'+(smis&&h.h3?', 3h: '+h.h3+' h':'')+'</dd>'+
   '<dt data-tip="Kolik přidělených hodin padlo do bloků „chce“.">Ve chtěných blocích</dt><dd>'+(h.hod?Math.round(h.chtene/h.hod*100):0)+' %</dd>'+
   '<dt data-tip="Podíl hodin před a po 14:00.">Před 14 / po 14</dt><dd class="'+(ok?'':'chyba')+'">'+pr+' % / '+po+' %</dd>'+
   '<dt data-tip="Nejkratší–nejdelší rezervace v jednom dni a počet dní.">Rezervace za den</dt><dd class="'+(h.podMin+h.nadMax?'chyba':'')+'">'+(h.rez.length?Math.min(...h.rez)+'–'+Math.max(...h.rez)+' h, '+h.rez.length+'×':'–')+'</dd>'+
   '<dt>Vydraženo</dt><dd>'+(h.drazHod?h.drazHod+' h ★':'–')+'</dd>'+
   '<dt>Nájem</dt><dd><b>'+kc(h.najem)+'</b>'+(h.drazNavic?' (příplatek '+kc(h.drazNavic)+')':'')+'</dd></dl></div>'}).join('');
 }
-function souhrnVar(v){const puv=VAR;nastavVar(v);const d=spocitej();nastavVar(puv);
+// souhrn pro jiné rozdělení křesel (k3 = počet 3h křesel po provozovnách)
+function souhrnKonf(k3){const puv=K3;K3=k3;let d;try{d=spocitej()}finally{K3=puv}
  const kap=DATA_DNY.length*12*PROV.reduce((a,p)=>a+p.kresla,0),obs=d.H.reduce((a,h)=>a+h.hod,0);
  const prod=d.loty.filter(l=>l.vitez!==null);const sp=d.H.map(h=>h.hod/h.cil*100);
  return {kap,obs,loty:d.loty.length,prod:prod.length,navic:d.H.reduce((a,h)=>a+h.drazNavic,0),najem:d.H.reduce((a,h)=>a+h.najem,0),
   sp:Math.round(Math.min(...sp))+'–'+Math.round(Math.max(...sp))+' %',chtene:Math.round(d.H.reduce((a,h)=>a+h.chtene,0)/obs*100),
   porus:d.H.filter(h=>h.hod&&(h.pred/h.hod*100<d.P.rano||h.po/h.hod*100<d.P.odpo)).length,
   mimo:d.H.reduce((a,h)=>a+h.podMin+h.nadMax,0),rez:d.H.reduce((a,h)=>a+h.rez.length,0),
-  zadane:PROV.reduce((a,p)=>a+d.popt[p.id].flat().filter(n=>n>p.kresla*d.P.prah).length,0)}}
-function kresliSrovnani(){const a=souhrnVar(4),b=souhrnVar(3);
+  zadane:PROV.reduce((a,p)=>a+Object.values(d.popt[p.id]).map(x=>x.flat().filter(n=>n>p.kresla*d.P.prah).length).reduce((x,y)=>x+y,0),0)}}
+function kresliSrovnani(){
+ const v4={},v3={};PROV.forEach(p=>{v4[p.id]=0;v3[p.id]=p.kresla});
+ const dr=konfDruh();
+ const sl=[{n:'Všechna 4h',tip:'Všechna křesla s bloky 8–12, 12–16, 16–20.',cls:'a4',d:souhrnKonf(v4),akt:dr===4},{n:'Všechna 3h',tip:'Všechna křesla s bloky 8–11, 11–14, 14–17, 17–20.',cls:'a3',d:souhrnKonf(v3),akt:dr===3}];
+ if(dr==='mix')sl.push({n:'Nastaveno',tip:'Právě nastavené rozdělení: '+konfTxt()+'.',cls:'am',d:souhrnKonf(K3),akt:true});
  const TIPY={'Obsazenost křesel':'Rezervované hodiny ze všech možných hodin křesel v lednu.','Splnění chtěných hodin (nejhorší–nejlepší)':'Přidělené / chtěné hodiny u holiče, který dopadl nejhůř a nejlíp.','Přidělené hodiny v blocích „chci“':'Kolik přidělených hodin padlo do bloků, které holiči označili „chce“.','Žádaných bloků v týdnu (převis zájmu)':'Kolik bloků v týdnu chce víc holičů, než je křesel.','Dražba: prodáno / balíčků':'Kolik dražených balíčků někdo koupil.','Příplatek z dražby':'Kolik holiči v dražbě zaplatili nad základní sazbu.','Nájem celkem':'Nájem za leden včetně příplatků z dražby.','Holičů mimo pravidlo ráno/odpoledne':'Holiči pod minimem hodin před nebo po 14:00.','Rezervací mimo nejkratší–nejdelší délku':'Rezervace kratší nebo delší, než holič pro daný den chtěl.'};
- const r=(t,x,y)=>'<tr><td data-tip="'+(TIPY[t]||'')+'">'+t+'</td><td class="'+(VAR===4?'akt':'')+'">'+x+'</td><td class="'+(VAR===3?'akt':'')+'">'+y+'</td></tr>';
- $('srovnani').innerHTML='<table class="siroka srov"><tr><th></th><th class="a4" data-tip="Bloky 8–12, 12–16, 16–20.">4h bloky</th><th class="a3" data-tip="Bloky 8–11, 11–14, 14–17, 17–20.">3h bloky</th></tr>'+
- r('Obsazenost křesel',Math.round(a.obs/a.kap*100)+' % ('+a.obs+' h)',Math.round(b.obs/b.kap*100)+' % ('+b.obs+' h)')+
- r('Splnění chtěných hodin (nejhorší–nejlepší)',a.sp,b.sp)+
- r('Přidělené hodiny v blocích „chci“',a.chtene+' %',b.chtene+' %')+
- r('Žádaných bloků v týdnu (převis zájmu)',a.zadane,b.zadane)+
- r('Dražba: prodáno / balíčků',a.prod+' / '+a.loty,b.prod+' / '+b.loty)+
- r('Příplatek z dražby',kc(a.navic),kc(b.navic))+
- r('Nájem celkem',kc(a.najem),kc(b.najem))+
- r('Holičů mimo pravidlo ráno/odpoledne',a.porus,b.porus)+
- r('Rezervací mimo nejkratší–nejdelší délku',a.mimo+' z '+a.rez,b.mimo+' z '+b.rez)+'</table>'}
+ const r=(t,f)=>'<tr><td data-tip="'+(TIPY[t]||'')+'">'+t+'</td>'+sl.map(s=>'<td class="'+(s.akt?'akt':'')+'">'+f(s.d)+'</td>').join('')+'</tr>';
+ $('srovnani').innerHTML='<table class="siroka srov"><tr><th></th>'+sl.map(s=>'<th class="'+s.cls+'" data-tip="'+s.tip+'">'+s.n+'</th>').join('')+'</tr>'+
+ r('Obsazenost křesel',d=>Math.round(d.obs/d.kap*100)+' % ('+d.obs+' h)')+
+ r('Splnění chtěných hodin (nejhorší–nejlepší)',d=>d.sp)+
+ r('Přidělené hodiny v blocích „chci“',d=>d.chtene+' %')+
+ r('Žádaných bloků v týdnu (převis zájmu)',d=>d.zadane)+
+ r('Dražba: prodáno / balíčků',d=>d.prod+' / '+d.loty)+
+ r('Příplatek z dražby',d=>kc(d.navic))+
+ r('Nájem celkem',d=>kc(d.najem))+
+ r('Holičů mimo pravidlo ráno/odpoledne',d=>d.porus)+
+ r('Rezervací mimo nejkratší–nejdelší délku',d=>d.mimo+' z '+d.rez)+'</table>'}
 // ---------- přednost: značky v rozvrhu ----------
 function puvod(o){return o.pev?' · pevný blok z přednosti (📌)':o.ruc?' · ručně upraveno (✎)':o.draz?' · vydraženo v dražbě (★)':' · přiděleno při spravedlivém rozdělení'}
 function znacka(o){return (o.draz?' <span class="hvezda">★</span>':'')+(o.pev?' 📌':'')+(o.ruc?' ✎':'')}
 // ---------- ruční úprava rozpisu ----------
 let uprCil=null;
-$('rozvrh').addEventListener('click',e=>{if(!$('rUpr').checked)return;const el=e.target.closest('[data-u]');if(!el)return;const [pid,di,b,k]=el.dataset.u.split(',');otevriUpravu(pid,+di,+b,+k)});
-function otevriUpravu(pid,di,b,k){
+$('rozvrh').addEventListener('click',e=>{if(!$('rUpr').checked)return;const el=e.target.closest('[data-u]');if(!el)return;const [pid,di,k,b]=el.dataset.u.split(',');otevriUpravu(pid,+di,+k,+b)});
+// křeslo, kde holič sedí ve stejný čas jinde (nebo -1)
+function kdeJinde(pid,di,hid,k,bl){const p=PROV.find(x=>x.id===pid);return D.occ[pid][di].findIndex((kr,kk)=>kk!==k&&kr.some((x,b)=>x&&x.h===hid&&TYP[typK(p,kk)].B[b].h0<bl.h1&&TYP[typK(p,kk)].B[b].h1>bl.h0))}
+function otevriUpravu(pid,di,k,b){
  if(typeof tipHide==='function')tipHide();
- const o=D.occ[pid][di][b][k], p=PROV.find(x=>x.id===pid), wd=DATA_DNY[di].wd;
- uprCil={pid,di,b,k,puv:o?o.h:null,pev:!!(o&&o.pev)};
- $('uprCo').innerHTML='<b>'+p.nazev+' · '+DATA_DNY[di].txt+' '+BLOKY[b].t+' · křeslo '+(k+1)+'</b><br>Teď: '+(o?cip(D.H[o.h])+puvod(o):'volno');
+ const p=PROV.find(x=>x.id===pid), T=typK(p,k), bl=TYP[T].B[b], o=D.occ[pid][di][k][b], wd=DATA_DNY[di].wd;
+ uprCil={pid,di,k,b,T,puv:o?o.h:null,pev:!!(o&&o.pev)};
+ $('uprCo').innerHTML='<b>'+p.nazev+' · '+DATA_DNY[di].txt+' '+bl.t+' · křeslo '+(k+1)+(typyP(p).length>1?' ('+T+'h bloky)':'')+'</b><br>Teď: '+(o?cip(D.H[o.h])+puvod(o):'volno');
  $('uprVar').classList.toggle('skryt',!uprCil.pev);
  $('uprVar').innerHTML=uprCil.pev?'📌 Tohle je <b>pevný blok</b>, který Tom dal holiči '+D.H[o.h].jmeno+' jako přednost. Přesunout ho jde, ale jen vědomě – před uložením se ještě zeptám.':'';
  const TX=['nemůže','může','chce'];
- $('uprH').innerHTML='<option value="">– volno –</option>'+D.H.filter(h=>h.prov===pid).map(h=>{const jinde=D.occ[pid][di][b].findIndex((x,kk)=>x&&x.h===h.id&&kk!==k);
-  return '<option value="'+h.id+'"'+(o&&o.h===h.id?' selected':'')+'>'+h.jmeno+' – '+TX[h.pref[wd][b]]+' · '+h.hod+'/'+h.cil+' h'+(jinde>=0?' · teď v křesle '+(jinde+1):'')+'</option>'}).join('');
+ $('uprH').innerHTML='<option value="">– volno –</option>'+D.H.filter(h=>h.prov===pid).map(h=>{const jinde=kdeJinde(pid,di,h.id,k,bl);
+  return '<option value="'+h.id+'"'+(o&&o.h===h.id?' selected':'')+'>'+h.jmeno+' – '+TX[h.pref[T][wd][b]]+' · '+h.hod+'/'+h.cil+' h'+(jinde>=0?' · teď v křesle '+(jinde+1):'')+'</option>'}).join('');
  $('uprInfo').textContent='U jména: co holič pro tento blok zadal v přáních a kolik hodin má / chtěl. Když vyberete holiče, který v tu dobu sedí v jiném křesle, přesune se sem.';
  $('upr').classList.remove('skryt');
 }
@@ -732,30 +781,34 @@ function ulozUpravu(){
  const u=uprCil;if(!u)return;const v=$('uprH').value, h=v===''?null:+v;
  if(h===u.puv){zavriUpravu();return}
  if(u.pev&&!confirm('Pozor: přesouváte pevný blok, který Tom dal holiči '+D.H[u.puv].jmeno+' jako přednost.\n\nOpravdu ho chcete přesunout?'))return;
- if(h!==null&&D.H[h].pref[DATA_DNY[u.di].wd][u.b]===0&&!confirm(D.H[h].jmeno+' v přáních zadal(a), že v tuto dobu nemůže. Přesto přidělit?'))return;
- UPRAVY=UPRAVY.filter(x=>!(x.var===VAR&&x.prov===u.pid&&x.di===u.di&&x.b===u.b&&x.k===u.k));
- UPRAVY.push({var:VAR,prov:u.pid,di:u.di,b:u.b,k:u.k,h});
- zapis('Ruční úprava ('+VAR+'h bloky): '+PROV.find(p=>p.id===u.pid).nazev+' '+DATA_DNY[u.di].txt+' '+BLOKY[u.b].t+' křeslo '+(u.k+1)+': '+(u.puv===null?'volno':D.H[u.puv].jmeno)+' → '+(h===null?'volno':D.H[h].jmeno)+(u.pev?' (přesunut pevný blok, potvrzeno)':''));
+ if(h!==null&&D.H[h].pref[u.T][DATA_DNY[u.di].wd][u.b]===0&&!confirm(D.H[h].jmeno+' v přáních zadal(a), že v tuto dobu nemůže. Přesto přidělit?'))return;
+ const kk=konfKlic();
+ UPRAVY=UPRAVY.filter(x=>!(x.konf===kk&&x.prov===u.pid&&x.di===u.di&&x.k===u.k&&x.b===u.b));
+ UPRAVY.push({konf:kk,prov:u.pid,di:u.di,k:u.k,b:u.b,h});
+ zapis('Ruční úprava: '+PROV.find(p=>p.id===u.pid).nazev+' '+DATA_DNY[u.di].txt+' '+TYP[u.T].B[u.b].t+' křeslo '+(u.k+1)+' ('+u.T+'h): '+(u.puv===null?'volno':D.H[u.puv].jmeno)+' → '+(h===null?'volno':D.H[h].jmeno)+(u.pev?' (přesunut pevný blok, potvrzeno)':''));
  zavriUpravu();prepocitat();
 }
 function zrusUpravy(zaznam){if(UPRAVY.length&&zaznam!==false)zapis(zaznam===true?'Ruční úpravy vráceny ('+UPRAVY.length+')':'Rozpis přepočítán, ruční úpravy ('+UPRAVY.length+') zrušeny');UPRAVY=[]}
 $('upr').addEventListener('click',e=>{if(e.target.id==='upr')zavriUpravu()});
 // ---------- přednost: nastavení ----------
-function prTxt(p){if(p.typ==='uroven')return 'úroveň '+p.hodnota;const bs=blokyPevne(p.hodnota);return 'pevný blok '+KAZDY[p.hodnota.wd]+' '+p.hodnota.h0+'–'+p.hodnota.h1+(bs.length&&(BLOKY[bs[0]].h0!==p.hodnota.h0||BLOKY[bs[bs.length-1]].h1!==p.hodnota.h1)?' (v '+VAR+'h blocích '+BLOKY[bs[0]].h0+'–'+BLOKY[bs[bs.length-1]].h1+')':'')}
+function prTxt(p){if(p.typ==='uroven')return 'úroveň '+p.hodnota;const v=p.hodnota,h=ODPOVEDI.find(o=>o.j===p.j),pr=h?PROV.find(x=>x.id===h.p):null;
+ let s='pevný blok '+KAZDY[v.wd]+' '+v.h0+'–'+v.h1;
+ if(pr)typyP(pr).forEach(T=>{const bs=blokyPevne(v,T);if(!bs.length)s+=' (ve '+T+'h křeslech nejde)';else{const a=TYP[T].B[bs[0]].h0,b=TYP[T].B[bs[bs.length-1]].h1;if(a!==v.h0||b!==v.h1)s+=' (ve '+T+'h křeslech '+a+'–'+b+')'}});
+ return s}
 function datum(s){const d=s.split('-');return +d[2]+'. '+(+d[1])+'. '+d[0]}
 function kresliPrednost(){
- if(!PRISTUP){['prSeznam','prSouhrn','prSrov','prZaznam'].forEach(id=>$(id).innerHTML='');return} // bez přihlášení nic nekreslit
  $('pZap').checked=PREDN_ZAP;
  if(!PREDNOST.length)$('prSeznam').innerHTML='<p class="mala">Žádná přednost – rozpis se dělí jen podle přání a pravidel.</p>';
  else $('prSeznam').innerHTML='<table class="siroka"><tr><th>Holič</th><th>Přednost</th><th>Platí</th><th>Poznámka</th><th>Zadal</th><th></th></tr>'+PREDNOST.map(p=>{const h=D.H.find(x=>x.jmeno===p.j);
-  let var_='';if(p.typ==='pevny'&&h){const bs=blokyPevne(p.hodnota);if(bs.some(b=>h.pref[p.hodnota.wd][b]===0))var_=' <span class="chyba" data-tip="Holič v přáních zadal, že v tuto dobu nemůže.">nemůže!</span>';
+  let var_='';if(p.typ==='pevny'&&h){if(h.typy.every(T=>{const bs=blokyPevne(p.hodnota,T);return !bs.length||bs.some(b=>h.pref[T][p.hodnota.wd][b]===0)}))var_=' <span class="chyba" data-tip="Holič v přáních zadal, že v tuto dobu nemůže.">nemůže!</span>';
    const k=D.konflikty.filter(x=>x.p===p).length;if(k)var_+=' <span class="chyba" data-tip="V tyto dny už nebylo volné křeslo (jiné pevné bloky).">'+k+'× bez křesla</span>'}
   p._var=var_;return '<tr><td>'+(h?cip(h):p.j)+'</td><td>'+prTxt(p)+var_+'</td><td style="white-space:nowrap">'+datum(p.od)+' – '+datum(p.do)+'</td><td>'+p.pozn+'</td><td>'+p.autor+'</td><td><button class="xb" onclick="smazPrednost('+p.id+')" data-tip="Odebrat tuto přednost.">✕</button></td></tr>'}).join('')+'</table>';
  if(PREDNOST.length){$('prSeznam').innerHTML='<div class="fk-tab">'+$('prSeznam').innerHTML+'</div><div class="fk">'+PREDNOST.map(p=>{const h=D.H.find(x=>x.jmeno===p.j);return '<div class="fkk" style="--hb:'+(h?h.barva:'#1F4E78')+'"><div class="hl">'+(h?cip(h):p.j)+'<button class="xb" onclick="smazPrednost('+p.id+')">✕</button></div><b>'+prTxt(p)+'</b>'+(p._var||'')+'<div class="mala">'+datum(p.od)+' – '+datum(p.do)+' · zadal '+p.autor+'</div><div>'+p.pozn+'</div></div>'}).join('')+'</div>'}
  // formulář
- const fh=$('fH').value;$('fH').innerHTML=D.H.slice().sort((a,b)=>a.prov.localeCompare(b.prov)||a.jmeno.localeCompare(b.jmeno,'cs')).map(h=>'<option value="'+h.jmeno+'">'+h.jmeno+' ('+PROV.find(p=>p.id===h.prov).nazev+')</option>').join('');if(fh)$('fH').value=fh;
+ const fh=$('fH').value;$('fH').innerHTML=D.H.slice().sort((a,b)=>a.prov.localeCompare(b.prov)||a.jmeno.localeCompare(b.jmeno,'cs')).map(h=>'<option value="'+h.jmeno+'">'+h.jmeno+' ('+provH(h).nazev+')</option>').join('');if(fh)$('fH').value=fh;
  if(!$('fDen').options.length)$('fDen').innerHTML=DNY.map((d,i)=>'<option value="'+i+'">'+KAZDY[i]+'</option>').join('');
- const fb=$('fBl').value;$('fBl').innerHTML=BLOKY.map(bl=>'<option value="'+bl.h0+'-'+bl.h1+'">'+bl.t+'</option>').join('');if(fb&&[...$('fBl').options].some(o=>o.value===fb))$('fBl').value=fb;
+ const fb=$('fBl').value,ty=[4,3].filter(T=>PROV.some(p=>typyP(p).includes(T)));
+ $('fBl').innerHTML=ty.map(T=>TYP[T].B.map(bl=>'<option value="'+bl.h0+'-'+bl.h1+'">'+bl.t+(ty.length>1?' ('+T+'h blok)':'')+'</option>').join('')).join('');if(fb&&[...$('fBl').options].some(o=>o.value===fb))$('fBl').value=fb;
  if(!$('fOd').value){$('fOd').value=MES_OD;$('fDo').value=MES_DO}
  kresliZaznam();kresliSrovPrednost();
 }
@@ -798,11 +851,23 @@ function kresliSrovPrednost(){
    return '<tr class="'+(h.prednost.length?'pr':'')+'"><td>'+cip(h)+ur+'</td><td class="c">'+a.hod+'→<b>'+h.hod+'</b> h<br><span class="mala">'+a.bloku+'→'+h.bloku+' bl.</span></td><td class="c">'+sg(r.d)+'</td><td class="c">'+pct(a)+'→<b>'+pct(h)+'</b> %</td><td class="c">'+cht(a)+'→<b>'+cht(h)+'</b> %</td></tr>'}).join('')+'</table>'+
   '<p class="mala">Žlutě holiči s předností, pak podle velikosti změny. Ostatní holiči mají změnu jen proto, že jim přednost vzala nebo uvolnila blok. Úroveň pomůže jen u bloků, o které se soupeří – když holič chce hlavně málo žádaná rána, nezmění se skoro nic; malé posuny „ve chtěných“ dělá i pravidlo ráno/odpoledne.'+(B.upravy?' Sloupec „s“ obsahuje i ruční úpravy rozpisu ('+B.upravy+').':'')+(PREDN_ZAP?'':' <b>Přednost je teď v rozpisu vypnutá</b> – porovnání ukazuje, co by udělala.')+'</p>';
 }
-function prepniVar(){zvolVar(VAR===4?3:4)}
-function zvolVar(v){nastavVar(v);$('pVar').value=v;prepocitat()}
+// ---------- rozdělení křesel na 4h a 3h ----------
+function kresliKonf(){
+ $('pKresla').innerHTML=PROV.map(p=>'<label data-tip="Kolik křesel v provozovně '+p.nazev+' má 3hodinové bloky (8–11, 11–14, 14–17, 17–20). Ostatní mají 4hodinové (8–12, 12–16, 16–20).">'+p.nazev+' – křesel se 3h bloky (z '+p.kresla+')<input type="number" min="0" max="'+p.kresla+'" step="1" value="'+K3[p.id]+'" onchange="nastavK3(\''+p.id+'\',this.value)"><span class="mala">'+(p.kresla-K3[p.id])+'× 4h, '+K3[p.id]+'× 3h</span></label>').join('');
+}
+function nastavK3(pid,v){const p=PROV.find(x=>x.id===pid);const n=Math.max(0,Math.min(p.kresla,Math.round(+v)||0));if(n===K3[pid]){kresliKonf();return}
+ zapis('Rozdělení křesel '+p.nazev+': '+(p.kresla-n)+'× 4h, '+n+'× 3h');K3={...K3,[pid]:n};prepocitat()}
+function zvolVar(v){const n={};PROV.forEach(p=>{n[p.id]=v===4?0:v===3?p.kresla:(konfDruh()==='mix'?K3[p.id]:Math.floor(p.kresla/2))});
+ if(konfKlic()!==PROV.map(p=>n[p.id]).join('-'))zapis('Rozdělení křesel: '+PROV.map(p=>p.nazev+' '+(p.kresla-n[p.id])+'× 4h, '+n[p.id]+'× 3h').join(' · '));
+ K3=n;prepocitat();if(v==='m')ukaz('pravidla')}
 function prepocitat(){
  zastavDrazbu(false);D=spocitej();
- document.body.classList.toggle('v3',VAR===3);document.querySelectorAll('#varLista button').forEach(b=>b.classList.toggle('akt',+b.dataset.v===VAR));document.querySelectorAll('.vb').forEach(e=>e.textContent=VAR+'h bloky');
+ const dr=konfDruh();
+ document.body.classList.toggle('v3',dr===3);document.body.classList.toggle('vm',dr==='mix');
+ document.querySelectorAll('#varLista button').forEach(b=>b.classList.toggle('akt',b.dataset.v===String(dr==='mix'?'m':dr)));
+ document.querySelectorAll('.vb').forEach(e=>{e.textContent=dr==='mix'?'4h + 3h křesla':dr+'h bloky';e.setAttribute('data-tip','Rozdělení křesel: '+konfTxt()+'. Mění se nahoře pod menu nebo v Pravidlech.')});
+ $('mKonf').textContent=dr==='mix'?PROV.map(p=>p.id+' '+(p.kresla-K3[p.id])+'+'+K3[p.id]).join(' · '):'nastavit v Pravidlech';$('mKonf').parentNode.setAttribute('data-tip','Část křesel má 4hodinové a část 3hodinové bloky (počet 4h + 3h křesel). Teď: '+konfTxt()+'. Nastaví majitel nebo pověřený pracovník v Pravidlech.');
+ kresliKonf();
  const pv=$('rProv').value||'OP', hv=$('rHolic').value;
  $('rProv').innerHTML=PROV.map(p=>'<option value="'+p.id+'">'+p.nazev+'</option>').join('');$('rProv').value=pv;
  $('rHolic').innerHTML='<option value="">–</option>'+D.H.filter(h=>h.prov===pv).map(h=>'<option value="'+h.id+'">'+h.jmeno+'</option>').join('');$('rHolic').value=hv;

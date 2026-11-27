@@ -136,6 +136,19 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
     přesun pevného bloku jen s `potvrzeno`). Přístup jen přes funkce `public.prednost_*` pro roli admin a majitel.
   - **Otevřené pro Keksu/Toma:** má úroveň platit i v dražbě jinak než při stejné ceně? Má holič s pevným blokem
     platit za něj stejnou sazbu (teď ano)? Smí provozní ručně upravovat rozpis, nebo jen Tom?
+- **Leden 2027, smíšená křesla 4h a 3h (Keksa 27. 11. 2026):** majitel nebo pověřený pracovník určí, kolik křesel
+  v provozovně má 3hodinové bloky a kolik 4hodinové (Pravidla → „Kolik křesel má 4h a kolik 3h bloky“, nebo nahoře
+  přepínač Vše 4h / 4h + 3h / Vše 3h; fialová barva = smíšené). Křesla se číslují nejdřív 4h, pak 3h.
+  - U 4h křesla se berou přání holiče z mřížky 3a dotazníku, u 3h křesla z 3b. Holič má v jednom dni rezervaci
+    jen v křeslech jednoho typu (ruční úpravou jde i jinak). Nejkratší a nejdelší rezervace platí pro hodiny za den.
+  - Dražba: pro každý typ křesla zvlášť; zájem o blok se na typ počítá podílem křesel toho typu
+    (žádaný, když ho „chce“ víc holičů než je všech křesel provozovny × hranice).
+  - Pevný blok z přednosti padne do křesla, jehož bloky čas pokrývají přesně (16–20 → 4h křeslo), jinak 4h, pak 3h.
+  - Rozvrh: u křesla značka 4h/3h; v mobilu je den rozložený po hodinách, takže 3h a 4h bloky sedí pod sebou.
+    Ruční úpravy se pamatují zvlášť pro každé rozdělení křesel.
+  - Srovnání ve „Férovost a nájem“: všechna 4h, všechna 3h a nastavené rozdělení. Čisté varianty dávají stejná
+    čísla jako dosud (4h 1 912 h, 3h 1 866 h s ukázkou přednosti). Příklad OP 4+2, ZV 3+1: 1 905 h, splnění
+    86–108 %, dražba 35 z 39, příplatek 10 280 Kč. Přesahy nad 100 % jsou 1–2 h ze zaokrouhlení na celé bloky.
 - **Otevřené:** po přechodu na Pro probudit vixen-dev.
 - **27. 11. 2026 (Keksa):** v sekci 8 nepovinně průměrný měsíční nájem a nájem za poslední 3 celé měsíce zvlášť
   (měsíce se počítají podle dne vyplnění). Sloupec `najem` jsonb `{"prumer":…, "mesice":{"RRRR-MM":…}}`, 0–50 000 Kč.
