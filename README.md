@@ -157,6 +157,12 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   sloupců od–do. Filtry i řazení zůstávají při změně období.
 - 27. 11. 2026 (Keksa): v tabulce „Co když“ je pod každou částkou rozdíl proti dnešnímu nájmu (střed rozpětí pásem
   a dohod), zeleně ▲ víc, červeně ▼ méně; po najetí myší rozpětí a rozdíl za rok.
+- 27. 11. 2026 (Keksa): nová stránka `web/prehledy/eet/` (odkaz „EET 2.0 →“ v záhlaví přehledů, přihlášení sdílené
+  s přehledy). Porovnává pro každého holiče vlastních provozoven náklady navíc proti dnešku (bez EET): EET OFF
+  (+1 400 Kč/měs, jen paušál 1. pásmo a tržba do 1 mil. Kč), MOJE eet (zdarma, čas na zadání plateb), pokladní aplikace
+  (cena neznámá) a evidence v naší aplikaci (cena nestanovená). Počet plateb = průměr rezervací za měsíc z Reservanta
+  za posledních 12 měsíců. Čas, hodnota hodiny a příprava jsou odhady k úpravě; parametry a režim daně u holičů si
+  pamatuje jen prohlížeč. Fakta z rozboru `Claude outputs\261126_KABINET_EET2.html` (Disk, složka klienta).
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
 - Další kroky: Tom jako `majitel`, Kuba jako `odpovedny` s omezeným pohledem (zatím nerozhodnuto, co uvidí);
   vlastní odesílání e-mailů (SMTP), protože vestavěné posílá jen členům týmu Supabase a málo zpráv za hodinu.
