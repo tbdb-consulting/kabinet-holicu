@@ -133,6 +133,8 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   varianty po řádcích sazeb a tabulka „co když“ (sazby × 0,8–1,2, obsazenost ±20 %). Varianty se ukládají do
   `analytika.scenar` přes `prehled_scenare` / `prehled_ulozit_scenar` / `prehled_smazat_scenar` (migrace
   `20261127170000_analytika_scenare_najmu.sql`, ověřeno v SQL Editoru, zkušební varianta smazaná).
+- 27. 11. 2026 (Keksa): výběr hodin „od–do“ přesunutý do horního filtru, platí pro dlaždice, graf vytíženosti po měsících
+  i tabulku po hodinách. Graf odstříhaných hodin a kalkulace nájmu počítají celý den.
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
 - Další kroky: Tom jako `majitel`, Kuba jako `odpovedny` s omezeným pohledem (zatím nerozhodnuto, co uvidí);
   vlastní odesílání e-mailů (SMTP), protože vestavěné posílá jen členům týmu Supabase a málo zpráv za hodinu.

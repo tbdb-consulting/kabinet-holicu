@@ -108,6 +108,7 @@ td.akt-c{font-weight:bold;outline:2px solid var(--s1);outline-offset:-2px}
 <div id="prehledy" class="skryte">
   <div class="filtry">
     <label>Období <select id="obdobi"></select></label>
+    <label>Hodiny od <select id="hod-od"></select></label><label>do <select id="hod-do"></select></label>
     <label><input type="checkbox" id="fransizy"> i franšízy (Masna, Kabinet Naproti)</label>
     <span class="mala" id="zdroj-dat"></span>
   </div>
@@ -116,7 +117,7 @@ td.akt-c{font-weight:bold;outline:2px solid var(--s1);outline-offset:-2px}
 
   <div class="karta">
     <h2>Vytíženost po měsících</h2>
-    <p class="mala">Obsazené hodiny křesel Po–Pá 7–22 h v procentech z toho, co křesla v tu dobu nabízejí (pracovní dny × 15 h × počet křesel). Svátky nejsou odečtené.</p>
+    <p class="mala">Obsazené hodiny křesel Po–Pá <span class="rozsah-h"></span> v procentech z toho, co křesla v tu dobu nabízejí (pracovní dny × <span class="delka-h"></span> × počet křesel). Svátky nejsou odečtené.</p>
     <div class="leg-serie" id="vyt-legenda"></div>
     <div id="vyt"></div>
   </div>
@@ -124,14 +125,13 @@ td.akt-c{font-weight:bold;outline:2px solid var(--s1);outline-offset:-2px}
   <div class="karta">
     <h2>Vytíženost po dnech a hodinách</h2>
     <p class="mala">Průměrně obsazená křesla v danou hodinu, v procentech z počtu křesel. V každém políčku <span id="heat-poradi"></span>, barva po 10 %.</p>
-    <div class="filtry" style="margin:10px 0 0"><label>Hodiny od <select id="hod-od"></select></label><label>do <select id="hod-do"></select></label></div>
     <div class="tab-obal" id="heat"></div>
     <div class="legenda" id="heat-legenda"></div>
   </div>
 
   <div class="karta">
     <h2>Odstříhané hodiny po měsících</h2>
-    <p class="mala">Součet délek rezervací všech holičů v provozovně.</p>
+    <p class="mala">Součet délek rezervací všech holičů v provozovně, za celý den (filtr hodin se sem nepromítá).</p>
     <div class="leg-serie" id="graf-legenda"></div>
     <div id="graf"></div>
   </div>
@@ -220,30 +220,34 @@ async function nacti(){
   for(let h=0;h<24;h++){$('hod-od').add(new Option(h+':00',h,false,h===7));$('hod-do').add(new Option((h+1)+':00',h+1,false,h+1===22))}
   $('hod-od').onchange=$('hod-do').onchange=e=>{
     if(+$('hod-od').value>=+$('hod-do').value){if(e.target.id==='hod-od')$('hod-do').value=Math.min(24,+$('hod-od').value+1);else $('hod-od').value=Math.max(0,+$('hod-do').value-1)}
-    kresliHeat()};
+    nactiVyt().then(kresli)};
   await nactiObdobi();
   ukaz('prehledy');
 }
 async function nactiObdobi(){
   const o=OBD[$('obdobi').value];
   $('zdroj-dat').textContent='Načítám…';
-  [OBS,HOL,VYT]=await Promise.all([rpc('prehled_obsazenost',{p_od:o.od,p_do:o.do}),rpc('prehled_holici_mesic',{p_od:o.od,p_do:o.do}),rpc('prehled_vytizenost_mesic',{p_od:o.od,p_do:o.do})]);
+  [OBS,HOL,VYT]=await Promise.all([rpc('prehled_obsazenost',{p_od:o.od,p_do:o.do}),rpc('prehled_holici_mesic',{p_od:o.od,p_do:o.do}),rpc('prehled_vytizenost_mesic',{p_od:o.od,p_do:o.do,p_hod_od:+$('hod-od').value,p_hod_do:+$('hod-do').value})]);
   $('zdroj-dat').textContent='';
   kresli();
 }
+function rozsahH(){return $('hod-od').value+'–'+$('hod-do').value+' h'}
+async function nactiVyt(){const o=OBD[$('obdobi').value];VYT=await rpc('prehled_vytizenost_mesic',{p_od:o.od,p_do:o.do,p_hod_od:+$('hod-od').value,p_hod_do:+$('hod-do').value})}
 function provozovny(){return PROV.filter(p=>$('fransizy').checked||!p.fransiza)}
 function barva(nazev){return css(BARVY[PROV.findIndex(p=>p.provozovna===nazev)%4])}
 function mesice(){return [...new Set(HOL.map(h=>h.mesic))].sort()}
 
 function kresli(){
+  document.querySelectorAll('.rozsah-h').forEach(e=>e.textContent=rozsahH());document.querySelectorAll('.delka-h').forEach(e=>e.textContent=($('hod-do').value-$('hod-od').value)+' h');
   kresliDlazdice();kresliVyt();kresliHeat();kresliGraf();kresliKalk();kresliHolice();
 }
 
 // ---------- dlaždice ----------
 function souhrn(p){
   const o=OBS.filter(x=>x.provozovna===p.provozovna);
-  const pracovni=o.filter(x=>x.den<=5&&x.hodina>=7&&x.hodina<22);
-  const prum=pracovni.length?pracovni.reduce((s,x)=>s+ +x.prumer,0)/75:0; // 5 dní × 15 hodin (7–22)
+  const od=+$('hod-od').value,doo=+$('hod-do').value;
+  const pracovni=o.filter(x=>x.den<=5&&x.hodina>=od&&x.hodina<doo);
+  const prum=pracovni.reduce((s,x)=>s+ +x.prumer,0)/(5*(doo-od)); // průměr přes Po–Pá a hodiny filtru
   const spicka=o.reduce((m,x)=>Math.max(m,+x.spicka),0);
   const h=HOL.filter(x=>x.provozovna===p.provozovna);
   const nMes=new Set(h.map(x=>x.mesic)).size||1;
@@ -255,7 +259,7 @@ function kresliDlazdice(){
     const s=souhrn(p);
     const pct=p.kresel?Math.round(s.prum/p.kresel*100)+' %':'–';
     return '<div class="dl"><div class="jm"><span class="znacka" style="background:'+barva(p.provozovna)+'"></span>'+esc(p.provozovna)+'</div>'
-      +'<div class="cislo">'+pct+'</div><div class="pod">obsazenost Po–Pá 7–22 h'+(p.kresel?' ('+nf(s.prum,1)+' z '+p.kresel+' křesel)':', počet křesel nevíme')+'</div>'
+      +'<div class="cislo">'+pct+'</div><div class="pod">obsazenost Po–Pá '+rozsahH()+(p.kresel?' ('+nf(s.prum,1)+' z '+p.kresel+' křesel)':', počet křesel nevíme')+'</div>'
       +'<div class="pod" style="margin-top:6px">'+nf(s.hodin/s.nMes)+' h měsíčně · '+s.holicu+' holičů<br>nejvíc najednou '+nf(s.spicka,0)+(p.kresel?' (křesel '+p.kresel+')':'')
       +'<br>nájem dnes cca '+(s.najMin===s.najMax?kc(s.najMin):kc(s.najMin)+'–'+kc(s.najMax))+' měsíčně</div></div>';
   }).join('');
