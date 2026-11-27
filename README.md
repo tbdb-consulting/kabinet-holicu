@@ -10,6 +10,7 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
 | Prototyp aplikace (zatím jen úvodní stránka) | `web/index.html` – kořen webu |
 | Dotazník pro holiče (hodiny a směny, bloky 4 h a 3 h, délky, odhady, obsazené hodiny, další fáze) | `web/dotaznik-pro-holice-pronajem-kresel/index.html` – HTML + JS bez sestavování |
 | Databáze dotazníku | `supabase/migrations/20261123120000_dotaznik.sql` |
+| Přehledy pro Toma a TBDB (přihlášení e-mailem, data z `analytika`) | `web/prehledy/index.html`, funkce `public.prehled_*` v `supabase/migrations/20261127090000_analytika_prehledy.sql` |
 
 - Stránka bez nastavené databáze (nebo s `?test=1`) běží ve zkušebním režimu: nic neodešle, jen ukáže data.
 - Odpovědi se ukládají jen přes funkci `odeslat_dotaznik` (kontrola všech 15 políček, limit 20 odpovědí za minutu).
@@ -105,3 +106,15 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   mobil: klepnutí, zmizí po 4,5 s), výrazný přepínač 4h/3h pod menu a barva podle varianty (modrá 4 h, zelená 3 h),
   na mobilu rozvrh po dnech (křesla × bloky) a férovost na kartách.
 - **Otevřené:** po přechodu na Pro probudit vixen-dev.
+
+## Přehledy (27. 11. 2026)
+
+- Stránka `web/prehledy/` (po zveřejnění https://tbdb-consulting.github.io/kabinet-holicu/prehledy/): přihlášení
+  odkazem do e-mailu (Supabase Auth, bez hesla), pak dlaždice po provozovnách, obsazenost po dnech a hodinách,
+  hodiny po měsících, nájem dnes proti nájmu za hodinu (posuvník sazby a koeficientu bloků) a tabulka holičů.
+- Oprávnění: tabulka `analytika.opravneni` (e-mail → role admin / majitel / odpovedny). Funkce `public.prehled_*`
+  pustí jen admina a majitele, anon nemá ani právo je volat (ověřeno curl 42501), cizí e-mail dostane chybu 42501.
+  E-maily oprávněných se vkládají ručně v SQL Editoru, do repozitáře nepatří. Teď je zapsaný jen admin (Keksa).
+- Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
+- Další kroky: Tom jako `majitel`, Kuba jako `odpovedny` s omezeným pohledem (zatím nerozhodnuto, co uvidí);
+  vlastní odesílání e-mailů (SMTP), protože vestavěné posílá jen členům týmu Supabase a málo zpráv za hodinu.

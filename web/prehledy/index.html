@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Kabinet holičů – přehledy</title>
+<style>
+:root{
+  --b:#1F4E78;--bg:#f4f7fa;--karta:#fff;--li:#d5dfe8;--text:#1a1a1a;--se:#5a6b7a;--mu:#8592a0;
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--mrizka:#e6ebf0;--chyba:#d03b3b;
+  --h0:#f0efec;--h1:#cde2fb;--h2:#9ec5f4;--h3:#6da7ec;--h4:#3987e5;--h5:#256abf;--h6:#184f95;--h7:#0d366b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121212;--karta:#1a1a19;--li:#33332f;--text:#f0efec;--se:#c3c2b7;--mu:#8f8e86;
+    --s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--mrizka:#2a2a27;
+    --h0:#262624;--h1:#0d366b;--h2:#104281;--h3:#184f95;--h4:#256abf;--h5:#3987e5;--h6:#6da7ec;--h7:#b7d3f6;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Verdana,Geneva,sans-serif}
+header{background:var(--b);color:#fff;padding:14px 16px}
+.hl{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+header h1{margin:0;font-size:18px;flex:1}
+header .kdo{font-size:12.5px;opacity:.85}
+header button{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:4px 10px;font:inherit;font-size:12.5px;cursor:pointer}
+main{max-width:960px;margin:0 auto;padding:16px}
+.karta{background:var(--karta);border:1px solid var(--li);border-radius:8px;padding:14px 16px;margin-bottom:14px}
+h2{font-size:16px;margin:0 0 4px}
+.mala{font-size:12.5px;color:var(--se)}
+.chyba{color:var(--chyba)}
+input[type=email]{width:100%;max-width:340px;padding:9px 10px;border:1px solid var(--li);border-radius:6px;font:inherit;background:var(--karta);color:var(--text)}
+button.hl-tl{background:var(--b);color:#fff;border:0;border-radius:6px;padding:9px 14px;font:inherit;cursor:pointer;margin-top:8px}
+button:disabled{opacity:.6;cursor:default}
+.filtry{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:14px;font-size:13.5px}
+.filtry label{max-width:100%}
+.filtry select{max-width:100%;font:inherit;padding:5px 8px;border:1px solid var(--li);border-radius:6px;background:var(--karta);color:var(--text)}
+.dlazdice{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px}
+.dl{background:var(--karta);border:1px solid var(--li);border-radius:8px;padding:12px 14px}
+.dl .jm{font-weight:bold;display:flex;align-items:center;gap:6px}
+.znacka{display:inline-block;width:10px;height:10px;border-radius:3px}
+.dl .cislo{font-size:26px;font-weight:bold;margin:4px 0 0}
+.dl .pod{font-size:12.5px;color:var(--se)}
+.tab-obal{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:5px 8px;border-bottom:1px solid var(--li);text-align:right;white-space:nowrap}
+th:first-child,td:first-child,th.l,td.l{text-align:left}
+th{color:var(--se);font-weight:normal}
+.heat{display:grid;gap:2px;font-size:11px;margin-top:8px}
+.heat .c{height:26px;border-radius:3px;cursor:default}
+.heat .lab{color:var(--se);display:flex;align-items:center;justify-content:center}
+.heat .lab.r{justify-content:flex-start;padding-right:4px}
+.legenda{display:flex;gap:4px;align-items:center;font-size:11.5px;color:var(--se);margin-top:8px;flex-wrap:wrap}
+.legenda .c{width:22px;height:10px;border-radius:2px}
+.leg-serie{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--se);margin:6px 0}
+.leg-serie span{display:inline-flex;align-items:center;gap:5px}
+svg text{fill:var(--se);font-size:11px;font-family:Verdana,Geneva,sans-serif}
+#tip{position:fixed;pointer-events:none;background:var(--karta);color:var(--text);border:1px solid var(--li);border-radius:6px;padding:6px 9px;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.15);display:none;z-index:9;max-width:260px}
+.rozsah{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:13.5px;margin:8px 0}
+.rozsah input[type=range]{width:160px;vertical-align:middle}
+.prepinac{font-size:12.5px;color:var(--b);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;font-family:inherit}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .prepinac{color:#86b6ef}}
+.skryte{display:none}
+</style>
+</head>
+<body>
+<header><div class="hl"><h1>Kabinet holičů – přehledy</h1>
+<span class="kdo" id="kdo"></span><button id="odhlasit" class="skryte">Odhlásit</button></div></header>
+<main>
+
+<div id="prihlaseni" class="karta skryte">
+  <h2>Přihlášení</h2>
+  <p class="mala">Napiš svůj e-mail, pošleme ti na něj odkaz. Klikneš na něj a jsi tady.</p>
+  <form id="f-prihlaseni"><input type="email" id="email" required autocomplete="email" placeholder="tvuj@email.cz"><br>
+  <button class="hl-tl" type="submit">Poslat odkaz</button></form>
+  <p id="prihlaseni-zprava" class="mala"></p>
+</div>
+
+<div id="bez-pristupu" class="karta skryte">
+  <h2>Sem zatím nemáš přístup</h2>
+  <p class="mala">Jsi přihlášený(á), ale přehledy ti zatím nikdo nezpřístupnil. Ozvi se Tomovi nebo TBDB.</p>
+</div>
+
+<div id="nacitam" class="karta">Načítám…</div>
+
+<div id="prehledy" class="skryte">
+  <div class="filtry">
+    <label>Období <select id="obdobi"></select></label>
+    <label><input type="checkbox" id="fransizy"> i franšízy (Masna, Kabinet Naproti)</label>
+    <span class="mala" id="zdroj-dat"></span>
+  </div>
+
+  <div class="dlazdice" id="dlazdice"></div>
+
+  <div class="karta">
+    <h2>Kdy jsou křesla obsazená</h2>
+    <p class="mala">Průměrně obsazená křesla v danou hodinu, v procentech z počtu křesel. Najeď na políčko pro čísla.</p>
+    <div class="filtry" style="margin:8px 0 0"><label>Provozovna <select id="heat-prov"></select></label>
+    <button class="prepinac" id="heat-tab-tl">Ukázat jako tabulku</button></div>
+    <div id="heat"></div>
+    <div id="heat-tab" class="tab-obal skryte"></div>
+  </div>
+
+  <div class="karta">
+    <h2>Odstříhané hodiny po měsících</h2>
+    <p class="mala">Součet délek rezervací všech holičů v provozovně.</p>
+    <div class="leg-serie" id="graf-legenda"></div>
+    <div id="graf"></div>
+  </div>
+
+  <div class="karta">
+    <h2>Nájem: dnes a za hodinu</h2>
+    <p class="mala">Dnes: měsíční paušál podle odstříhaných hodin (do 60 h 3 500 Kč, 60–120 h 6 000 Kč, nad 120 h 8 000–10 000 Kč).
+    Za hodinu: každá rezervovaná hodina × sazba. Bloky se platí celé, proto koeficient (1,2 = o pětinu víc hodin než samotné rezervace).
+    Dohody s jednotlivými holiči (např. křeslo pro sebe za 10 000 Kč) zatím nejsou započtené.</p>
+    <div class="rozsah">
+      <label>Sazba <input type="range" id="sazba" min="20" max="150" step="5" value="50"> <b id="sazba-h">50 Kč/h</b></label>
+      <label>Koeficient bloků <input type="range" id="koef" min="1" max="1.6" step="0.05" value="1.2"> <b id="koef-h">1,20</b></label>
+    </div>
+    <div class="tab-obal" id="najem"></div>
+  </div>
+
+  <div class="karta">
+    <h2>Holiči</h2>
+    <p class="mala">Průměr na měsíc, ve kterém holič aspoň jednou stříhal.</p>
+    <div class="tab-obal" id="holici"></div>
+  </div>
+
+  <p class="mala">Zdroj: export rezervací z Reservanta, bez jmen a kontaktů zákazníků. Holiči přiřazení k provozovně, kde stříhají nejčastěji.</p>
+</div>
+</main>
+<div id="tip"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+// Projekt Supabase kabinet-holicu v organizaci TBDB (veřejný publishable klíč smí být ve stránce).
+const SUPABASE_URL='https://bgnzfrxnvkifvpmrilgd.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_-CwxCS480OD5Hfx7N_OsHg_WuVoWOQj';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const $=id=>document.getElementById(id);
+const DNY=['Po','Út','St','Čt','Pá','So','Ne'];
+const MES=['led','úno','bře','dub','kvě','čvn','čvc','srp','zář','říj','lis','pro'];
+const BARVY=['--s1','--s2','--s3','--s4'];
+const nf=(x,d=0)=>Number(x).toLocaleString('cs-CZ',{minimumFractionDigits:d,maximumFractionDigits:d});
+const kc=x=>nf(Math.round(x/100)*100)+' Kč';
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function ukaz(id){for(const x of ['prihlaseni','bez-pristupu','nacitam','prehledy'])$(x).classList.toggle('skryte',x!==id)}
+
+// ---------- přihlášení ----------
+$('f-prihlaseni').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const tl=e.target.querySelector('button');tl.disabled=true;
+  const {error}=await sb.auth.signInWithOtp({email:$('email').value.trim(),options:{emailRedirectTo:location.origin+location.pathname}});
+  tl.disabled=false;
+  $('prihlaseni-zprava').innerHTML=error?'<span class="chyba">Odkaz se nepodařilo poslat: '+esc(error.message)+'</span>'
+    :'Hotovo, mrkni do schránky (i do hromadné pošty) a klikni na odkaz.';
+});
+$('odhlasit').onclick=async()=>{await sb.auth.signOut();location.reload()};
+
+let spusteno=false;
+sb.auth.onAuthStateChange((ev,session)=>{setTimeout(()=>start(session),0)});
+async function start(session){
+  if(!session){ukaz('prihlaseni');$('kdo').textContent='';$('odhlasit').classList.add('skryte');spusteno=false;return}
+  if(spusteno)return;spusteno=true;
+  $('kdo').textContent=session.user.email;$('odhlasit').classList.remove('skryte');
+  const {data:r,error}=await sb.rpc('prehled_role');
+  if(error||!r?.length||!r[0].role){ukaz('bez-pristupu');return}
+  try{await nacti()}catch(err){ukaz('nacitam');$('nacitam').innerHTML='<span class="chyba">Data se nepodařilo načíst: '+esc(err.message)+'</span>'}
+}
+
+// ---------- data ----------
+let PROV=[],OBS=[],HOL=[];
+async function rpc(f,a){const {data,error}=await sb.rpc(f,a);if(error)throw error;return data}
+function obdobi(){
+  const od=PROV[0].data_od,doo=PROV[0].data_do,d=new Date(doo);
+  const konecMin=new Date(d.getFullYear(),d.getMonth(),0); // poslední den minulého měsíce
+  const zacMin=new Date(konecMin.getFullYear(),konecMin.getMonth()-11,1);
+  const iso=x=>x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');
+  const o=[{t:'Posledních 12 celých měsíců ('+MES[zacMin.getMonth()]+' '+zacMin.getFullYear()+' – '+MES[konecMin.getMonth()]+' '+konecMin.getFullYear()+')',od:iso(zacMin),do:iso(konecMin)}];
+  for(let y=d.getFullYear();y>=+od.slice(0,4);y--)o.push({t:'Rok '+y+(y===d.getFullYear()?' (do '+d.getDate()+'. '+(d.getMonth()+1)+'.)':''),od:y+'-01-01',do:y===d.getFullYear()?doo:y+'-12-31'});
+  o.push({t:'Všechno ('+od.split('-').reverse().join('. ')+' – '+doo.split('-').reverse().join('. ')+')',od,do:doo});
+  return o;
+}
+let OBD=[];
+async function nacti(){
+  PROV=await rpc('prehled_provozovny');
+  OBD=obdobi();
+  $('obdobi').innerHTML=OBD.map((o,i)=>'<option value="'+i+'">'+esc(o.t)+'</option>').join('');
+  $('obdobi').onchange=nactiObdobi;$('fransizy').onchange=kresli;
+  $('heat-prov').onchange=kresliHeat;
+  $('sazba').oninput=$('koef').oninput=kresliNajem;
+  $('heat-tab-tl').onclick=()=>{const t=$('heat-tab').classList.toggle('skryte');$('heat').classList.toggle('skryte',!t);$('heat-tab-tl').textContent=t?'Ukázat jako tabulku':'Ukázat jako barvy'};
+  await nactiObdobi();
+  ukaz('prehledy');
+}
+async function nactiObdobi(){
+  const o=OBD[$('obdobi').value];
+  $('zdroj-dat').textContent='Načítám…';
+  [OBS,HOL]=await Promise.all([rpc('prehled_obsazenost',{p_od:o.od,p_do:o.do}),rpc('prehled_holici_mesic',{p_od:o.od,p_do:o.do})]);
+  $('zdroj-dat').textContent='';
+  kresli();
+}
+function provozovny(){return PROV.filter(p=>$('fransizy').checked||!p.fransiza)}
+function barva(nazev){return css(BARVY[PROV.findIndex(p=>p.provozovna===nazev)%4])}
+function mesice(){return [...new Set(HOL.map(h=>h.mesic))].sort()}
+
+function kresli(){
+  const pp=provozovny();
+  const vyb=$('heat-prov').value;
+  $('heat-prov').innerHTML=pp.map(p=>'<option'+(p.provozovna===vyb?' selected':'')+'>'+esc(p.provozovna)+'</option>').join('');
+  kresliDlazdice();kresliHeat();kresliGraf();kresliNajem();kresliHolice();
+}
+
+// ---------- dlaždice ----------
+function souhrn(p){
+  const o=OBS.filter(x=>x.provozovna===p.provozovna);
+  const pracovni=o.filter(x=>x.den<=5&&x.hodina>=9&&x.hodina<18);
+  const prum=pracovni.length?pracovni.reduce((s,x)=>s+ +x.prumer,0)/45:0; // 5 dní × 9 hodin
+  const spicka=o.reduce((m,x)=>Math.max(m,+x.spicka),0);
+  const h=HOL.filter(x=>x.provozovna===p.provozovna);
+  const nMes=new Set(h.map(x=>x.mesic)).size||1;
+  return {prum,spicka,hodin:h.reduce((s,x)=>s+ +x.hodin,0),nMes,holicu:new Set(h.map(x=>x.holic)).size,
+    najMin:h.reduce((s,x)=>s+ +(x.najem_min||0),0)/nMes,najMax:h.reduce((s,x)=>s+ +(x.najem_max||0),0)/nMes};
+}
+function kresliDlazdice(){
+  $('dlazdice').innerHTML=provozovny().map(p=>{
+    const s=souhrn(p);
+    const pct=p.kresel?Math.round(s.prum/p.kresel*100)+' %':'–';
+    return '<div class="dl"><div class="jm"><span class="znacka" style="background:'+barva(p.provozovna)+'"></span>'+esc(p.provozovna)+'</div>'
+      +'<div class="cislo">'+pct+'</div><div class="pod">obsazenost Po–Pá 9–18 h'+(p.kresel?' ('+nf(s.prum,1)+' z '+p.kresel+' křesel)':', počet křesel nevíme')+'</div>'
+      +'<div class="pod" style="margin-top:6px">'+nf(s.hodin/s.nMes)+' h měsíčně · '+s.holicu+' holičů<br>nejvíc najednou '+nf(s.spicka,0)+(p.kresel?' (křesel '+p.kresel+')':'')
+      +'<br>nájem dnes cca '+(s.najMin===s.najMax?kc(s.najMin):kc(s.najMin)+'–'+kc(s.najMax))+' měsíčně</div></div>';
+  }).join('');
+}
+
+// ---------- heatmapa ----------
+function heatBarva(pct){const st=['--h0','--h1','--h2','--h3','--h4','--h5','--h6','--h7'];
+  if(pct<=0)return css(st[0]);return css(st[Math.min(7,1+Math.floor(pct/100*7))])}
+function kresliHeat(){
+  const p=PROV.find(x=>x.provozovna===$('heat-prov').value);if(!p){$('heat').innerHTML='';return}
+  const o=OBS.filter(x=>x.provozovna===p.provozovna);
+  const hod=o.filter(x=>+x.prumer>=0.05).map(x=>x.hodina);
+  const h0=Math.min(8,...hod),h1=Math.max(19,...hod);
+  const m={};o.forEach(x=>m[x.den+'-'+x.hodina]=x);
+  const k=p.kresel||Math.max(1,...o.map(x=>+x.spicka));
+  let g='<div class="heat" style="grid-template-columns:26px repeat('+(h1-h0+1)+',1fr)"><div></div>';
+  for(let h=h0;h<=h1;h++)g+='<div class="lab">'+h+'</div>';
+  let t='<table><tr><th>Den</th>';for(let h=h0;h<=h1;h++)t+='<th>'+h+'</th>';t+='</tr>';
+  for(let d=1;d<=7;d++){
+    g+='<div class="lab r">'+DNY[d-1]+'</div>';t+='<tr><td>'+DNY[d-1]+'</td>';
+    for(let h=h0;h<=h1;h++){
+      const x=m[d+'-'+h],pr=x?+x.prumer:0,pct=pr/k*100;
+      const tip=DNY[d-1]+' '+h+':00–'+(h+1)+':00<br><b>'+Math.round(pct)+' %</b> · průměrně '+nf(pr,1)+' z '+k+' křesel<br>nejvíc najednou '+nf(x?+x.spicka:0,0);
+      g+='<div class="c" style="background:'+heatBarva(pct)+'" data-tip="'+esc(tip)+'"></div>';
+      t+='<td>'+Math.round(pct)+' %</td>';
+    }
+    t+='</tr>';
+  }
+  g+='</div><div class="legenda">0 %';
+  ['--h0','--h1','--h2','--h3','--h4','--h5','--h6','--h7'].forEach(v=>g+='<span class="c" style="background:'+css(v)+'"></span>');
+  g+='100 %'+(p.kresel?'':' (počet křesel nevíme, počítáno z největšího obsazení)')+'</div>';
+  $('heat').innerHTML=g;$('heat-tab').innerHTML=t+'</table>';
+}
+
+// ---------- graf hodin po měsících ----------
+function kresliGraf(){
+  const pp=provozovny(),ms=mesice();
+  if(!ms.length){$('graf').innerHTML='<p class="mala">Žádná data.</p>';$('graf-legenda').innerHTML='';return}
+  const W=Math.max(320,$('graf').clientWidth||600),H=240,L=46,R=10,T=10,B=26;
+  const ser=pp.map(p=>({p:p.provozovna,v:ms.map(m=>HOL.filter(x=>x.mesic===m&&x.provozovna===p.provozovna).reduce((s,x)=>s+ +x.hodin,0))}));
+  const max=Math.max(1,...ser.flatMap(s=>s.v));const krok=max>1500?500:max>600?200:100;const top=Math.ceil(max/krok)*krok;
+  const x=i=>L+(ms.length===1?(W-L-R)/2:i*(W-L-R)/(ms.length-1)),y=v=>T+(H-T-B)*(1-v/top);
+  let s='<svg width="100%" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Odstříhané hodiny po měsících">';
+  for(let v=0;v<=top;v+=krok)s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="'+css('--mrizka')+'"/><text x="'+(L-6)+'" y="'+(y(v)+4)+'" text-anchor="end">'+nf(v)+'</text>';
+  const kazdy=Math.ceil(ms.length/(W<500?6:12));
+  ms.forEach((m,i)=>{if(i%kazdy===0){const d=new Date(m);s+='<text x="'+x(i)+'" y="'+(H-8)+'" text-anchor="middle">'+MES[d.getMonth()]+(d.getMonth()===0||i===0?' '+String(d.getFullYear()).slice(2):'')+'</text>'}});
+  ser.forEach(se=>{s+='<polyline fill="none" stroke="'+barva(se.p)+'" stroke-width="2" stroke-linejoin="round" points="'+se.v.map((v,i)=>x(i)+','+y(v)).join(' ')+'"/>'});
+  s+='<line id="kriz" y1="'+T+'" y2="'+(H-B)+'" stroke="'+css('--mu')+'" stroke-dasharray="3 3" visibility="hidden"/>';
+  s+='<rect x="'+L+'" y="'+T+'" width="'+(W-L-R)+'" height="'+(H-T-B)+'" fill="transparent" id="graf-plocha"/></svg>';
+  $('graf').innerHTML=s;
+  $('graf-legenda').innerHTML=ser.map(se=>'<span><span class="znacka" style="background:'+barva(se.p)+'"></span>'+esc(se.p)+'</span>').join('');
+  const pl=$('graf-plocha'),svg=pl.ownerSVGElement;
+  pl.onmousemove=e=>{
+    const r=svg.getBoundingClientRect(),px=(e.clientX-r.left)*W/r.width;
+    const i=Math.max(0,Math.min(ms.length-1,Math.round((px-L)/((W-L-R)/Math.max(1,ms.length-1)))));
+    const k=$('kriz');k.setAttribute('x1',x(i));k.setAttribute('x2',x(i));k.setAttribute('visibility','visible');
+    const d=new Date(ms[i]);
+    tip(e,'<b>'+MES[d.getMonth()]+' '+d.getFullYear()+'</b><br>'+ser.slice().sort((a,b)=>b.v[i]-a.v[i]).map(se=>'<span class="znacka" style="background:'+barva(se.p)+'"></span> '+esc(se.p)+': '+nf(se.v[i])+' h').join('<br>'));
+  };
+  pl.onmouseleave=()=>{$('kriz').setAttribute('visibility','hidden');skryjTip()};
+}
+
+// ---------- nájem ----------
+function kresliNajem(){
+  const sazba=+$('sazba').value,koef=+$('koef').value;
+  $('sazba-h').textContent=sazba+' Kč/h';$('koef-h').textContent=nf(koef,2);
+  let t='<table><tr><th>Provozovna</th><th>Hodin měsíčně</th><th>Nájem dnes měsíčně</th><th>Za hodinu měsíčně</th><th>Rozdíl</th></tr>';
+  let sH=0,sMin=0,sMax=0,sN=0;
+  provozovny().forEach(p=>{
+    const s=souhrn(p),h=s.hodin/s.nMes,n=h*koef*sazba;
+    sH+=h;sMin+=s.najMin;sMax+=s.najMax;sN+=n;
+    t+='<tr><td>'+esc(p.provozovna)+'</td><td>'+nf(h)+'</td><td>'+(s.najMin===s.najMax?kc(s.najMin):kc(s.najMin)+'–'+kc(s.najMax))+'</td><td>'+kc(n)+'</td><td>'+rozdil(n,s.najMin,s.najMax)+'</td></tr>';
+  });
+  t+='<tr><td><b>Celkem</b></td><td><b>'+nf(sH)+'</b></td><td><b>'+(sMin===sMax?kc(sMin):kc(sMin)+'–'+kc(sMax))+'</b></td><td><b>'+kc(sN)+'</b></td><td><b>'+rozdil(sN,sMin,sMax)+'</b></td></tr></table>';
+  $('najem').innerHTML=t;
+}
+function rozdil(n,a,b){const d1=n-b,d2=n-a;const f=v=>(v>=0?'+':'−')+kc(Math.abs(v));return Math.abs(d1-d2)<1?f(d1):f(d1)+' až '+f(d2)}
+
+// ---------- holiči ----------
+function kresliHolice(){
+  const pp=new Set(provozovny().map(p=>p.provozovna)),m={};
+  HOL.filter(x=>pp.has(x.provozovna)).forEach(x=>{const k=x.holic;(m[k]??={holic:k,prov:x.provozovna,mes:0,hod:0,rez:0,zak:0,naj:0}).mes++;
+    m[k].hod+= +x.hodin;m[k].rez+= +x.rezervaci;m[k].zak+= +x.zakazniku;m[k].naj+= +(x.najem_min||0)});
+  const r=Object.values(m).sort((a,b)=>b.hod/b.mes-a.hod/a.mes);
+  let t='<table><tr><th>Holič</th><th class="l">Provozovna</th><th>Měsíců</th><th>Hodin</th><th>Rezervací</th><th>Zákazníků</th><th>Nájem dnes</th></tr>';
+  r.forEach(x=>{t+='<tr><td>'+esc(x.holic)+'</td><td class="l">'+esc(x.prov)+'</td><td>'+x.mes+'</td><td>'+nf(x.hod/x.mes)+'</td><td>'+nf(x.rez/x.mes)+'</td><td>'+nf(x.zak/x.mes)+'</td><td>'+kc(x.naj/x.mes)+'</td></tr>'});
+  $('holici').innerHTML=r.length?t+'</table>':'<p class="mala">Žádná data.</p>';
+}
+
+// ---------- tooltip ----------
+function tip(e,html){const t=$('tip');t.innerHTML=html;t.style.display='block';
+  const w=t.offsetWidth,h=t.offsetHeight;let x=e.clientX+12,y=e.clientY+12;
+  if(x+w>innerWidth-8)x=e.clientX-w-12;if(y+h>innerHeight-8)y=e.clientY-h-12;t.style.left=Math.max(8,x)+'px';t.style.top=Math.max(8,y)+'px'}
+function skryjTip(){$('tip').style.display='none'}
+document.addEventListener('mouseover',e=>{const c=e.target.closest('[data-tip]');if(c)c.onmousemove=ev=>tip(ev,c.dataset.tip),c.onmouseleave=skryjTip});
+addEventListener('resize',()=>{if(HOL.length)kresliGraf()});
+</script>
+</body>
+</html>
