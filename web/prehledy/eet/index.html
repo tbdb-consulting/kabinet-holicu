@@ -68,16 +68,16 @@ ul.fakta{margin:6px 0 0;padding-left:20px;font-size:13px}
 <div id="obsah" class="skryte">
   <div class="karta">
     <h2>Jak to počítáme</h2>
-    <p class="mala">Výchozí stav = dnes, kdy holiči tržby neevidují (0 Kč). Každá možnost ukazuje, kolik holiče stojí navíc měsíčně:
-    peníze plus čas na evidenci, přepočtený na Kč hodnotou hodiny. Počet plateb = průměrný počet rezervací holiče za měsíc
-    v období <b id="obdobi"></b> (všechny rezervace v Reservantu mají „platba na místě“, takže by se evidovaly).
-    Čísla psaná <span class="odhad">kurzívou</span> jsou odhady k ověření, ne fakta.</p>
+    <p class="mala">Výchozí stav = dnes, kdy holiči tržby neevidují (0 Kč). Každá možnost ukazuje, kolik holiče stojí navíc měsíčně
+    v penězích; čas na evidenci se nepočítá. Počet plateb = průměrný počet rezervací holiče za měsíc
+    v období <b id="obdobi"></b> (všechny rezervace v Reservantu mají „platba na místě“, takže by se evidovaly).</p>
     <ul class="fakta">
       <li><b>EET OFF</b>: místo evidence o <span id="f-off"></span> Kč měsíčně vyšší paušální daň. Jen pro holiče v 1. pásmu paušální daně
         s příjmy do 1 mil. Kč ročně, přihlásit do 10. 1. 2027.</li>
       <li><b>MOJE eet</b>: bezplatná státní aplikace (od 1. 12. 2026). Každou platbu holič zadá sám, předtím registrace v daňové schránce a certifikát.</li>
       <li><b>Pokladní aplikace</b>: placená služba třetí strany, která tržby odesílá. Cenu zatím nevíme.</li>
-      <li><b>Naše aplikace</b>: eviduje za holiče na základě pověření, až v ní poběží platby (podle rozboru nejdřív ve fázi 3). Cenu zatím nikdo nestanovil.</li>
+      <li><b>Naše aplikace</b>: evidence tržeb je součást fáze 1 (Keksa 28. 11. 2026). Holič platbu zadá v aplikaci a ta ji sama odešle
+        s jeho certifikátem (nebo za něj na základě pověření), bez signálu do 48 hodin dodatečně. Cenu zatím nikdo nestanovil.</li>
     </ul>
     <p class="mala">Zdroj faktů: rozbor TBDB „EET 2.0 – co to znamená pro Kabinet“ z 26. 11. 2026 (zákon č. 180/2026 Sb., evidence od 1. 1. 2027,
     pokuta za neodeslání až 500 000 Kč). Není to daňové poradenství – kdo eviduje a v jakém režimu je kdo zdaněný, ověřit u daňového poradce.</p>
@@ -112,24 +112,16 @@ const uloz=(k,v)=>{try{localStorage.setItem('eet_'+k,JSON.stringify(v))}catch(e)
 const nactiL=(k,d)=>{try{const v=localStorage.getItem('eet_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}};
 
 // ---------- parametry (výchozí hodnoty: fakta z rozboru, ostatní odhady k úpravě) ----------
-const PAR_DEF={cena_p:500,cena_d:650,cena_n:500,off:1400,hodina:300,
-  moje_s:15,moje_prip:2,
-  pok_kc:'',pok_s:5,pok_prip:1,
-  nase_kc:'',nase_s:0,nase_prip:1};
-let PAR={...PAR_DEF,...nactiL('par',{})};
+// Čas na evidenci se nepočítá (Keksa 27. 11. 2026), jen peníze.
+const PAR_DEF={cena_p:500,cena_d:650,cena_n:500,off:1400,pok_kc:'',nase_kc:''};
+let PAR={...PAR_DEF};{const u=nactiL('par',{});Object.keys(PAR_DEF).forEach(k=>{if(k in u)PAR[k]=u[k]})}
 const POLE=[
   {sk:'Ceny střihů (pro odhad tržby)',p:[['cena_p','Pánský Kč','Průměrná cena pánského střihu (Keksa 27. 11. 2026). Slouží jen k odhadu tržby kvůli limitu 1 mil. Kč u EET OFF.',''],
     ['cena_d','Dámský Kč','Průměrná cena dámského střihu (Keksa 27. 11. 2026).',''],
     ['cena_n','Neurčený Kč','Většina rezervací v Reservantu je obecný „Střih – Kabinet holičů“ bez rozlišení. Výchozí je cena pánského střihu, uprav, pokud to tak není.','']]},
-  {sk:'Společné',p:[
-    ['hodina','Hodnota hodiny holiče Kč','Kolik holiči „stojí“ hodina času stráveného evidencí. Odhad, uprav.','odhad']]},
   {sk:'EET OFF',p:[['off','Příplatek k paušální dani Kč/měs','Podle rozboru 1 400 Kč měsíčně navíc místo evidence.','']]},
-  {sk:'MOJE eet (zdarma)',p:[['moje_s','Sekund na jednu platbu','Jak dlouho trvá zadat platbu do státní aplikace. Odhad, uprav.','odhad'],
-    ['moje_prip','Příprava hodin (jednorázově)','Registrace v daňové schránce, certifikát, nastavení. Rozpočítá se na 12 měsíců. Odhad.','odhad']]},
-  {sk:'Pokladní aplikace',p:[['pok_kc','Cena Kč/měs','Měsíční poplatek služby. Neznámý – doplň cenu konkrétní nabídky.',''],
-    ['pok_s','Sekund na platbu','Odhad, uprav.','odhad'],['pok_prip','Příprava hodin','Jednorázově, rozpočítá se na 12 měsíců. Odhad.','odhad']]},
-  {sk:'Naše aplikace',p:[['nase_kc','Cena Kč/měs','Kolik by holič platil za evidenci v aplikaci. Zatím nestanoveno – zkus různé částky.',''],
-    ['nase_s','Sekund na platbu','Když platba proběhne v aplikaci, evidence je automatická. Odhad.','odhad'],['nase_prip','Příprava hodin','Pověření a certifikát. Odhad.','odhad']]}];
+  {sk:'Pokladní aplikace',p:[['pok_kc','Cena Kč/měs','Měsíční poplatek služby. Neznámý – doplň cenu konkrétní nabídky.','']]},
+  {sk:'Naše aplikace',p:[['nase_kc','Cena Kč/měs','Kolik by holič platil za evidenci v aplikaci. Zatím nestanoveno – zkus různé částky.','']]}];
 function kresliParam(){
   $('param').innerHTML=POLE.map(s=>'<fieldset><legend>'+esc(s.sk)+'</legend>'+s.p.map(([k,n,tip,o])=>
     '<label'+T(tip)+'>'+esc(n)+(o?' <span class="odhad">odhad</span>':'')+'<input type="number" min="0" step="any" data-p="'+k+'" value="'+esc(PAR[k])+'" placeholder="'+(PAR_DEF[k]===''?'doplnit':'')+'"></label>').join('')+'</fieldset>').join('')
@@ -165,17 +157,15 @@ function trzbaRok(h){const cp=cislo(PAR.cena_p),cd=cislo(PAR.cena_d),cn=cislo(PA
   if(cp==null||cd==null||cn==null)return null;return (h.p*cp+h.d*cd+h.n*cn)/h.mes*12}
 // náklad možnosti pro holiče za měsíc; null = nejde spočítat (chybí cena), {nelze:true} = možnost pro holiče neplatí
 function naklad(h,k){
-  const hod=cislo(PAR.hodina)??0,rez=REZIM[h.holic]||'nevim';
+  const rez=REZIM[h.holic]||'nevim';
   if(k==='off'){
     if(rez==='jiny')return {nelze:true,duvod:'není v 1. pásmu paušální daně'};
     const trzba=trzbaRok(h);
     if(trzba!=null&&trzba>1e6)return {nelze:true,duvod:'odhad tržby '+kc(trzba)+' ročně je nad 1 mil. Kč'};
-    return {kc:cislo(PAR.off)??0,cas:0,penize:cislo(PAR.off)??0,otaznik:rez==='nevim'};
+    return {kc:cislo(PAR.off)??0,otaznik:rez==='nevim'};
   }
   const pen=k==='moje'?0:cislo(PAR[k+'_kc']);if(pen==null)return null;
-  const s=cislo(PAR[k+'_s'])??0,prip=cislo(PAR[k+'_prip'])??0;
-  const casH=h.plat*s/3600+prip/12;
-  return {kc:pen+casH*hod,cas:casH,penize:pen};
+  return {kc:pen};
 }
 function nejlepsi(h){let b=null;MOZ.forEach(m=>{const v=naklad(h,m.k);if(v&&!v.nelze&&(!b||v.kc<b.v.kc))b={k:m.k,v}});return b}
 
@@ -187,7 +177,7 @@ function kresli(){
   const min=Math.min(...souc.filter(x=>!x.chybi&&x.poc).map(x=>x.s/x.poc));
   $('dlazdice').innerHTML='<div class="dl"'+T('Dnes holiči tržby neevidují. Od toho se počítají všechny rozdíly.')+'><div class="jm">Dnes (bez EET)</div><div class="cislo">0 Kč</div><div class="pod">'+HOL.length+' holičů, '+nf(HOL.reduce((a,h)=>a+h.plat,0))+' plateb měsíčně celkem</div></div>'
     +souc.map(x=>{const pr=x.poc?x.s/x.poc:0;
-      return '<div class="dl'+(!x.chybi&&x.poc&&Math.abs(pr-min)<1?' nej':'')+'"'+T('Kolik by '+x.poc+' holičů dohromady zaplatilo navíc měsíčně (peníze + čas), kdyby všichni zvolili „'+x.n+'“. Průměr na holiče '+kc(pr)+'. Zelený rámeček = nejnižší průměr na holiče.'+(x.nel?' '+x.nel+' holičům tato možnost nepatří.':''))+'><div class="jm">'+esc(x.n)+'</div>'
+      return '<div class="dl'+(!x.chybi&&x.poc&&Math.abs(pr-min)<1?' nej':'')+'"'+T('Kolik by '+x.poc+' holičů dohromady zaplatilo navíc měsíčně, kdyby všichni zvolili „'+x.n+'“. Průměr na holiče '+kc(pr)+'. Zelený rámeček = nejnižší průměr na holiče.'+(x.nel?' '+x.nel+' holičům tato možnost nepatří.':''))+'><div class="jm">'+esc(x.n)+'</div>'
       +(x.chybi?'<div class="cislo">?</div><div class="pod">doplň cenu v parametrech</div>'
         :'<div class="cislo minus">+'+kc(x.s)+'</div><div class="pod">měsíčně za '+x.poc+' holičů · '+kc(x.s*12)+' ročně<br>průměr '+kc(pr)+' na holiče'+(x.nel?' · '+x.nel+' nemůže':'')+'<br>nejlevnější pro '+(vit[x.k]||0)+' holičů</div>')+'</div>'}).join('');
   kresliTab();
@@ -198,7 +188,7 @@ function kresliTab(){
     {k:'dam',n:'Dámských',tip:'Podíl dámských střihů z rezervací holiče (podle služby v Reservantu).'},
     {k:'trzba',n:'Tržba/rok',tip:'Odhad: střihy podle typu × ceny z parametrů, průměr na měsíc × 12. Rozhoduje o limitu 1 mil. Kč u EET OFF.'},
     {k:'rezim',n:'Režim daně',l:1,tip:'Paušál 1. pásmo = může zvolit EET OFF. Jiný = nemůže. Nevím = EET OFF se počítá s otazníkem.'},
-    ...MOZ.map(m=>({k:m.k,n:m.n,tip:'Kč navíc za měsíc proti dnešku: peníze + čas na evidenci.'})),{k:'nej',n:'Nejlevnější',l:1,tip:'Nejlevnější možnost, která holiči dává smysl.'}];
+    ...MOZ.map(m=>({k:m.k,n:m.n,tip:'Kč navíc za měsíc proti dnešku (čas na evidenci se nepočítá).'})),{k:'nej',n:'Nejlevnější',l:1,tip:'Nejlevnější možnost, která holiči dává smysl.'}];
   const vse=h=>h.d+h.p+h.n;
   const r=HOL.map(h=>({h,v:{holic:h.holic,prov:h.prov,plat:h.plat,dam:vse(h)?h.d/vse(h):null,trzba:trzbaRok(h),rezim:REZIM[h.holic]||'nevim',
     ...Object.fromEntries(MOZ.map(m=>{const v=naklad(h,m.k);return [m.k,v&&!v.nelze?v.kc:null]})),nej:nejlepsi(h)?.k||''}}));
@@ -212,7 +202,7 @@ function kresliTab(){
       +MOZ.map(m=>{const x=naklad(h,m.k);
         if(x==null)return '<td'+T('Doplň cenu v parametrech.')+'>?</td>';
         if(x.nelze)return '<td class="mala"'+T('Nelze: '+x.duvod+'.')+'>nelze</td>';
-        return '<td'+(b&&b.k===m.k?' class="nej"':'')+T(m.n+': '+kc(x.penize)+' peníze + '+nf(x.cas*60)+' min času měsíčně ('+nf(x.cas,1)+' h × '+nf(cislo(PAR.hodina)??0)+' Kč).'+(x.otaznik?' Platí jen pro paušál v 1. pásmu.':''))+'>'
+        return '<td'+(b&&b.k===m.k?' class="nej"':'')+T(m.n+': '+kc(x.kc)+' měsíčně navíc.'+(m.k==='moje'?' Státní aplikace je zdarma.':'')+(x.otaznik?' Platí jen pro paušál v 1. pásmu.':''))+'>'
           +'<span class="minus">+'+kc(x.kc)+'</span>'+(x.otaznik?' ?':'')+'</td>'}).join('')
       +'<td class="l">'+(b?esc(MOZ.find(m=>m.k===b.k).n)+(b.v.otaznik?' ?':''):'–')+'</td></tr>'});
   $('tabulka').innerHTML=t+'</table>';
