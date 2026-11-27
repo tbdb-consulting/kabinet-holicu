@@ -3,3 +3,5 @@ a12160c87bf7b16e1d203e80bdb03c8f3b4c6d8b:web/index.html:generic-api-key:103
 18c022f91870169b9e3c907f42878cdffe4c7c04:web/dotaznik-pro-holice-pronajem-kresel/index.html:generic-api-key:175
 # Stejný publishable klíč ve stránce přehledů (data chrání role a funkce prehled_*), Keksa 27. 11. 2026.
 4fae2508d1add3986e563f453fa1faaf118a8e9c:web/prehledy/index.html:generic-api-key:139
+# Stejný publishable klíč ve stránce EET 2.0 v přehledech, Keksa 27. 11. 2026.
+c1e190e1ade6ffa558a42933f92441c38f260e4e:web/prehledy/eet/index.html:generic-api-key:104
