@@ -37,10 +37,13 @@ Web: https://tbdb-consulting.github.io/kabinet-holicu/ (kořen = prototyp aplika
 - **Historická data a přístup (Keksa a Tom 26. 11. 2026):** pseudonymizovaná historie z Reservanta do schématu
   `analytika` (bez jmen a kontaktů, nepřístupné z veřejného webu), nahrává Claude importem v administraci Supabase.
   Přehledy vidí jen Tom a TBDB; odpovědný pracovník (holič Kuba) jen vybraná data. Patří do fáze 1 za pevnou cenu.
-- **EET 2.0 je součást fáze 1 (Keksa 27. 11. 2026).** Aplikace má umět evidovat tržby holičů podle zákona č. 180/2026 Sb.
-  (povinnost od 1. 1. 2027): datová zpráva SOAP 1.1, podpis WS-Security / XML Signature (exc-c14n, RSA-SHA256, SHA-256)
-  certifikátem holiče z DIS+, odeslání z prohlížeče (server podporuje CORS), dodatečné odeslání do 48 h. Technický základ:
-  popis rozhraní v1.2 na eet.gov.cz, rozbor `Claude outputs\261126_KABINET_EET2.html`. Dřívější doporučení „EET až po fázi 1“ neplatí.
+- **EET 2.0 v aplikaci je možná varianta pro fázi 3, ne součást fáze 1 (Keksa 27. 11. 2026, mění rozhodnutí z téhož dne).**
+  Povinnost evidovat platí od 1. 1. 2027 (§ 36 zákona č. 180/2026 Sb.); do té doby si každý holič zařídí evidenci sám
+  (MOJE eet, aplikace jiného dodavatele, nebo EET OFF) – podklad pro holiče `Claude outputs\261127_KABINET_EET2_pro_holice.pdf`.
+  Ve fázi 1 aplikace nezná platby zákazníků, holič by částku zadával ručně jako v bezplatné MOJE eet; smysl má až s platbami
+  v aplikaci (fáze 3). Technika pro případný vývoj: datová zpráva SOAP 1.1, podpis WS-Security / XML Signature (exc-c14n,
+  RSA-SHA256, SHA-256) certifikátem holiče z DIS+, odeslání z prohlížeče (CORS), dodatečně do 48 h; osnova a odhad 60–88 h
+  `Claude outputs\261127_KABINET_EET2_osnova_vyvoje.html`, stav tématu `Claude outputs\261128_KABINET_EET2_stav.md`.
 - **Přednost holičů při rozdělování směn (Keksa 27. 11. 2026, výběr z `Otázky\261127_prednost_holicu_pri_vyberu_smen.html`):**
   Tom jako majitel může vybrané holiče upřednostnit, nemění se tím nájem. (1) Pevné bloky – Tom přidělí holiči konkrétní
   bloky na období, dostane je před rozdělováním podle přání. (2) Úroveň přednosti 1–3 – při sporu o blok vyhraje vyšší

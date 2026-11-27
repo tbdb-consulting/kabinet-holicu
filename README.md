@@ -265,6 +265,9 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   „Zvýhodnění“, nový graf „Nájem podle počtu hodin“ (dnešní pásma, křivka kalkulace při průměrné sazbě, body holičů).
 - 27. 11. 2026 (Keksa): EET 2.0 v aplikaci chce Keksa stihnout do 1. 1. 2027 (SOAP 1.1, podpis WS-Security
   RSA-SHA256 / exc-c14n certifikátem holiče, server podporuje CORS – viz popis rozhraní v1.2 na eet.gov.cz).
+- 27. 11. 2026 večer (Keksa): **EET 2.0 v aplikaci přesunuto z fáze 1 jako možná varianta pro fázi 3.** Do té doby si holiči
+  evidenci zařídí sami (MOJE eet, aplikace jiného dodavatele, EET OFF); podklad pro holiče na Disku
+  `Claude outputs\261127_KABINET_EET2_pro_holice.pdf`. Text u „Naše aplikace“ na stránce `web/prehledy/eet/` upraven.
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
 - Další kroky: Tom jako `majitel`, Kuba jako `odpovedny` s omezeným pohledem (zatím nerozhodnuto, co uvidí);
   vlastní odesílání e-mailů (SMTP), protože vestavěné posílá jen členům týmu Supabase a málo zpráv za hodinu.
