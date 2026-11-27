@@ -59,7 +59,7 @@ table.heat td.den{color:var(--se);padding-right:4px;text-align:left}
 .leg-serie{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--se);margin:6px 0}
 .leg-serie span{display:inline-flex;align-items:center;gap:5px}
 svg text{fill:var(--se);font-size:11px;font-family:Verdana,Geneva,sans-serif}
-#tip{position:fixed;pointer-events:none;background:var(--karta);color:var(--text);border:1px solid var(--li);border-radius:6px;padding:6px 9px;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.15);display:none;z-index:9;max-width:260px}
+#tip{position:fixed;pointer-events:none;background:var(--karta);color:var(--text);border:1px solid var(--li);border-radius:6px;padding:6px 9px;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.15);display:none;z-index:9;max-width:340px}
 .rozsah{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:13.5px;margin:8px 0}
 .rozsah input[type=range]{width:160px;vertical-align:middle}
 .prepinac{font-size:12.5px;color:var(--b);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;font-family:inherit}
@@ -862,7 +862,14 @@ function kresliPomerPrehled(R,hod){
   const agg=f=>{let m=0,ms=0;Object.entries(bun).forEach(([k,c])=>{if(f(k)){m+=c.m;ms+=c.ms}});return m?ms/m:null};
   const fmt=v=>v==null?'–':nf(v,POMER_POHLED==='*'?0:0);
   const nazev=POMER_POHLED==='spol'?'společná sazba obou provozoven':POMER_POHLED==='*'?'obě provozovny dohromady':POMER_POHLED;
-  let t='<h3>Cena křesla po dnech a hodinách <span class="mala">('+esc(nazev)+', Kč za hodinu)</span></h3>'
+  const vyklad='<b>Jak se cena počítá.</b> Cena hodiny je poměrová podle obsazenosti: čím víc křesel je v daný den a hodinu v průměru obsazených, '
+    +'tím je hodina dražší. Obsazenost té hodiny se porovná s obsazeností všech křesel ve všech dnech a hodinách týdne a podle tohoto poměru '
+    +'se rozpočítá dnešní měsíční nájem. Součet „cena × obsazené hodiny křesel“ za měsíc je proto stejný jako dnes vybraný nájem.<br>'
+    +'Vzorec: cena hodiny = koeficient × (průměrně obsazená křesla v tu hodinu a den ÷ počet sdílených křesel). Koeficient = dnešní měsíční nájem ÷ součet '
+    +'(obsazené hodiny křesel × obsazenost) přes všechny hodiny a dny. Hodnota koeficientu je v souhrnu výš.'
+    +(POMER_MIN!==''||POMER_MAX!==''?' Ceny jsou navíc oříznuté na zadané rozpětí a ostatní hodiny se dopočítají.':'')+' Výsledek se zaokrouhlí na '+POMER_ZAOKR+' Kč.';
+  let t='<h3><span class="nap"'+T(vyklad)+'>Cena křesla po dnech a hodinách</span> <span class="mala">('+esc(nazev)+', Kč za hodinu)</span></h3>'
+    +'<p class="mala">Cena hodiny = poměr obsazenosti křesel v daný den a hodinu k obsazenosti všech křesel ve všech dnech a hodinách. Podle něj se rozpočítá dnešní měsíční nájem. Podrobně v nápovědě u nadpisu.</p>'
     +'<div class="ed"><label'+T('Jednu provozovnu, nebo obě dohromady: u souhrnu je v políčku průměr sazeb obou provozoven vážený obsazenými hodinami.')+'>Zobrazit<select id="pomer-pohled">'
     +(R.length>1?'<option value="*"'+(POMER_POHLED==='*'?' selected':'')+'>obě provozovny dohromady</option>':'')
     +(R.length>1?'<option value="spol"'+(POMER_POHLED==='spol'?' selected':'')+'>společná sazba obou provozoven</option>':'')
