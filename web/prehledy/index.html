@@ -150,7 +150,8 @@ td.akt-c{font-weight:bold;outline:2px solid var(--s1);outline-offset:-2px}
 
   <div class="karta">
     <h2>Holiči</h2>
-    <p class="mala">Průměr na měsíc, ve kterém holič aspoň jednou stříhal.</p>
+    <p class="mala">Průměr na měsíc, ve kterém holič aspoň jednou stříhal. <b>Kč za hodinu</b> = nájem podle dnešních pásem za zvolené období
+    děleno odstříhanými hodinami ve stejném období (celý den, filtr hodin se tu nepoužije). U pásma nad 120 h je rozpětí 8 000–10 000 Kč.</p>
     <div class="tab-obal" id="holici"></div>
   </div>
 
@@ -512,11 +513,13 @@ function kresliRozpad(pp){
 // ---------- holiči ----------
 function kresliHolice(){
   const pp=new Set(provozovny().map(p=>p.provozovna)),m={};
-  HOL.filter(x=>pp.has(x.provozovna)).forEach(x=>{const k=x.holic;(m[k]??={holic:k,prov:x.provozovna,mes:0,hod:0,rez:0,zak:0,naj:0}).mes++;
-    m[k].hod+= +x.hodin;m[k].rez+= +x.rezervaci;m[k].zak+= +x.zakazniku;m[k].naj+= +(x.najem_min||0)});
+  HOL.filter(x=>pp.has(x.provozovna)).forEach(x=>{const k=x.holic;(m[k]??={holic:k,prov:x.provozovna,mes:0,hod:0,rez:0,zak:0,naj:0,najMax:0}).mes++;
+    m[k].hod+= +x.hodin;m[k].rez+= +x.rezervaci;m[k].zak+= +x.zakazniku;m[k].naj+= +(x.najem_min||0);m[k].najMax+= +(x.najem_max??x.najem_min??0)});
   const r=Object.values(m).sort((a,b)=>b.hod/b.mes-a.hod/a.mes);
-  let t='<table><tr><th>Holič</th><th class="l">Provozovna</th><th>Měsíců</th><th>Hodin</th><th>Rezervací</th><th>Zákazníků</th><th>Nájem dnes</th></tr>';
-  r.forEach(x=>{t+='<tr><td>'+esc(x.holic)+'</td><td class="l">'+esc(x.prov)+'</td><td>'+x.mes+'</td><td>'+nf(x.hod/x.mes)+'</td><td>'+nf(x.rez/x.mes)+'</td><td>'+nf(x.zak/x.mes)+'</td><td>'+kc(x.naj/x.mes)+'</td></tr>'});
+  const rozpeti=(a,b,f)=>Math.round(a)===Math.round(b)?f(a):f(a).replace(/\s*Kč$/,'')+'–'+f(b);
+  let t='<table><tr><th>Holič</th><th class="l">Provozovna</th><th>Měsíců</th><th>Hodin</th><th>Rezervací</th><th>Zákazníků</th><th>Nájem dnes</th><th>Kč za hodinu</th></tr>';
+  r.forEach(x=>{const h=x.hod>0;t+='<tr><td>'+esc(x.holic)+'</td><td class="l">'+esc(x.prov)+'</td><td>'+x.mes+'</td><td>'+nf(x.hod/x.mes)+'</td><td>'+nf(x.rez/x.mes)+'</td><td>'+nf(x.zak/x.mes)+'</td><td>'+rozpeti(x.naj/x.mes,x.najMax/x.mes,kc)
+    +'</td><td data-tip="'+esc('Nájem za celé období '+rozpeti(x.naj,x.najMax,kc)+' / '+nf(x.hod)+' h')+'">'+(h?rozpeti(x.naj/x.hod,x.najMax/x.hod,v=>nf(v,0)+' Kč'):'–')+'</td></tr>'});
   $('holici').innerHTML=r.length?t+'</table>':'<p class="mala">Žádná data.</p>';
 }
 
