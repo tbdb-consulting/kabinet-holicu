@@ -163,6 +163,11 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   (cena neznámá) a evidence v naší aplikaci (cena nestanovená). Počet plateb = průměr rezervací za měsíc z Reservanta
   za posledních 12 měsíců. Čas, hodnota hodiny a příprava jsou odhady k úpravě; parametry a režim daně u holičů si
   pamatuje jen prohlížeč. Fakta z rozboru `Claude outputs\261126_KABINET_EET2.html` (Disk, složka klienta).
+- 27. 11. 2026 (Keksa): ceny střihů z Reservanta nepoužívat (částku má jen 287 z 30 955 rezervací a nesedí). Platí
+  průměr **pánský 500 Kč, dámský 650 Kč**. Migrace `20261127190000_analytika_holici_sluzby.sql` (nasazená, ověřená):
+  `prehled_holici_sluzby` = počty dámských / pánských / neurčených střihů na holiče. Neurčený („Střih – Kabinet holičů“,
+  většina rezervací) se na stránce EET počítá cenou pánského, jde změnit. Za 11/2025–10/2026: 21 holičů, odhad tržby
+  medián asi 404 000 Kč ročně, nad 1 mil. Kč jeden holič, nad 800 000 Kč tři.
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
 - Další kroky: Tom jako `majitel`, Kuba jako `odpovedny` s omezeným pohledem (zatím nerozhodnuto, co uvidí);
   vlastní odesílání e-mailů (SMTP), protože vestavěné posílá jen členům týmu Supabase a málo zpráv za hodinu.

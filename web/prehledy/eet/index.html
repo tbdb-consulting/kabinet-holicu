@@ -112,13 +112,16 @@ const uloz=(k,v)=>{try{localStorage.setItem('eet_'+k,JSON.stringify(v))}catch(e)
 const nactiL=(k,d)=>{try{const v=localStorage.getItem('eet_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}};
 
 // ---------- parametry (výchozí hodnoty: fakta z rozboru, ostatní odhady k úpravě) ----------
-const PAR_DEF={cena:'',off:1400,hodina:300,
+const PAR_DEF={cena_p:500,cena_d:650,cena_n:500,off:1400,hodina:300,
   moje_s:15,moje_prip:2,
   pok_kc:'',pok_s:5,pok_prip:1,
   nase_kc:'',nase_s:0,nase_prip:1};
 let PAR={...PAR_DEF,...nactiL('par',{})};
 const POLE=[
-  {sk:'Společné',p:[['cena','Průměrná cena návštěvy Kč','Jen pro kontrolu limitu 1 mil. Kč ročně u EET OFF. Z Reservanta to nevíme (částku má jen 287 z 30 955 rezervací), doplň.',''],
+  {sk:'Ceny střihů (pro odhad tržby)',p:[['cena_p','Pánský Kč','Průměrná cena pánského střihu (Keksa 27. 11. 2026). Slouží jen k odhadu tržby kvůli limitu 1 mil. Kč u EET OFF.',''],
+    ['cena_d','Dámský Kč','Průměrná cena dámského střihu (Keksa 27. 11. 2026).',''],
+    ['cena_n','Neurčený Kč','Většina rezervací v Reservantu je obecný „Střih – Kabinet holičů“ bez rozlišení. Výchozí je cena pánského střihu, uprav, pokud to tak není.','']]},
+  {sk:'Společné',p:[
     ['hodina','Hodnota hodiny holiče Kč','Kolik holiči „stojí“ hodina času stráveného evidencí. Odhad, uprav.','odhad']]},
   {sk:'EET OFF',p:[['off','Příplatek k paušální dani Kč/měs','Podle rozboru 1 400 Kč měsíčně navíc místo evidence.','']]},
   {sk:'MOJE eet (zdarma)',p:[['moje_s','Sekund na jednu platbu','Jak dlouho trvá zadat platbu do státní aplikace. Odhad, uprav.','odhad'],
@@ -146,7 +149,8 @@ async function start(session){
   $('obdobi').textContent=zac.getDate()+'. '+(zac.getMonth()+1)+'. '+zac.getFullYear()+' – '+konec.getDate()+'. '+(konec.getMonth()+1)+'. '+konec.getFullYear();
   const vlastni=new Set(prov.filter(p=>!p.fransiza).map(p=>p.provozovna));
   const rows=(await rpc('prehled_holici_mesic',{p_od:iso(zac),p_do:iso(konec)})).filter(x=>vlastni.has(x.provozovna));
-  const m={};rows.forEach(x=>{const a=m[x.holic]??={holic:x.holic,prov:x.provozovna,mes:0,rez:0,hod:0};a.mes++;a.rez+= +x.rezervaci;a.hod+= +x.hodin});
+  const m={};rows.forEach(x=>{const a=m[x.holic]??={holic:x.holic,prov:x.provozovna,mes:0,rez:0,hod:0,d:0,p:0,n:0};a.mes++;a.rez+= +x.rezervaci;a.hod+= +x.hodin});
+  (await rpc('prehled_holici_sluzby',{p_od:iso(zac),p_do:iso(konec)})).forEach(s=>{const a=m[s.holic];if(a){a.d+= +s.damskych;a.p+= +s.panskych;a.n+= +s.neurcenych}});
   HOL=Object.values(m).map(a=>({...a,plat:a.rez/a.mes}));
   kresliParam();kresli();ukaz('obsah');
 }
@@ -156,12 +160,15 @@ sb.auth.onAuthStateChange((ev,s)=>{if(spusteno&&s)return;spusteno=!!s;setTimeout
 // ---------- výpočet ----------
 const MOZ=[{k:'off',n:'EET OFF'},{k:'moje',n:'MOJE eet'},{k:'pok',n:'Pokladní aplikace'},{k:'nase',n:'Naše aplikace'}];
 const cislo=v=>v===''||v==null||isNaN(+v)?null:+v;
+// odhad tržby za rok: střihy podle typu × cena, průměr na měsíc, kdy holič stříhal, × 12
+function trzbaRok(h){const cp=cislo(PAR.cena_p),cd=cislo(PAR.cena_d),cn=cislo(PAR.cena_n);
+  if(cp==null||cd==null||cn==null)return null;return (h.p*cp+h.d*cd+h.n*cn)/h.mes*12}
 // náklad možnosti pro holiče za měsíc; null = nejde spočítat (chybí cena), {nelze:true} = možnost pro holiče neplatí
 function naklad(h,k){
   const hod=cislo(PAR.hodina)??0,rez=REZIM[h.holic]||'nevim';
   if(k==='off'){
     if(rez==='jiny')return {nelze:true,duvod:'není v 1. pásmu paušální daně'};
-    const cena=cislo(PAR.cena),trzba=cena!=null?h.plat*12*cena:null;
+    const trzba=trzbaRok(h);
     if(trzba!=null&&trzba>1e6)return {nelze:true,duvod:'odhad tržby '+kc(trzba)+' ročně je nad 1 mil. Kč'};
     return {kc:cislo(PAR.off)??0,cas:0,penize:cislo(PAR.off)??0,otaznik:rez==='nevim'};
   }
@@ -188,17 +195,19 @@ function kresli(){
 function kresliTab(){
   const sl=[{k:'holic',n:'Holič',l:1,tip:'Holič podle Reservanta.'},{k:'prov',n:'Provozovna',l:1,tip:'Kde stříhá nejčastěji.'},
     {k:'plat',n:'Plateb/měs',tip:'Průměrný počet rezervací za měsíc, kdy stříhal = počet plateb, které by se evidovaly.'},
-    {k:'trzba',n:'Tržba/rok',tip:'Odhad: platby × 12 × průměrná cena návštěvy. Bez ceny v parametrech se nepočítá.'},
+    {k:'dam',n:'Dámských',tip:'Podíl dámských střihů z rezervací holiče (podle služby v Reservantu).'},
+    {k:'trzba',n:'Tržba/rok',tip:'Odhad: střihy podle typu × ceny z parametrů, průměr na měsíc × 12. Rozhoduje o limitu 1 mil. Kč u EET OFF.'},
     {k:'rezim',n:'Režim daně',l:1,tip:'Paušál 1. pásmo = může zvolit EET OFF. Jiný = nemůže. Nevím = EET OFF se počítá s otazníkem.'},
     ...MOZ.map(m=>({k:m.k,n:m.n,tip:'Kč navíc za měsíc proti dnešku: peníze + čas na evidenci.'})),{k:'nej',n:'Nejlevnější',l:1,tip:'Nejlevnější možnost, která holiči dává smysl.'}];
-  const cena=cislo(PAR.cena);
-  const r=HOL.map(h=>({h,v:{holic:h.holic,prov:h.prov,plat:h.plat,trzba:cena!=null?h.plat*12*cena:null,rezim:REZIM[h.holic]||'nevim',
+  const vse=h=>h.d+h.p+h.n;
+  const r=HOL.map(h=>({h,v:{holic:h.holic,prov:h.prov,plat:h.plat,dam:vse(h)?h.d/vse(h):null,trzba:trzbaRok(h),rezim:REZIM[h.holic]||'nevim',
     ...Object.fromEntries(MOZ.map(m=>{const v=naklad(h,m.k);return [m.k,v&&!v.nelze?v.kc:null]})),nej:nejlepsi(h)?.k||''}}));
   r.sort((a,b)=>{const x=a.v[HS.k],y=b.v[HS.k];if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;
     return HS.d*(typeof x==='string'?x.localeCompare(y,'cs'):x-y)||a.h.holic.localeCompare(b.h.holic,'cs')});
   let t='<table><tr>'+sl.map(c=>'<th'+(c.l?' class="l"':'')+' data-sort="'+c.k+'"'+T(c.tip+' Kliknutím seřadíš.')+'>'+c.n+'<span class="sipka">'+(HS.k===c.k?(HS.d>0?' ▲':' ▼'):'')+'</span></th>').join('')+'</tr>';
   r.forEach(({h,v})=>{const b=nejlepsi(h);
-    t+='<tr><td>'+esc(h.holic)+'</td><td class="l">'+esc(h.prov)+'</td><td>'+nf(h.plat)+'</td><td>'+(v.trzba!=null?kc(v.trzba):'–')+'</td>'
+    t+='<tr><td>'+esc(h.holic)+'</td><td class="l">'+esc(h.prov)+'</td><td>'+nf(h.plat)+'</td><td'+T(nf(h.d/h.mes)+' dámských, '+nf(h.p/h.mes)+' pánských a '+nf(h.n/h.mes)+' neurčených střihů měsíčně.')+'>'+(v.dam!=null?nf(v.dam*100)+' %':'–')+'</td>'
+      +'<td'+(v.trzba>1e6?' class="minus"':'')+'>'+(v.trzba!=null?kc(v.trzba):'–')+'</td>'
       +'<td class="l"><select data-rezim="'+esc(h.holic)+'"><option value="nevim">nevím</option><option value="pausal1"'+(v.rezim==='pausal1'?' selected':'')+'>paušál 1. pásmo</option><option value="jiny"'+(v.rezim==='jiny'?' selected':'')+'>jiný</option></select></td>'
       +MOZ.map(m=>{const x=naklad(h,m.k);
         if(x==null)return '<td'+T('Doplň cenu v parametrech.')+'>?</td>';
