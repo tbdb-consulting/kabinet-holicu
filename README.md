@@ -135,6 +135,11 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   `20261127170000_analytika_scenare_najmu.sql`, ověřeno v SQL Editoru, zkušební varianta smazaná).
 - 27. 11. 2026 (Keksa): výběr hodin „od–do“ přesunutý do horního filtru, platí pro dlaždice, graf vytíženosti po měsících
   i tabulku po hodinách. Graf odstříhaných hodin a kalkulace nájmu počítají celý den.
+- 27. 11. 2026 (Keksa): tabulka holičů má sloupec „Kč za hodinu“ (nájem podle dnešních pásem / odstříhané hodiny
+  za zvolené období). V kalkulačce uložená varianta „Hodinová 72 Kč – stejný příjem jako dnes“ (72 Kč/h, koeficient 1;
+  za 11/2025–10/2026 vychází 96 000 Kč měsíčně proti dnešním 92 500–100 200 Kč).
+- 27. 11. 2026 (Keksa): nápovědy po najetí myší (v mobilu ťuknutím) u filtrů, čísel v dlaždicích, legend, nadpisů
+  i buněk všech tabulek a polí kalkulačky. Texty v objektu `NAP` ve stránce; co má nápovědu, je podtržené tečkami.
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
 - Další kroky: Tom jako `majitel`, Kuba jako `odpovedny` s omezeným pohledem (zatím nerozhodnuto, co uvidí);
   vlastní odesílání e-mailů (SMTP), protože vestavěné posílá jen členům týmu Supabase a málo zpráv za hodinu.
