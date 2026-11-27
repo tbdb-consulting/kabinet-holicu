@@ -172,6 +172,11 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   nejde smazat sám sebe ani odebrat / sesadit posledního admina, neplatný e-mail odmítnut, zkušební účet přidán a smazán.
   Role odpovědný zatím nemá přístup nikam. Odkaz pro přihlášení chodí zatím jen členům týmu Supabase (chybí SMTP).
 
+- **Web kabinetholicu.cz (zjištěno 27. 11. 2026):** běží na **Wixu** (generator „Wix.com Website Builder“, DNS na
+  ns10/ns11.wixdns.net, www → cdn3.wixdns.net). Doménu má registrovanou INTERNET CZ (Forpsi), držitel „Kabinet Toma holiče“,
+  platnost do 14. 4. 2027. Na doméně nejsou MX záznamy (žádný e-mail @kabinetholicu.cz). Přístup: Tom pozve TBDB do webu
+  ve Wixu jako spolupracovníka (Nastavení webu → Role a oprávnění), bez sdílení hesla. Přes Wix se mění i DNS (subdoména pro aplikaci).
+
 ## Přehledy (27. 11. 2026)
 
 - Stránka `web/prehledy/` (po zveřejnění https://tbdb-consulting.github.io/kabinet-holicu/prehledy/): přihlášení
