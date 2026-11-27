@@ -123,6 +123,10 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   `prehled_vytizenost_mesic`, Po–Pá 9–18 h, migrace `20261127150000_analytika_vytizenost_mesic.sql`, za 12 měsíců
   OP 49,9 %, ZV 58,6 %); tabulka po dnech a hodinách má v políčku čísla všech provozoven „OP / ZV“ a barvy po 10 %
   (stupnice viridis, 0–9 % šedě).
+- 27. 11. 2026 později (Keksa): vytíženost se počítá Po–Pá 7–22 h místo 9–18 h (funkce má rozsah hodin jako parametr,
+  migrace `20261127160000_analytika_vytizenost_7_22.sql`; za 12 měsíců OP 36,0 %, ZV 44,7 %, při 9–18 h 49,9 % a 58,6 %).
+  Tabulka po hodinách: nad ní výběr rozsahu hodin (výchozí 7–22), v políčku čísla oddělená lomítkem, každé s proužkem
+  v barvě provozovny.
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
 - Další kroky: Tom jako `majitel`, Kuba jako `odpovedny` s omezeným pohledem (zatím nerozhodnuto, co uvidí);
   vlastní odesílání e-mailů (SMTP), protože vestavěné posílá jen členům týmu Supabase a málo zpráv za hodinu.

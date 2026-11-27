@@ -25,7 +25,7 @@ header{background:var(--b);color:#fff;padding:14px 16px}
 header h1{margin:0;font-size:18px;flex:1}
 header .kdo{font-size:12.5px;opacity:.85}
 header button{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:4px 10px;font:inherit;font-size:12.5px;cursor:pointer}
-main{max-width:960px;margin:0 auto;padding:16px}
+main{max-width:1240px;margin:0 auto;padding:16px}
 .karta{background:var(--karta);border:1px solid var(--li);border-radius:8px;padding:14px 16px;margin-bottom:14px}
 h2{font-size:16px;margin:0 0 4px}
 .mala{font-size:12.5px;color:var(--se)}
@@ -47,13 +47,13 @@ table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{padding:5px 8px;border-bottom:1px solid var(--li);text-align:right;white-space:nowrap}
 th:first-child,td:first-child,th.l,td.l{text-align:left}
 th{color:var(--se);font-weight:normal}
-table.heat{border-collapse:separate;border-spacing:2px;width:auto;margin-top:8px;font-size:11.5px}
+table.heat{border-collapse:separate;border-spacing:4px;width:auto;margin-top:8px;font-size:11.5px}
 table.heat th{padding:2px 4px;border:0;text-align:center}
 table.heat td{padding:0;border:0;text-align:center}
 table.heat td.den{color:var(--se);padding-right:4px;text-align:left}
-.bunka{display:flex;border-radius:4px;overflow:hidden;min-width:58px;height:30px;cursor:default}
-.bunka span{flex:1;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
-.bunka span+span{border-left:1px solid var(--karta)}
+.bunka{display:flex;align-items:stretch;gap:2px;padding:3px;border:1px solid var(--li);border-radius:6px;cursor:default}
+.bunka .n{min-width:30px;height:28px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;border-top:4px solid transparent}
+.bunka .lom{color:var(--mu);display:flex;align-items:center;padding:0 1px}
 .legenda{display:flex;gap:2px;align-items:center;font-size:11px;color:var(--se);margin-top:10px;flex-wrap:wrap}
 .legenda .c{min-width:34px;height:18px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px}
 .leg-serie{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--se);margin:6px 0}
@@ -98,7 +98,7 @@ svg text{fill:var(--se);font-size:11px;font-family:Verdana,Geneva,sans-serif}
 
   <div class="karta">
     <h2>Vytíženost po měsících</h2>
-    <p class="mala">Obsazené hodiny křesel Po–Pá 9–18 h v procentech z toho, co křesla v tu dobu nabízejí (pracovní dny × 9 h × počet křesel). Svátky nejsou odečtené.</p>
+    <p class="mala">Obsazené hodiny křesel Po–Pá 7–22 h v procentech z toho, co křesla v tu dobu nabízejí (pracovní dny × 15 h × počet křesel). Svátky nejsou odečtené.</p>
     <div class="leg-serie" id="vyt-legenda"></div>
     <div id="vyt"></div>
   </div>
@@ -106,6 +106,7 @@ svg text{fill:var(--se);font-size:11px;font-family:Verdana,Geneva,sans-serif}
   <div class="karta">
     <h2>Vytíženost po dnech a hodinách</h2>
     <p class="mala">Průměrně obsazená křesla v danou hodinu, v procentech z počtu křesel. V každém políčku <span id="heat-poradi"></span>, barva po 10 %.</p>
+    <div class="filtry" style="margin:10px 0 0"><label>Hodiny od <select id="hod-od"></select></label><label>do <select id="hod-do"></select></label></div>
     <div class="tab-obal" id="heat"></div>
     <div class="legenda" id="heat-legenda"></div>
   </div>
@@ -198,6 +199,10 @@ async function nacti(){
   $('obdobi').innerHTML=OBD.map((o,i)=>'<option value="'+i+'">'+esc(o.t)+'</option>').join('');
   $('obdobi').onchange=nactiObdobi;$('fransizy').onchange=kresli;
   $('sazba').oninput=$('koef').oninput=kresliNajem;
+  for(let h=0;h<24;h++){$('hod-od').add(new Option(h+':00',h,false,h===7));$('hod-do').add(new Option((h+1)+':00',h+1,false,h+1===22))}
+  $('hod-od').onchange=$('hod-do').onchange=e=>{
+    if(+$('hod-od').value>=+$('hod-do').value){if(e.target.id==='hod-od')$('hod-do').value=Math.min(24,+$('hod-od').value+1);else $('hod-od').value=Math.max(0,+$('hod-do').value-1)}
+    kresliHeat()};
   await nactiObdobi();
   ukaz('prehledy');
 }
@@ -219,8 +224,8 @@ function kresli(){
 // ---------- dlaždice ----------
 function souhrn(p){
   const o=OBS.filter(x=>x.provozovna===p.provozovna);
-  const pracovni=o.filter(x=>x.den<=5&&x.hodina>=9&&x.hodina<18);
-  const prum=pracovni.length?pracovni.reduce((s,x)=>s+ +x.prumer,0)/45:0; // 5 dní × 9 hodin
+  const pracovni=o.filter(x=>x.den<=5&&x.hodina>=7&&x.hodina<22);
+  const prum=pracovni.length?pracovni.reduce((s,x)=>s+ +x.prumer,0)/75:0; // 5 dní × 15 hodin (7–22)
   const spicka=o.reduce((m,x)=>Math.max(m,+x.spicka),0);
   const h=HOL.filter(x=>x.provozovna===p.provozovna);
   const nMes=new Set(h.map(x=>x.mesic)).size||1;
@@ -232,7 +237,7 @@ function kresliDlazdice(){
     const s=souhrn(p);
     const pct=p.kresel?Math.round(s.prum/p.kresel*100)+' %':'–';
     return '<div class="dl"><div class="jm"><span class="znacka" style="background:'+barva(p.provozovna)+'"></span>'+esc(p.provozovna)+'</div>'
-      +'<div class="cislo">'+pct+'</div><div class="pod">obsazenost Po–Pá 9–18 h'+(p.kresel?' ('+nf(s.prum,1)+' z '+p.kresel+' křesel)':', počet křesel nevíme')+'</div>'
+      +'<div class="cislo">'+pct+'</div><div class="pod">obsazenost Po–Pá 7–22 h'+(p.kresel?' ('+nf(s.prum,1)+' z '+p.kresel+' křesel)':', počet křesel nevíme')+'</div>'
       +'<div class="pod" style="margin-top:6px">'+nf(s.hodin/s.nMes)+' h měsíčně · '+s.holicu+' holičů<br>nejvíc najednou '+nf(s.spicka,0)+(p.kresel?' (křesel '+p.kresel+')':'')
       +'<br>nájem dnes cca '+(s.najMin===s.najMax?kc(s.najMin):kc(s.najMin)+'–'+kc(s.najMax))+' měsíčně</div></div>';
   }).join('');
@@ -248,19 +253,18 @@ function stupen(pct){return Math.max(0,Math.min(10,Math.floor(pct/10)))}
 function barvaPct(pct){const i=stupen(pct),s=tmavy()?SKALA.tmava:SKALA.svetla,bily=tmavy()?(i===0||i<=4):i>=7;return 'background:'+s[i]+';color:'+(bily?'#fff':'#1a1a1a')}
 function kresliHeat(){
   const pp=provozovny().filter(p=>OBS.some(x=>x.provozovna===p.provozovna));
-  $('heat-poradi').innerHTML=pp.map(p=>'<b>'+esc(p.provozovna)+'</b>').join(' / ');
+  $('heat-poradi').innerHTML=pp.map(p=>'<span class="znacka" style="background:'+barva(p.provozovna)+'"></span> <b>'+esc(p.provozovna)+'</b>').join(' / ')+' (barevný proužek nahoře u čísla)';
   if(!pp.length){$('heat').innerHTML='<p class="mala">Žádná data.</p>';$('heat-legenda').innerHTML='';return}
   const m={};OBS.forEach(x=>m[x.provozovna+'|'+x.den+'|'+x.hodina]=x);
   const kres=p=>p.kresel||Math.max(1,...OBS.filter(x=>x.provozovna===p.provozovna).map(x=>+x.spicka));
-  const hod=OBS.filter(x=>+x.prumer>=0.05&&pp.some(p=>p.provozovna===x.provozovna)).map(x=>x.hodina);
-  const h0=Math.min(8,...hod),h1=Math.max(19,...hod);
-  let t='<table class="heat"><tr><th></th>';for(let h=h0;h<=h1;h++)t+='<th>'+h+'</th>';t+='</tr>';
+  const h0=+$('hod-od').value,h1=+$('hod-do').value-1;
+  let t='<table class="heat"><tr><th></th>';for(let h=h0;h<=h1;h++)t+='<th>'+h+'–'+(h+1)+'</th>';t+='</tr>';
   for(let d=1;d<=7;d++){
     t+='<tr><td class="den">'+DNY[d-1]+'</td>';
     for(let h=h0;h<=h1;h++){
       const v=pp.map(p=>{const x=m[p.provozovna+'|'+d+'|'+h],pr=x?+x.prumer:0;return {p,pr,pct:pr/kres(p)*100,sp:x?+x.spicka:0}});
       const tip='<b>'+DNY[d-1]+' '+h+':00–'+(h+1)+':00</b><br>'+v.map(x=>esc(x.p.provozovna)+': <b>'+Math.round(x.pct)+' %</b> ('+nf(x.pr,1)+' z '+kres(x.p)+' křesel, nejvíc '+nf(x.sp,0)+')').join('<br>');
-      t+='<td><div class="bunka" data-tip="'+esc(tip)+'">'+v.map(x=>'<span style="'+barvaPct(x.pct)+'">'+Math.round(x.pct)+'</span>').join('')+'</div></td>';
+      t+='<td><div class="bunka" data-tip="'+esc(tip)+'">'+v.map(x=>'<span class="n" style="'+barvaPct(x.pct)+';border-top-color:'+barva(x.p.provozovna)+'">'+Math.round(x.pct)+'</span>').join('<span class="lom">/</span>')+'</div></td>';
     }
     t+='</tr>';
   }
