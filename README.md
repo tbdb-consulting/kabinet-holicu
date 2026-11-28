@@ -281,3 +281,18 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
 - Supabase Auth → URL Configuration: Site URL a povolené adresy `…/kabinet-holicu/prehledy/` a `http://127.0.0.1:8787/prehledy/`.
 - Další kroky: Tom jako `majitel`, Kuba jako `odpovedny` s omezeným pohledem (zatím nerozhodnuto, co uvidí);
   vlastní odesílání e-mailů (SMTP), protože vestavěné posílá jen členům týmu Supabase a málo zpráv za hodinu.
+
+## Import z Reservanta pro rozvrh obsazenosti (28. 11. 2026)
+
+- Zadání Keksa 28. 11. 2026, výběr z `Otázky\261128_import_z_reservanta.html` (body 1, 2, 3, 5; doba držení dat nerozhodnuta).
+- Stránka `web/prehledy/import/` (odkaz „Import z Reservanta →“ v záhlaví přehledů, jen admin a majitel). CSV exportu událostí
+  se zpracuje v prohlížeči: sloupce se poznají podle názvu (jde je přepnout), z rezervace se vezme jen začátek zaokrouhlený
+  dolů na celou hodinu, konec nahoru (bez konce 1 hodina), holič (sloupec Zdroj) a zákazník „Jan Nov“ (křestní jméno
+  + 3 písmena příjmení). E-mail, telefon, poznámky a služby z počítače neodejdou. Zrušené se vynechají, když export má stav.
+  Náhled ukáže období, počty, neznámé holiče a prvních 8 řádků; uložení po dávkách 20 000 hodin.
+- Migrace `20261128110000_reservanto_obsazenost_import.sql` (nasazená a ověřená v SQL Editoru, zkušební dávky smazané):
+  tabulka `analytika.reservanto_obsazenost` (jedna hodina křesla na řádek, klíč holič + začátek + zákazník, opakovaný import
+  nic nezdvojí), `prehled_import_reservanto`, `prehled_import_stav` (bez jmen zákazníků), `prehled_holici_aliasy`.
+- Ověřeno na historii 11/2025–10/2026: 99,7 % rezervací trvá přesně hodinu, jen 38 z 33 292 nezačíná na celou hodinu.
+- Dnešní export `reservanto-events-20260829-20261129.csv` nemá konec ani jméno zákazníka – pro jména ho Tom stáhne znovu
+  s těmito sloupci. Čtení jmen (admin, majitel, odpovědný) přijde s obrazovkou rozvrhu.

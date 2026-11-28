@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Kabinet holičů – import z Reservanta</title>
+<style>
+:root{--b:#1F4E78;--bg:#f4f7fa;--karta:#fff;--li:#d5dfe8;--text:#1a1a1a;--se:#5a6b7a;--mu:#8592a0;--chyba:#c62828;--ok:#1a7f37;--var:#9a6700}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#121212;--karta:#1a1a19;--li:#33332f;--text:#f0efec;--se:#c3c2b7;--mu:#8f8e86;--chyba:#ff7b72;--ok:#4cc46a;--var:#e3b341}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Verdana,Geneva,sans-serif}
+header{background:var(--b);color:#fff;padding:14px 16px}
+.hl{max-width:1000px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+header h1{margin:0;font-size:18px;flex:1}
+header a{color:#fff;font-size:12.5px}
+main{max-width:1000px;margin:0 auto;padding:16px}
+.karta{background:var(--karta);border:1px solid var(--li);border-radius:8px;padding:14px 16px;margin-bottom:14px}
+h2{font-size:16px;margin:0 0 6px}
+.mala{font-size:12.5px;color:var(--se)}
+.skryte{display:none}
+.chyba{color:var(--chyba)}.ok{color:var(--ok)}.var{color:var(--var)}
+#zona{border:2px dashed var(--li);border-radius:8px;padding:22px;text-align:center;cursor:pointer}
+#zona.nad{border-color:var(--b)}
+button.hl-tl{background:var(--b);color:#fff;border:0;border-radius:6px;padding:10px 16px;font:inherit;cursor:pointer}
+button.hl-tl:disabled{opacity:.5;cursor:default}
+select{font:inherit;font-size:13px;padding:4px 7px;border:1px solid var(--li);border-radius:5px;background:var(--karta);color:var(--text);max-width:100%}
+.sloupce{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 16px;font-size:13px}
+.sloupce label{display:flex;flex-direction:column;gap:2px}
+.dlazdice{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0}
+.dl{border:1px solid var(--li);border-radius:8px;padding:8px 12px}
+.dl .c{font-size:20px;font-weight:bold;font-variant-numeric:tabular-nums}
+.dl .p{font-size:12px;color:var(--se)}
+.tab-obal{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:5px 8px;border-bottom:1px solid var(--li);text-align:left;white-space:nowrap;font-variant-numeric:tabular-nums}
+th{color:var(--se);font-weight:normal}
+td.r,th.r{text-align:right}
+ul{margin:4px 0;padding-left:20px;font-size:13px}
+</style>
+</head>
+<body>
+<header><div class="hl"><h1>Kabinet holičů – import z Reservanta</h1><a href="../">← přehledy</a></div></header>
+<main>
+<div id="nacitam" class="karta">Načítám…</div>
+<div id="prihlasit" class="karta skryte"><h2>Nejdřív se přihlas</h2>
+  <p class="mala">Přihlas se v <a href="../">přehledech</a> a pak se sem vrať.</p></div>
+<div id="bez-pristupu" class="karta skryte"><h2>Import je jen pro Toma a TBDB</h2><p class="mala">Ozvi se Tomovi nebo TBDB.</p></div>
+
+<div id="obsah" class="skryte">
+  <div class="karta">
+    <h2>Rezervace pro rozvrh obsazenosti křesel</h2>
+    <p class="mala">Vlož export událostí z Reservanta (CSV). Prohlížeč z každé rezervace vezme jen: začátek po celých hodinách (10:30 → 10:00),
+    délku 1 hodina, holiče a zákazníka ve tvaru „Jan Nov“ (křestní jméno + 3 písmena příjmení). Všechno ostatní – telefon, e-mail, poznámky,
+    služby – zůstane jen u tebe v počítači a nikam neodejde. Zrušené rezervace se vynechají. Obě provozovny dohromady.
+    Co už v databázi je, se znovu neuloží, takže stejný export jde nahrát i dvakrát.</p>
+    <div id="zona"><b>Přetáhni sem soubor CSV</b><br><span class="mala">nebo klepni a vyber ho</span>
+      <input type="file" id="soubor" accept=".csv,text/csv" class="skryte"></div>
+    <p id="chyba-souboru" class="chyba"></p>
+  </div>
+
+  <div id="nahled" class="karta skryte">
+    <h2>Náhled: <span id="n-soubor"></span></h2>
+    <p class="mala">Sloupce poznané podle názvu. Kdyby něco nesedělo, vyber správný sloupec.</p>
+    <div class="sloupce" id="sloupce"></div>
+    <div class="dlazdice" id="dlazdice"></div>
+    <div id="upozorneni"></div>
+    <div class="tab-obal" id="ukazka"></div>
+    <p style="margin-top:12px"><button type="button" class="hl-tl" id="ulozit">Uložit do aplikace</button> <span id="vysledek" class="mala"></span></p>
+  </div>
+
+  <div class="karta">
+    <h2>Dosavadní importy</h2>
+    <div class="tab-obal" id="historie"><span class="mala">Načítám…</span></div>
+    <div id="nezn"></div>
+  </div>
+</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+// Projekt Supabase kabinet-holicu v organizaci TBDB (veřejný publishable klíč smí být ve stránce).
+const sb=supabase.createClient('https://bgnzfrxnvkifvpmrilgd.supabase.co','sb_publishable_-CwxCS480OD5Hfx7N_OsHg_WuVoWOQj');
+const $=id=>document.getElementById(id);
+const nf=x=>Number(x).toLocaleString('cs-CZ');
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function ukaz(id){for(const x of ['nacitam','prihlasit','bez-pristupu','obsah'])$(x).classList.toggle('skryte',x!==id)}
+async function rpc(f,a){const {data,error}=await sb.rpc(f,a);if(error)throw error;return data}
+const dt=s=>{if(!s)return '';const d=new Date(String(s).replace(' ','T'));return isNaN(d)?String(s):d.toLocaleDateString('cs-CZ')+(String(s).length>10?' '+d.toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'}):'')};
+
+// ---------- čtení CSV ----------
+function dekoduj(buf){
+  try{return new TextDecoder('utf-8',{fatal:true}).decode(buf)}catch(e){return new TextDecoder('windows-1250').decode(buf)}
+}
+function parsujCSV(text){
+  text=text.replace(/^﻿/,'');
+  const prvni=text.split(/\r?\n/,1)[0];
+  const odd=[';','\t',','].map(o=>[o,prvni.split(o).length]).sort((a,b)=>b[1]-a[1])[0][0];
+  const radky=[];let r=[],pole='',uvoz=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(uvoz){if(c==='"'){if(text[i+1]==='"'){pole+='"';i++}else uvoz=false}else pole+=c;continue}
+    if(c==='"')uvoz=true;
+    else if(c===odd){r.push(pole);pole=''}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;r.push(pole);pole='';if(r.some(x=>x.trim()))radky.push(r);r=[]}
+    else pole+=c;
+  }
+  r.push(pole);if(r.some(x=>x.trim()))radky.push(r);
+  return radky;
+}
+// čas: „29.08.2026 9:00“, „29. 8. 2026 9:00“, „2026-08-29 09:00“, „2026-08-29T09:00“
+function cas(s){
+  s=String(s||'').trim();let m=s.match(/^(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})\D+(\d{1,2}):(\d{2})/);
+  if(m)return {r:+m[3],m:+m[2],d:+m[1],h:+m[4],mi:+m[5]};
+  m=s.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{1,2}):(\d{2})/);
+  if(m)return {r:+m[1],m:+m[2],d:+m[3],h:+m[4],mi:+m[5]};
+  return null;
+}
+const p2=n=>String(n).padStart(2,'0');
+const isoH=c=>c.r+'-'+p2(c.m)+'-'+p2(c.d)+'T'+p2(c.h)+':00';
+const bezDiakr=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+
+// role sloupců: klíčová slova v názvu (bez diakritiky)
+const ROLE=[
+  {k:'zac',n:'Začátek rezervace',pov:true,hl:[/zacatek/,/^od$/,/datum a cas/,/^cas od/,/start/]},
+  {k:'kon',n:'Konec rezervace',hl:[/konec/,/^do$/,/^cas do/,/end/]},
+  {k:'hol',n:'Holič (zdroj)',pov:true,hl:[/^zdroj$/,/zdroj/,/holic/,/zamestnan/,/pracovnik/]},
+  {k:'jm',n:'Křestní jméno zákazníka',hl:[/^jmeno$/,/krestni/,/jmeno zakaznika/,/^jmeno/]},
+  {k:'pr',n:'Příjmení zákazníka',hl:[/prijmeni/]},
+  {k:'zak',n:'Zákazník (celé jméno v jednom sloupci)',hl:[/^zakaznik$/,/^klient$/,/zakaznik/,/klient/]},
+  {k:'stav',n:'Stav rezervace',hl:[/^stav/,/zrusen/,/status/]}];
+let HLAV=[],DATA=[],MAPA={},SOUBOR='',ALIAS=new Map(),VYSL=null;
+
+function odhadniMapu(){
+  const h=HLAV.map(bezDiakr),pouz=new Set();MAPA={};
+  for(const r of ROLE){
+    let i=-1;for(const re of r.hl){i=h.findIndex((x,j)=>!pouz.has(j)&&re.test(x));if(i>=0)break}
+    MAPA[r.k]=i;if(i>=0)pouz.add(i);
+  }
+  if(MAPA.jm>=0||MAPA.pr>=0){/* celé jméno nepotřeba */}
+}
+function kresliSloupce(){
+  $('sloupce').innerHTML=ROLE.map(r=>'<label>'+esc(r.n)+(r.pov?' *':'')+'<select data-k="'+r.k+'"><option value="-1">– není –</option>'
+    +HLAV.map((x,i)=>'<option value="'+i+'"'+(MAPA[r.k]===i?' selected':'')+'>'+esc(x)+'</option>').join('')+'</select></label>').join('');
+  $('sloupce').querySelectorAll('select').forEach(s=>s.onchange=()=>{MAPA[s.dataset.k]=+s.value;zpracuj()});
+}
+// „Jan“, „Novák“ → „Jan Nov“; jen celé jméno „Jan Novák“ → první slovo + 3 písmena posledního
+function zkratka(jm,pr){
+  jm=(jm||'').trim().split(/\s+/)[0]||'';pr=(pr||'').trim();
+  const z=(jm+(pr?' '+[...pr].slice(0,3).join(''):'')).trim();
+  return z.slice(0,40);
+}
+const ZRUS=/zru[sš]|storn|cancel|odmítnut|odmitnut|nedorazil/i;
+
+function zpracuj(){
+  VYSL=null;$('vysledek').textContent='';
+  const g=(r,k)=>MAPA[k]>=0?(r[MAPA[k]]??''):'';
+  const out=new Map(),chyby=[],neznami=new Map();let zrus=0,pul=0,delsi=0,bezJm=0;
+  if(MAPA.zac<0||MAPA.hol<0){$('dlazdice').innerHTML='';$('ukazka').innerHTML='';
+    $('upozorneni').innerHTML='<p class="chyba">Vyber sloupec se začátkem rezervace a s holičem.</p>';$('ulozit').disabled=true;return}
+  DATA.forEach((r,i)=>{
+    if(MAPA.stav>=0&&ZRUS.test(g(r,'stav'))){zrus++;return}
+    const z=cas(g(r,'zac'));const h=g(r,'hol').trim().toUpperCase();
+    if(!z||!h){chyby.push(i+2);return}
+    let k;if(MAPA.jm>=0||MAPA.pr>=0)k=zkratka(g(r,'jm'),g(r,'pr'));
+    else if(MAPA.zak>=0){const s=g(r,'zak').trim().split(/\s+/);k=zkratka(s[0],s.length>1?s[s.length-1]:'')}else k='';
+    if(!k)bezJm++;
+    if(z.mi)pul++;
+    // délka: začátek dolů, konec nahoru, po hodinách
+    let hodin=1;const kc=cas(g(r,'kon'));
+    if(kc){const a=Date.UTC(z.r,z.m-1,z.d,z.h),b=Date.UTC(kc.r,kc.m-1,kc.d,kc.h+(kc.mi?1:0));if(b>a)hodin=Math.min(12,Math.round((b-a)/36e5))}
+    if(hodin>1)delsi++;
+    for(let j=0;j<hodin;j++){
+      const d=new Date(Date.UTC(z.r,z.m-1,z.d,z.h+j));
+      const c={r:d.getUTCFullYear(),m:d.getUTCMonth()+1,d:d.getUTCDate(),h:d.getUTCHours()};
+      const x={z:isoH(c),h,k};out.set(x.h+'|'+x.z+'|'+x.k,x);
+    }
+    if(!ALIAS.has(h))neznami.set(h,(neznami.get(h)||0)+1);
+  });
+  VYSL=[...out.values()].sort((a,b)=>a.z<b.z?-1:a.z>b.z?1:a.h<b.h?-1:1);
+  const od=VYSL[0]?.z.slice(0,10),doo=VYSL[VYSL.length-1]?.z.slice(0,10);
+  const dl=(c,p)=>'<div class="dl"><div class="c">'+c+'</div><div class="p">'+p+'</div></div>';
+  $('dlazdice').innerHTML=dl(nf(DATA.length),'řádků v souboru')+dl(nf(VYSL.length),'hodin křesel k uložení')
+    +dl(od?dt(od)+' – '+dt(doo):'–','období')+dl(nf(new Set(VYSL.map(x=>x.h)).size),'holičů')+dl(nf(zrus),'zrušených vynecháno');
+  const u=[];
+  if(MAPA.stav<0)u.push('<li class="var">Export nemá sloupec se stavem rezervace – zrušené rezervace nejde poznat, importuje se všechno.</li>');
+  if(MAPA.jm<0&&MAPA.pr<0&&MAPA.zak<0)u.push('<li class="var">Export nemá jméno zákazníka – uloží se jen obsazenost (holič a hodina). Pro jména stáhni export znovu se sloupci jméno a příjmení.</li>');
+  else if(bezJm)u.push('<li class="var">'+nf(bezJm)+' rezervací je bez jména zákazníka.</li>');
+  if(MAPA.kon<0)u.push('<li class="mala">Bez konce rezervace – každá se počítá na 1 hodinu (99,7 % rezervací v historii trvá přesně hodinu).</li>');
+  if(delsi)u.push('<li class="mala">'+nf(delsi)+' rezervací trvá víc než hodinu – uloží se jako víc hodin.</li>');
+  if(pul)u.push('<li class="mala">'+nf(pul)+' rezervací nezačíná na celou hodinu – začátek se zaokrouhlí dolů.</li>');
+  if(chyby.length)u.push('<li class="chyba">'+nf(chyby.length)+' řádků nejde přečíst (chybí čas nebo holič), vynechají se: řádek '+chyby.slice(0,10).join(', ')+(chyby.length>10?' …':'')+'.</li>');
+  if(neznami.size)u.push('<li class="var">Holiči, které aplikace nezná (v přehledech se nepřiřadí k provozovně, dokud je TBDB nedoplní): '
+    +[...neznami].map(([h,n])=>esc(h)+' ('+nf(n)+')').join(', ')+'.</li>');
+  if(VYSL.length>50000)u.push('<li class="chyba">Moc řádků najednou (nejvýš 50 000) – stáhni export za kratší období.</li>');
+  $('upozorneni').innerHTML=u.length?'<ul>'+u.join('')+'</ul>':'';
+  $('ukazka').innerHTML=VYSL.length?'<p class="mala" style="margin:8px 0 2px">Prvních 8 řádků tak, jak se uloží:</p><table><tr><th>Od</th><th>Do</th><th>Holič</th><th>Zákazník</th></tr>'
+    +VYSL.slice(0,8).map(x=>'<tr><td>'+dt(x.z.replace('T',' '))+'</td><td>'+p2((+x.z.slice(11,13)+1)%24)+':00</td><td>'+esc(x.h)+'</td><td>'+esc(x.k)+'</td></tr>').join('')+'</table>':'';
+  $('ulozit').disabled=!VYSL.length||VYSL.length>50000;
+}
+
+async function nactiSoubor(f){
+  $('chyba-souboru').textContent='';
+  if(!f)return;
+  if(f.size>30e6){$('chyba-souboru').textContent='Soubor je moc velký (víc než 30 MB).';return}
+  const radky=parsujCSV(dekoduj(await f.arrayBuffer()));
+  if(radky.length<2){$('chyba-souboru').textContent='V souboru nejsou žádné rezervace.';return}
+  HLAV=radky[0].map(x=>x.trim());DATA=radky.slice(1);SOUBOR=f.name;
+  $('n-soubor').textContent=f.name;odhadniMapu();kresliSloupce();zpracuj();$('nahled').classList.remove('skryte');
+}
+
+async function ulozit(){
+  if(!VYSL?.length)return;
+  const b=$('ulozit');b.disabled=true;$('vysledek').textContent='Ukládám…';
+  try{
+    let nov=0,uz=0;const DAV=20000;
+    for(let i=0;i<VYSL.length;i+=DAV){
+      const r=(await rpc('prehled_import_reservanto',{p_soubor:SOUBOR,p_radky:VYSL.slice(i,i+DAV)}))[0];
+      nov+=r.novych;uz+=r.uz_bylo;
+    }
+    $('vysledek').innerHTML='<span class="ok">Hotovo: '+nf(nov)+' nových hodin, '+nf(uz)+' už v aplikaci bylo.</span>';
+    nactiHistorii();
+  }catch(e){$('vysledek').innerHTML='<span class="chyba">Nepovedlo se: '+esc(e.message)+'</span>';b.disabled=false}
+}
+
+async function nactiHistorii(){
+  const h=await rpc('prehled_import_stav').catch(e=>{$('historie').innerHTML='<span class="chyba">'+esc(e.message)+'</span>';return null});
+  if(!h)return;
+  if(!h.length){$('historie').innerHTML='<span class="mala">Zatím nic.</span>';$('nezn').innerHTML='';return}
+  $('historie').innerHTML='<p class="mala">V aplikaci jsou rezervace od '+dt(h[0].obsazeno_od)+' do '+dt(h[0].obsazeno_do)+'.</p>'
+    +'<table><tr><th>Kdy</th><th>Soubor</th><th>Období</th><th class="r">Hodin</th><th>Kdo</th></tr>'
+    +h.map(x=>'<tr><td>'+dt(x.kdy)+'</td><td>'+esc(x.soubor)+'</td><td>'+dt(x.od)+' – '+dt(x.do_)+'</td><td class="r">'+nf(x.radku)+'</td><td>'+esc(String(x.kdo||'').replace(/^import ze stránky přehledů, /,''))+'</td></tr>').join('')+'</table>';
+  const n=h[0].holici_neznami;
+  $('nezn').innerHTML=n?.length?'<p class="mala var">Holiči bez přiřazení k provozovně: '+n.map(esc).join(', ')+'.</p>':'';
+}
+
+async function start(session){
+  if(!session){ukaz('prihlasit');return}
+  const r=await rpc('prehled_role').catch(()=>null);
+  if(!r?.length||!['admin','majitel'].includes(r[0].role)){ukaz('bez-pristupu');return}
+  const a=await rpc('prehled_holici_aliasy').catch(()=>[]);ALIAS=new Map(a.map(x=>[x.alias,x]));
+  ukaz('obsah');nactiHistorii();
+}
+
+const z=$('zona');
+z.onclick=()=>$('soubor').click();
+$('soubor').onchange=e=>nactiSoubor(e.target.files[0]);
+z.ondragover=e=>{e.preventDefault();z.classList.add('nad')};
+z.ondragleave=()=>z.classList.remove('nad');
+z.ondrop=e=>{e.preventDefault();z.classList.remove('nad');nactiSoubor(e.dataTransfer.files[0])};
+$('ulozit').onclick=ulozit;
+sb.auth.getSession().then(({data})=>start(data.session));
+</script>
+</body>
+</html>
