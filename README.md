@@ -294,5 +294,7 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   tabulka `analytika.reservanto_obsazenost` (jedna hodina křesla na řádek, klíč holič + začátek + zákazník, opakovaný import
   nic nezdvojí), `prehled_import_reservanto`, `prehled_import_stav` (bez jmen zákazníků), `prehled_holici_aliasy`.
 - Ověřeno na historii 11/2025–10/2026: 99,7 % rezervací trvá přesně hodinu, jen 38 z 33 292 nezačíná na celou hodinu.
+- Import zvládne i konec rezervace jen jako čas („9:00“), jak ho má úplný export událostí z 26. 11. 2026 (sloupce Křestní jméno,
+  Příjmení, Začátek rezervace, Konec, Zdroj, Stav rezervace) – ověřeno v náhledu se zkušebními daty.
 - Dnešní export `reservanto-events-20260829-20261129.csv` nemá konec ani jméno zákazníka – pro jména ho Tom stáhne znovu
   s těmito sloupci. Čtení jmen (admin, majitel, odpovědný) přijde s obrazovkou rozvrhu.

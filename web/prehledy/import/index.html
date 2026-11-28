@@ -167,7 +167,9 @@ function zpracuj(){
     if(!k)bezJm++;
     if(z.mi)pul++;
     // délka: začátek dolů, konec nahoru, po hodinách
-    let hodin=1;const kc=cas(g(r,'kon'));
+    // konec bývá jen čas („9:00“) – pak platí datum začátku
+    let hodin=1;let kc=cas(g(r,'kon'));
+    if(!kc){const m=String(g(r,'kon')).trim().match(/^(\d{1,2}):(\d{2})$/);if(m)kc={r:z.r,m:z.m,d:z.d,h:+m[1],mi:+m[2]}}
     if(kc){const a=Date.UTC(z.r,z.m-1,z.d,z.h),b=Date.UTC(kc.r,kc.m-1,kc.d,kc.h+(kc.mi?1:0));if(b>a)hodin=Math.min(12,Math.round((b-a)/36e5))}
     if(hodin>1)delsi++;
     for(let j=0;j<hodin;j++){
