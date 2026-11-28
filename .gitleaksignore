@@ -11,3 +11,5 @@ a11962479e1d996b36d3d63118df6e09eb47e22f:web/prehledy/simulace/index.html:generi
 35ab389603f44e2f8eda2a2d60166029652d03a5:web/leden-2027.html:generic-api-key:836
 # Stejný publishable klíč ve stránce Import z Reservanta v přehledech, Keksa 28. 11. 2026.
 d0426194d9b6529d3add983bfce6f18245885ba3:web/prehledy/import/index.html:generic-api-key:83
+# Stejný publishable klíč ve stránce Rozvrh křesel v přehledech, Keksa 28. 11. 2026.
+80b80ba32bef818fd734133a9f2421cc95561224:web/prehledy/rozvrh/index.html:generic-api-key:70
