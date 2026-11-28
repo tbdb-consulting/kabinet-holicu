@@ -298,3 +298,9 @@ data a návrhy: `C:\Users\Dell\Můj disk\Claude AI\TBDB\Zákazníci\T26-09 Kabin
   Příjmení, Začátek rezervace, Konec, Zdroj, Stav rezervace) – ověřeno v náhledu se zkušebními daty.
 - Dnešní export `reservanto-events-20260829-20261129.csv` nemá konec ani jméno zákazníka – pro jména ho Tom stáhne znovu
   s těmito sloupci. Čtení jmen (admin, majitel, odpovědný) přijde s obrazovkou rozvrhu.
+- 28. 11. 2026 (Keksa): stránka `web/prehledy/rozvrh/` (odkaz „Rozvrh křesel →“ v záhlaví přehledů) – kdo kdy stříhá po hodinách
+  z importu Reservanta: týden (v mobilu jeden den), výběr provozovny (vlastní dohromady, každá zvlášť, franšízy, bez provozovny, všichni),
+  obsazená / všechna křesla s barvou (volno, od 70 % skoro plno, plno), holič a zákazník „Jan Nov“ (jména jde skrýt).
+  Vidí admin, majitel a odpovědný. Migrace `20261128140000_reservanto_rozvrh_cteni.sql` (nasazená, ověřená zkušební dávkou,
+  ta smazaná): `prehled_rozvrh(od, do)` vrací jeden jsonb, nejvýš 2 měsíce. V aplikaci je import 8 342 hodin za 27. 8.–28. 11. 2026,
+  všechny se jménem; v exportu jsou i holiči franšíz (Masna, Kabinet Naproti).

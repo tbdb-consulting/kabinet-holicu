@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Kabinet holičů – rozvrh křesel</title>
+<style>
+:root{--b:#1F4E78;--bg:#f4f7fa;--karta:#fff;--li:#d5dfe8;--text:#1a1a1a;--se:#5a6b7a;--mu:#8592a0;--plno:#fde2e1;--plnoT:#b42318;--skoro:#fff4d6;--volno:#eaf6ec;--chip:#eef3f8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#121212;--karta:#1a1a19;--li:#33332f;--text:#f0efec;--se:#c3c2b7;--mu:#8f8e86;--plno:#4a1d1b;--plnoT:#ff9b93;--skoro:#3d3214;--volno:#173322;--chip:#262624}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Verdana,Geneva,sans-serif}
+header{background:var(--b);color:#fff;padding:14px 16px}
+.hl{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+header h1{margin:0;font-size:18px;flex:1}
+header a{color:#fff;font-size:12.5px}
+main{max-width:1400px;margin:0 auto;padding:16px}
+.karta{background:var(--karta);border:1px solid var(--li);border-radius:8px;padding:14px 16px;margin-bottom:14px}
+h2{font-size:16px;margin:0 0 6px}
+.mala{font-size:12.5px;color:var(--se)}
+.skryte{display:none}
+.filtry{display:flex;gap:10px 16px;flex-wrap:wrap;align-items:center;font-size:13.5px;margin:8px 0}
+select,input[type=date]{font:inherit;font-size:13px;padding:4px 7px;border:1px solid var(--li);border-radius:5px;background:var(--karta);color:var(--text)}
+button.t{font:inherit;font-size:13px;padding:4px 10px;border:1px solid var(--li);border-radius:5px;background:var(--karta);color:var(--text);cursor:pointer}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--se);margin:4px 0 8px}
+.leg i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:4px;border:1px solid var(--li)}
+.tab-obal{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:12px;table-layout:fixed}
+th,td{border:1px solid var(--li);padding:3px 4px;vertical-align:top}
+th{color:var(--se);font-weight:normal;background:var(--karta);position:sticky;top:0}
+th.h,td.h{width:46px;text-align:right;color:var(--se);white-space:nowrap}
+td .poc{font-weight:bold;font-variant-numeric:tabular-nums;font-size:11.5px}
+td.plno{background:var(--plno)}td.plno .poc{color:var(--plnoT)}
+td.skoro{background:var(--skoro)}td.volno{background:var(--volno)}
+.ch{display:block;background:var(--chip);border-radius:4px;padding:0 4px;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch b{font-weight:bold}
+.tyden table{min-width:900px}
+</style>
+</head>
+<body>
+<header><div class="hl"><h1>Kabinet holičů – rozvrh křesel</h1><a href="../">← přehledy</a></div></header>
+<main>
+<div id="nacitam" class="karta">Načítám…</div>
+<div id="prihlasit" class="karta skryte"><h2>Nejdřív se přihlas</h2>
+  <p class="mala">Přihlas se v <a href="../">přehledech</a> a pak se sem vrať.</p></div>
+<div id="bez-pristupu" class="karta skryte"><h2>Rozvrh vidí jen Tom, odpovědný pracovník a TBDB</h2><p class="mala">Ozvi se Tomovi nebo TBDB.</p></div>
+
+<div id="obsah" class="skryte">
+  <div class="karta">
+    <h2>Kdo kdy stříhá</h2>
+    <p class="mala" id="popis"></p>
+    <div class="filtry">
+      <button type="button" class="t" id="zpet">◀</button>
+      <label>Týden od <input type="date" id="od"></label>
+      <button type="button" class="t" id="dal">▶</button>
+      <label>Provozovna <select id="prov"></select></label>
+      <label>Den <select id="den"></select></label>
+      <label><input type="checkbox" id="jmena" checked> jména zákazníků</label>
+    </div>
+    <div class="leg" id="leg"></div>
+    <div class="tab-obal" id="rozvrh"></div>
+    <p class="mala" id="pozn"></p>
+  </div>
+</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+// Projekt Supabase kabinet-holicu v organizaci TBDB (veřejný publishable klíč smí být ve stránce).
+const sb=supabase.createClient('https://bgnzfrxnvkifvpmrilgd.supabase.co','sb_publishable_-CwxCS480OD5Hfx7N_OsHg_WuVoWOQj');
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const DNY=['Po','Út','St','Čt','Pá','So','Ne'];
+const p2=n=>String(n).padStart(2,'0');
+const iso=d=>d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
+const pondeli=d=>{d=new Date(d);d.setHours(12,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d};
+const pridej=(d,n)=>{d=new Date(d);d.setDate(d.getDate()+n);return d};
+const cz=d=>d.getDate()+'. '+(d.getMonth()+1)+'.';
+function ukaz(id){for(const x of ['nacitam','prihlasit','bez-pristupu','obsah'])$(x).classList.toggle('skryte',x!==id)}
+async function rpc(f,a){const {data,error}=await sb.rpc(f,a);if(error)throw error;return data}
+const ulozL=(k,v)=>{try{localStorage.setItem('rozvrh_'+k,JSON.stringify(v))}catch(e){}};
+const nactiL=(k,d)=>{try{const v=localStorage.getItem('rozvrh_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+
+let D=null,KRESLA={},OD=null;
+const VLASTNI='*vlastni',VSE='*vse';
+
+async function nacti(){
+  $('rozvrh').innerHTML='<span class="mala">Načítám…</span>';
+  D=await rpc('prehled_rozvrh',{p_od:iso(OD),p_do:iso(pridej(OD,6))});
+  KRESLA=Object.fromEntries(D.kresla.map(k=>[k.provozovna,k.kresel]));
+  // provozovny: vlastní (s křesly) + franšízy a „bez provozovny“, co se v datech objeví
+  const vData=[...new Set(D.radky.map(r=>r.p||'bez provozovny'))];
+  const ostatni=vData.filter(p=>!(p in KRESLA)).sort();
+  const sel=$('prov'),cur=sel.value||nactiL('prov',VLASTNI);
+  sel.innerHTML='<option value="'+VLASTNI+'">vlastní provozovny dohromady ('+Object.keys(KRESLA).join(' + ')+')</option>'
+    +Object.keys(KRESLA).map(p=>'<option>'+esc(p)+'</option>').join('')
+    +ostatni.map(p=>'<option>'+esc(p)+'</option>').join('')
+    +'<option value="'+VSE+'">všechny holiče z Reservanta</option>';
+  sel.value=[...sel.options].some(o=>o.value===cur)?cur:VLASTNI;
+  $('popis').textContent='Rezervace z Reservanta po celých hodinách (import v přehledech). V aplikaci jsou od '
+    +(D.data_od?new Date(D.data_od).toLocaleDateString('cs-CZ'):'–')+' do '+(D.data_do?new Date(D.data_do).toLocaleDateString('cs-CZ'):'–')
+    +'. Jména zákazníků („Jan Nov“) vidí jen Tom, odpovědný pracovník a TBDB.';
+  kresli();
+}
+
+function kresli(){
+  const pv=$('prov').value;ulozL('prov',pv);
+  const den=$('den').value;ulozL('jmena',$('jmena').checked);
+  const pat=r=>{const p=r.p||'bez provozovny';return pv===VSE||(pv===VLASTNI?p in KRESLA:p===pv)};
+  const R=D.radky.filter(pat);
+  const kap=pv===VLASTNI?Object.values(KRESLA).reduce((a,b)=>a+b,0):KRESLA[pv]||0;
+  // mřížka den × hodina
+  const M={};let hMin=24,hMax=-1;
+  for(const r of R){const d=(new Date(r.z.slice(0,10)+'T12:00').getDay()+6)%7,h=+r.z.slice(11,13);
+    (M[d+'|'+h]=M[d+'|'+h]||[]).push(r);hMin=Math.min(hMin,h);hMax=Math.max(hMax,h)}
+  hMin=Math.min(hMin,9);hMax=Math.max(hMax,19);
+  const dny=den===''?[0,1,2,3,4,5,6]:[+den];
+  const jm=$('jmena').checked;
+  $('rozvrh').className='tab-obal'+(dny.length>1?' tyden':'');
+  let t='<table><tr><th class="h">Hodina</th>'+dny.map(d=>'<th>'+DNY[d]+' '+cz(pridej(OD,d))+'</th>').join('')+'</tr>';
+  for(let h=hMin;h<=hMax;h++){
+    t+='<tr><td class="h">'+h+'–'+(h+1)+'</td>';
+    for(const d of dny){
+      const L=(M[d+'|'+h]||[]).sort((a,b)=>a.h.localeCompare(b.h,'cs'));
+      const n=L.length,tr=!kap||!n?'':n>=kap?'plno':n>=kap*0.7?'skoro':'volno';
+      const tip=n?(kap?n+' z '+kap+' křesel obsazeno':n+' rezervací'):'nikdo';
+      t+='<td class="'+tr+'" title="'+esc(tip)+'">'+(n?'<span class="poc">'+n+(kap?' / '+kap:'')+'</span>':'')
+        +L.map(r=>'<span class="ch" title="'+esc(r.h+(r.k?' · '+r.k:'')+(pv===VSE||pv===VLASTNI?' · '+(r.p||'bez provozovny'):''))+'"><b>'+esc(r.h)+'</b>'+(jm&&r.k?' · '+esc(r.k):'')+'</span>').join('')+'</td>';
+    }
+    t+='</tr>';
+  }
+  t+='</table>';
+  $('rozvrh').innerHTML=R.length?t:'<p class="mala">V tomto týdnu tu nejsou žádné rezervace.</p>';
+  $('leg').innerHTML=kap?'<span><i style="background:var(--volno)"></i>volno (pod 70 % křesel)</span><span><i style="background:var(--skoro)"></i>skoro plno (70 % a víc)</span><span><i style="background:var(--plno)"></i>všechna křesla obsazená</span><span>číslo = obsazená / všechna křesla ('+kap+')</span>'
+    :'<span>číslo = počet rezervací v hodině (u franšíz křesla neznáme)</span>';
+  const bez=D.radky.filter(r=>!r.p).length;
+  $('pozn').textContent=(bez?'Holiči bez přiřazené provozovny: '+[...new Set(D.radky.filter(r=>!r.p).map(r=>r.h))].join(', ')+' – vidíš je ve výběru „bez provozovny“. ':'')
+    +'Rezervace, která nezačíná na celou hodinu, je posunutá na začátek hodiny.';
+}
+
+function nastavTyden(d){OD=pondeli(d);$('od').value=iso(OD);return nacti().catch(e=>$('rozvrh').innerHTML='<p class="mala">Nepovedlo se: '+esc(e.message)+'</p>')}
+
+async function start(session){
+  if(!session){ukaz('prihlasit');return}
+  const r=await rpc('prehled_role').catch(()=>null);
+  if(!r?.length||!['admin','majitel','odpovedny'].includes(r[0].role)){ukaz('bez-pristupu');return}
+  $('den').innerHTML='<option value="">celý týden</option>'+DNY.map((d,i)=>'<option value="'+i+'">'+d+'</option>').join('');
+  // v mobilu jeden den (dnešní), jinak celý týden
+  const dnes=new Date();
+  if(matchMedia('(max-width: 700px)').matches)$('den').value=String((dnes.getDay()+6)%7);
+  $('jmena').checked=nactiL('jmena',true);
+  ukaz('obsah');
+  await nastavTyden(dnes);
+  // když v tomto týdnu nic není, skočit na poslední týden s daty
+  if(!D.radky.length&&D.data_do&&new Date(D.data_do)<OD)await nastavTyden(new Date(D.data_do));
+}
+$('zpet').onclick=()=>nastavTyden(pridej(OD,-7));
+$('dal').onclick=()=>nastavTyden(pridej(OD,7));
+$('od').onchange=e=>e.target.value&&nastavTyden(new Date(e.target.value+'T12:00'));
+$('prov').onchange=kresli;$('den').onchange=kresli;$('jmena').onchange=kresli;
+sb.auth.getSession().then(({data})=>start(data.session));
+</script>
+</body>
+</html>
