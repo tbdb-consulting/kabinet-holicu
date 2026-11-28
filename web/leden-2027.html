@@ -176,6 +176,7 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 .fkk dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:0;font-size:12.5px}
 .fkk dt{color:var(--se)}.fkk dd{margin:0;text-align:right}
 /* přednost a ruční úpravy */
+body:not(.pristup) .jenTom{display:none}
 .zamek{background:#fff3c4;border:1px solid #e6c65c;border-radius:6px;padding:7px 10px;font-size:13px}
 .prep{display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer}
 .prep input{width:18px;height:18px}
@@ -213,8 +214,8 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <button data-t="prani" data-tip="Co holiči zadali v dotazníku a o které bloky je největší zájem.">2. Přání holičů</button>
 <button data-t="drazba" data-tip="Holandská dražba bloků, o které je zájem větší než počet křesel.">3. Dražba žádaných bloků</button>
 <button data-t="rozvrh" data-tip="Výsledný rozvrh křesel po týdnech a dnech.">4. Rozvrh</button>
-<button data-t="ferovost" data-tip="Kolik kdo dostal, kolik zaplatí a srovnání 4h a 3h bloků.">5. Férovost a nájem</button>
-<button data-t="prednost" data-tip="Přednost vybraných holičů (pevné bloky a úroveň 1–3) a porovnání rozpisu s ní a bez ní. Jen pro Toma a provozního.">6. Přednost 🔒</button>
+<button data-t="ferovost" data-tip="Kolik kdo dostal, kolik zaplatí a srovnání 4h a 3h bloků. Jen pro Toma a provozního.">5. Férovost a nájem 🔒</button>
+<button class="jenTom" data-t="prednost" data-tip="Přednost vybraných holičů (pevné bloky a úroveň 1–3) a porovnání rozpisu s ní a bez ní. Jen pro Toma a provozního.">6. Přednost 🔒</button>
 </nav>
 <div id="varLista">
 <button data-v="4" onclick="zvolVar(4)" data-tip="Všechna křesla mají den rozdělený na 3 bloky po 4 hodinách, jak navrhuje mail. Přání holičů se berou ze sekce 3a dotazníku."><b>Vše 4h</b><small>8–12 · 12–16 · 16–20</small></button>
@@ -235,12 +236,12 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <li><b>Pravidla</b> nastavuje majitel nebo pověřený pracovník provozovny: sazbu za hodinu, poměr ranních a odpoledních hodin a pravidla dražby.</li>
 <li><b>Přání:</b> každý holič do 15. zadá, kolik hodin chce a které dny a bloky „chce / může / nemůže“.</li>
 <li><b>Dražba:</b> bloky, o které má zájem víc holičů, než je křesel (typicky čtvrtek a pátek odpoledne), se zčásti vydraží. Cena klesá, dokud někdo neklikne „Beru“.</li>
-<li><b>Rozvrh:</b> zbytek rozdělí systém spravedlivě. Přednost má ten, kdo má zatím splněno nejméně ze svých hodin; holiči s úrovní přednosti od Toma si vybírají dřív.</li>
-<li><b>Přednost (jen Tom):</b> majitel může vybrané holiče upřednostnit pevnými bloky nebo úrovní 1–3. V části 6 se dá zkusit a porovnat rozpis s ní a bez ní.</li>
+<li><b>Rozvrh:</b> zbytek rozdělí systém spravedlivě. Přednost má ten, kdo má zatím splněno nejméně ze svých hodin<span class="jenTom">; holiči s úrovní přednosti od Toma si vybírají dřív</span>.</li>
+<li class="jenTom"><b>Přednost (jen Tom):</b> majitel může vybrané holiče upřednostnit pevnými bloky nebo úrovní 1–3. V části 6 se dá zkusit a porovnat rozpis s ní a bez ní.</li>
 <li><b>Ruční úprava:</b> před schválením jde v rozvrhu klepnutím změnit, kdo v bloku stříhá.</li>
-<li><b>Férovost a nájem:</b> u každého holiče je vidět, kolik dostal, kolik z toho chtěl, jaký má poměr ráno/odpoledne a kolik zaplatí.</li>
+<li><b>Férovost a nájem (jen Tom a provozní, po přihlášení):</b> u každého holiče je vidět, kolik dostal, kolik z toho chtěl, jaký má poměr ráno/odpoledne a kolik zaplatí.</li>
 </ul>
-<p class="mala">Křeslo má buď 4h bloky (8–12, 12–16, 16–20), nebo 3h bloky (8–11, 11–14, 14–17, 17–20). U 4h křesel se berou přání holiče z mřížky 3a dotazníku, u 3h křesel z mřížky 3b. Holič má v jednom dni rezervaci jen v křeslech jednoho typu. Srovnání všech 4h, všech 3h a nastaveného rozdělení je v části Férovost a nájem. Rezervace se skládají ze souvislých bloků u jednoho křesla a jejich délka respektuje nejkratší a nejdelší rezervaci, kterou holič pro daný den zadal. U 3h bloků se chtěné hodiny dorovnají na nejbližší násobek 3. Pro jednoduchost jen pracovní dny . Šestihodinové bloky, víkendy, časy 7–8 a 20–22, burzu směn a přihlašování přidá skutečná aplikace. Počty křesel: Old Place 6, Zverimex 4 (<i>počet ve Zverimexu je zatím nepotvrzený</i>).</p>
+<p class="mala">Křeslo má buď 4h bloky (8–12, 12–16, 16–20), nebo 3h bloky (8–11, 11–14, 14–17, 17–20). U 4h křesel se berou přání holiče z mřížky 3a dotazníku, u 3h křesel z mřížky 3b. Holič má v jednom dni rezervaci jen v křeslech jednoho typu. Srovnání všech 4h, všech 3h a nastaveného rozdělení je v části Férovost a nájem (po přihlášení). Rezervace se skládají ze souvislých bloků u jednoho křesla a jejich délka respektuje nejkratší a nejdelší rezervaci, kterou holič pro daný den zadal. U 3h bloků se chtěné hodiny dorovnají na nejbližší násobek 3. Pro jednoduchost jen pracovní dny . Šestihodinové bloky, víkendy, časy 7–8 a 20–22, burzu směn a přihlašování přidá skutečná aplikace. Počty křesel: Old Place 6, Zverimex 4 (<i>počet ve Zverimexu je zatím nepotvrzený</i>).</p>
 <button class="btn" onclick="ukaz('pravidla')">Začít pravidly →</button>
 <button class="btn sv" onclick="novaData()" data-tip="Znovu vylosuje, kolik by kdo v dražbě nejvýš dal. Přání holičů zůstávají stejná.">Jiná simulace dražby</button>
 </div>
@@ -320,11 +321,11 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <div class="tydny" id="rTydny"></div>
 <div class="tydny" id="rDny"></div>
 <label data-tip="Zvýrazní bloky holiče a pod rozvrhem ukáže celý jeho leden.">Holič <select id="rHolic" onchange="kresliRozvrh()"><option value="">–</option></select></label>
-<label class="prep" data-tip="Návrh rozpisu před schválením. Zapněte a klepněte na blok – můžete ho dát jinému holiči nebo uvolnit. Pevný blok z přednosti jde přesunout jen vědomě, s upozorněním."><input type="checkbox" id="rUpr" onchange="kresliRozvrh()"> ✎ Upravit ručně</label>
+<label class="prep" data-tip="Návrh rozpisu před schválením. Zapněte a klepněte na blok – můžete ho dát jinému holiči nebo uvolnit."><input type="checkbox" id="rUpr" onchange="kresliRozvrh()"> ✎ Upravit ručně</label>
 </div>
 <div id="rStav" class="mala"></div>
 <div class="rleg" id="rLeg"></div>
-<p class="mala"><span class="hvezda">★</span> = vydraženo · 📌 = pevný blok z přednosti · ✎ = ručně upraveno · čárkovaně = volné křeslo k dokoupení · klepnutím na jméno v legendě holiče zvýrazníte</p>
+<p class="mala"><span class="hvezda">★</span> = vydraženo <span class="jenTom">· 📌 = pevný blok z přednosti</span> · ✎ = ručně upraveno · čárkovaně = volné křeslo k dokoupení · klepnutím na jméno v legendě holiče zvýrazníte</p>
 <div id="rozvrh" class="posuv"></div>
 <div id="rHolicMesic" class="hmes"></div>
 </div>
@@ -333,6 +334,12 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <section id="t-ferovost" class="skryt">
 <div class="karta">
 <h2>5. Férovost a nájem<span class="vb" data-tip="Právě zobrazená varianta délky bloků. Přepíná se nahoře pod menu."></span></h2>
+<div class="ferZamek">
+<p class="zamek">🔒 Kdo kolik chtěl a kolik dostal, vidí jen Tom a provozní (Tom 26. 11. 2026). Otevře se po přihlášení stejným e-mailem jako do přehledů.</p>
+<p><a class="btn" href="prehledy/">Přihlásit se v přehledech</a></p>
+<p class="mala">Po přihlášení se sem vrať (stačí obnovit stránku).</p>
+</div>
+<div class="jenTom">
 <h3 style="margin-top:0">Srovnání variant 4h a 3h bloků<span class="ti" data-tip="Stejná přání holičů rozdělená dvakrát: jednou na 4h bloky, jednou na 3h. Tučně je právě zobrazená varianta.">?</span></h3>
 <div id="srovnani" class="posuv"></div>
 <h3>Vybraná varianta</h3>
@@ -341,6 +348,7 @@ label[data-tip],th[data-tip],.dlazdice[data-tip] .t{text-decoration:underline do
 <div id="ferTab" class="posuv fk-tab"></div>
 <div id="ferKarty" class="fk"></div>
 <p class="mala">„Splněno“ = přidělené hodiny / chtěné hodiny. „Ve chtěných blocích“ = kolik přidělených hodin padlo do bloků, které holič označil „chci“. Pravidlo ráno/odpoledne počítá blok 12–16 napůl.</p>
+</div>
 </div>
 </section>
 
@@ -449,6 +457,8 @@ const UKAZKA_PREDNOSTI=[
  {j:'Jakub',typ:'uroven',hodnota:2,od:'2027-01-11',do:'2027-01-31',pozn:'UKÁZKA, vymyšleno – zaučuje nového holiče'},
  {j:'Michal',typ:'pevny',hodnota:{wd:4,h0:16,h1:20},od:'2027-01-01',do:'2027-01-31',pozn:'UKÁZKA, vymyšleno – pátek večer pro stálé zákazníky'},
  {j:'Klára',typ:'pevny',hodnota:{wd:3,h0:16,h1:20},od:'2027-01-01',do:'2027-01-15',pozn:'UKÁZKA, vymyšleno – na dva týdny'}];
+// části 5 (férovost) a 6 (přednost) jen po přihlášení s rolí admin nebo majitel (Supabase, stejně jako přehledy; Keksa 27.–28. 11. 2026)
+let PRISTUP=false;
 let PREDNOST=UKAZKA_PREDNOSTI.map((p,i)=>({...p,id:i+1,autor:'Tom (majitel)'})), PREDN_ZAP=true, UPRAVY=[], ZAZNAM=[];
 try{const s=JSON.parse(localStorage.getItem('kh-prednost')||'null');if(s&&Array.isArray(s.p)){PREDNOST=s.p;PREDN_ZAP=s.zap!==false}}catch(e){}
 function ulozPrednost(){try{localStorage.setItem('kh-prednost',JSON.stringify({p:PREDNOST,zap:PREDN_ZAP}))}catch(e){}}
@@ -469,7 +479,7 @@ function maxB(h,wd,T){const d=h.delka[wd];return d?Math.floor(d[1]/TYP[T].L):0}
 function bloky(h,di){const ix=[];h.busy[di].forEach((x,i)=>{if(x)ix.push(i)});return ix}
 // opt.prednost: použít přednost; opt.upravy: použít ruční úpravy rozpisu
 function spocitej(opt){
- opt=opt||{prednost:PREDN_ZAP,upravy:true};
+ opt=opt||{prednost:PREDN_ZAP&&PRISTUP,upravy:true};
  const H=vymysli();
  const P={sazba:num('pSazba'),rano:num('pRano'),odpo:num('pOdpo'),prah:num('pPrah'),podil:num('pPodil'),start:num('pStart'),krok:Math.max(1,num('pKrok')),max:num('pMax')};
  const PR=opt.prednost?PREDNOST:[];
@@ -701,6 +711,7 @@ function kresliRozvrh(){
  $('rHolicMesic').innerHTML=t+'<tr><td colspan="3"><b>Celkem</b></td><td><b>'+h.hod+' h</b></td><td><b>'+kc(h.najem)+'</b></td><td></td></tr></table></div>';
 }
 function kresliFerovost(){
+ if(!PRISTUP){['srovnani','souhrn','ferTab','ferKarty'].forEach(id=>$(id).innerHTML='');return} // bez přihlášení nic nekreslit
  const P=D.P;let celkemZaklad=0,celkemNavic=0,kap=0,obs=0;
  PROV.forEach(p=>{kap+=DATA_DNY.length*12*p.kresla});
  D.H.forEach(h=>{obs+=h.hod;celkemNavic+=h.drazNavic;celkemZaklad+=h.najem-h.drazNavic});
@@ -797,6 +808,7 @@ function prTxt(p){if(p.typ==='uroven')return 'úroveň '+p.hodnota;const v=p.hod
  return s}
 function datum(s){const d=s.split('-');return +d[2]+'. '+(+d[1])+'. '+d[0]}
 function kresliPrednost(){
+ if(!PRISTUP){['prSeznam','prSouhrn','prSrov','prZaznam'].forEach(id=>$(id).innerHTML='');return} // bez přihlášení nic nekreslit
  $('pZap').checked=PREDN_ZAP;
  if(!PREDNOST.length)$('prSeznam').innerHTML='<p class="mala">Žádná přednost – rozpis se dělí jen podle přání a pravidel.</p>';
  else $('prSeznam').innerHTML='<table class="siroka"><tr><th>Holič</th><th>Přednost</th><th>Platí</th><th>Poznámka</th><th>Zadal</th><th></th></tr>'+PREDNOST.map(p=>{const h=D.H.find(x=>x.jmeno===p.j);
@@ -903,7 +915,7 @@ async function overPristup(){
   if(session){const {data,error}=await sb.rpc('prehled_role');const role=!error&&data&&data[0]&&data[0].role;
    ok=role==='admin'||role==='majitel';stav=ok?'':'Přihlášený(á) jako '+session.user.email+', ale tahle část je jen pro majitele a TBDB.'}
  }catch(e){stav='Přihlášení se nepodařilo ověřit: '+e.message}
- PRISTUP=ok;$('prZamek').classList.toggle('skryt',ok);$('prObsah').classList.toggle('skryt',!ok);$('prZamekStav').textContent=stav;
+ PRISTUP=ok;document.body.classList.toggle('pristup',ok);document.querySelectorAll('.ferZamek').forEach(e=>e.classList.toggle('skryt',ok));$('prZamek').classList.toggle('skryt',ok);$('prObsah').classList.toggle('skryt',!ok);$('prZamekStav').textContent=stav;
  const bylo=window.__PR_BYLO;window.__PR_BYLO=ok;if(ok||bylo)prepocitat();
 }
 overPristup();
